@@ -136,7 +136,7 @@ utt2spk = []
 test = test_lst_f.readlines()
 for idx, utt_path in enumerate(test):
     path = utt_path.rstrip('.wav').split('/')  # test/id00999-singing-02-006.wav
-    uid = '-'.join(path).rstrip('\n')    # test-id00999-singing-02-006.wav
+    uid = '-'.join(path).rstrip('.wav\n')    # test-id00999-singing-02-006.wav
 
     spk_id = uid.split('-')[1]
     path = args.dataset_dir + '/eval/' + utt_path
