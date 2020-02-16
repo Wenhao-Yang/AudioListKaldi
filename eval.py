@@ -56,13 +56,13 @@ def main(_):
         FLAGS.window_stride_ms,
         FLAGS.num_coefficient)
     # if skip_generate_feature=True, it will calculs the mfcc feature and prepare the file trials for training or testing
-    audio_data_processor = input_data_test.AudioProcessor(
-        FLAGS.data_dir,
+    audio_data_processor = input_data_test.EvalAudioProcessor(
+        FLAGS.enroll_data_dir,
+        FLAGS.test_data_dir,
         FLAGS.num_repeats,
         audio_settings,
         FLAGS.skip_generate_feature,
         FLAGS.num_utt_enrollment)
-
     # create an objet of class AudioProcessor. 
     lstm_model_setting={}
     lstm_model_setting['num_units'] = FLAGS.num_units
@@ -70,7 +70,8 @@ def main(_):
     lstm_model_setting['num_layers'] = FLAGS.num_layers
     #creat graph
     input_audio_data = tf.placeholder(tf.float32,
-                                      [FLAGS.batch_size, 1+FLAGS.num_utt_enrollment, audio_settings['desired_spectrogramme_length'], FLAGS.num_coefficient],
+                                      [FLAGS.batch_size, 1+FLAGS.num_utt_enrollment, audio_settings['desired_spectrogramme_length'],
+                                       FLAGS.num_coefficient],
                                       name='input_audio_data')
     dimension_linear_layer = FLAGS.dimension_linear_layer
 
@@ -89,8 +90,10 @@ def main(_):
     saver.restore(sess, tf.train.latest_checkpoint(FLAGS.file_checkpoint))
 
     batch_size = FLAGS.batch_size
-    read_mfcc_buffer = h5py.File(FLAGS.data_dir + '/feature_mfcc.h5', 'r')
-    read_trials = open(FLAGS.data_dir + '/trials', 'r')
+    enroll_mfcc_buffer = h5py.File(FLAGS.enroll_data_dir + '/feature_mfcc.h5', 'r')
+    test_mfcc_buffer = h5py.File(FLAGS.test_data_dir + '/feature_mfcc.h5', 'r')
+
+    read_trials = open(FLAGS.test_data_dir + '/trials', 'r')
 
     trials = read_trials.readlines()
     num_iteration = int(len(trials)/batch_size)
@@ -102,14 +105,15 @@ def main(_):
 
     for i in range(num_iteration):
         trial_batch = trials[i*batch_size: (i+1)*batch_size]
-        test_voiceprint, label = audio_data_processor.get_data(trial_batch, read_mfcc_buffer)
+        test_voiceprint, label = audio_data_processor.get_data(trial_batch, enroll_mfcc_buffer, test_mfcc_buffer)
         score_batch = sess.run(batch_score, feed_dict={input_audio_data:test_voiceprint, dropout_prob_input:0, batch_label:label})
         #shape of output:  batch_size*tuple_size
         #shape of score_batch: batch_size
         for i in range(score_batch.shape[0]):
             file_score.write(str(score_batch[i]) + '\n')
 
-    read_mfcc_buffer.close()
+    enroll_mfcc_buffer
+    test_mfcc_buffer.close()
     read_trials.close()
     file_score.close()
 
@@ -122,9 +126,10 @@ if __name__ == '__main__':
     parser.add_argument('--window_size_ms', type=int, default=25, help='how long each frame of spectrograme')
     parser.add_argument('--window_stride_ms', type=int, default=10, help='how far to move in time between two frames')
     parser.add_argument('--num_coefficient', type=int, default=40, help='numbers of coefficients of mfcc')
-    parser.add_argument('--data_dir', type=str, default='data/CN-Celeb/enroll/', help='work location')
+    parser.add_argument('--enroll-data-dir', type=str, default='data/CN-Celeb/enroll/', help='work location')
+    parser.add_argument('--test-data-dir', type=str, default='data/CN-Celeb/test/', help='work location')
     parser.add_argument('--num_repeats', type=int, default=140, help='number of repeat when we prepare the trials')
-    parser.add_argument('--skip_generate_feature', type=bool, default=True, help='whether to skip the phase of generating mfcc features')
+    parser.add_argument('--skip_generate_feature', type=bool, default=False, help='whether to skip the phase of generating mfcc features')
     parser.add_argument('--num_utt_enrollment', type=int, default=1, help='numbers of enrollment utts for each speaker')
     parser.add_argument('--check_nans', type=bool, default=True, help='whether to check for invalid numbers during processing')
     parser.add_argument('--num_units', type=int, default=128, help='numbers of units for each layer of lstm')
@@ -132,6 +137,6 @@ if __name__ == '__main__':
     parser.add_argument('--num_layers', type=int, default=1, help='number of layers of multi-lstm')
     parser.add_argument('--dimension_linear_layer', type=int, default=64, help='dimension of linear layer on top of lstm')
     parser.add_argument('--batch_size', type=int, default=80)
-    parser.add_argument('--file_checkpoint', type=str, default='data/CN-Celeb/dev/')
+    parser.add_argument('--file-checkpoint', type=str, default='data/CN-Celeb/dev/')
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
