@@ -100,7 +100,7 @@ def main(_):
     #calcul score of a batch
     batch_label = tf.placeholder(tf.int32, [batch_size])
     batch_score = score(batch_size=batch_size, tuple_size=FLAGS.num_utt_enrollment+1, spk_rep=outputs, batch_label=batch_label)
-    file_score = open(os.path.join(FLAGS.data_dir, 'score_eval'), 'w')
+    file_score = open(os.path.join(FLAGS.test_data_dir, 'score_eval'), 'w')
 
     for i in range(num_iteration):
         trial_batch = trials[i*batch_size: (i+1)*batch_size]
