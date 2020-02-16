@@ -123,9 +123,53 @@ with open(args.output_dir + '/enroll/wav.scp', 'w') as f1, \
 
 
 # eval set
+test_lst = args.dataset_dir + '/eval/lists/test.lst'
+test_lst_f = open(test_lst, 'r')
+
+test_dir_path = pathlib.Path(args.output_dir + '/test')
+if not test_dir_path.exists():
+    os.makedirs(str(test_dir_path))
+
+wav_scp = []
+utt2spk = []
+
+test = test_lst_f.readlines()
+for idx, utt_path in enumerate(test):
+    path = utt_path.rstrip('.wav').split('/')  # test/id00999-singing-02-006.wav
+    uid = '-'.join(path).rstrip('\n')    # test-id00999-singing-02-006.wav
+
+    spk_id = uid.split('-')[1]
+    path = args.dataset_dir + '/eval/' + path
+    wav_scp.append(uid + ' '+ path)
+    # f2.write(spk_id + ' ' + uid + '\n')
+    spk_id = spk_id + '\n'
+    utt2spk.append(uid + ' ' + spk_id)
+
+wav_scp.sort()
+utt2spk.sort()
+
+with open(args.output_dir + '/test/wav.scp', 'w') as f1, \
+     open(args.output_dir + '/test/utt2spk', 'w') as f2:
+    f1.writelines(wav_scp)
+    f2.writelines(utt2spk)
 
 
+trials_uid = []
+trials_lst = args.dataset_dir + '/eval/lists/trials.lst.lst'
+trials_lst_f = open(trials_lst, 'r')
 
+trials = trials_lst_f.readlines()
+for idx, utt_pair in enumerate(trials):
+
+    enroll_uid, test_path, target = utt_pair.split(' ')  # id00800-enroll test/id00800-singing-01-005.wav 1
+
+    path = test_path.rstrip('.wav').split('/')  # test/id00999-singing-02-006.wav
+    test_uid = '-'.join(path)  # test-id00999-singing-02-006.wav
+
+    trials_uid.append(enroll_uid + ' ' + test_uid + ' ' + target + '\n')
+
+with open(args.output_dir + '/test/trials', 'w') as f:
+    f.writelines(trials_uid)
 
 
 
