@@ -257,9 +257,9 @@ class EvalAudioProcessor(object):
             return 'Error, input .ark file is compressed'
         rows = 0
         _, rows = struct.unpack('<bi', read_buffer.read(5))
-        if header[1] == 'F':
+        if header[1] == 'F' or header[1].decode() == 'F':
             tmp_mat = np.frombuffer(read_buffer.read(rows * 4), dtype=np.float32)
-        elif header[1] == 'D':
+        elif header[1] == 'D' or header[1].decode() == 'D':
             tmp_mat = np.frombuffer(read_buffer.read(rows * 8), dtype=np.float64)
         mat = np.reshape(tmp_mat, (rows))
         read_buffer.close()
