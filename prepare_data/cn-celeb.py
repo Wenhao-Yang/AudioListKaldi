@@ -139,7 +139,7 @@ for idx, utt_path in enumerate(test):
     uid = '-'.join(path).rstrip('\n')    # test-id00999-singing-02-006.wav
 
     spk_id = uid.split('-')[1]
-    path = args.dataset_dir + '/eval/' + path
+    path = args.dataset_dir + '/eval/' + utt_path
     wav_scp.append(uid + ' '+ path)
     # f2.write(spk_id + ' ' + uid + '\n')
     spk_id = spk_id + '\n'
