@@ -83,7 +83,7 @@ def main(_):
     outputs = model.create_lstm_baseline_model(
         audio_tuple_input=input_audio_data,
         W=weights,
-        B=bias, lstm_model_setting=lstm_model_setting, deropout_prob=dropout_prob_input)
+        B=bias, lstm_model_setting=lstm_model_setting, dropout_prob=dropout_prob_input)
  
     saver = tf.train.Saver()
     saver.restore(sess, tf.train.latest_checkpoint(FLAGS.file_checkpoint))
