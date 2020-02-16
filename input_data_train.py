@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 import os
+import pdb
 import random
 import numpy as np 
 import tensorflow as tf 
@@ -48,11 +49,12 @@ class AudioProcessor(object):
                         0:nontarget  1:target
     1. using methode get_data() when we feed a batch of data to our LSTM model. 
     '''  
-    def __init__(self, data_dir,
-        num_repeats,
-        audio_settings,
-        skip_generate_feature,
-        num_utt_enrollment):
+    def __init__(self,
+                 data_dir,
+                 num_repeats,
+                 audio_settings,
+                 skip_generate_feature,
+                 num_utt_enrollment):
         '''
     the form of data_dir :   ..../train/  or  ...../test/
     the value of is training:  True or False
@@ -63,6 +65,7 @@ class AudioProcessor(object):
         self.generate_trials(data_dir, num_repeats, num_utt_enrollment)
         if not skip_generate_feature:
             self.generate_features(data_dir, audio_settings)
+
     def read_ark(self, arkpath, offset):
         read_buffer = open(arkpath, 'rb')
         read_buffer.seek(int(offset), 0)
@@ -71,10 +74,13 @@ class AudioProcessor(object):
             return 'Error, input .ark file is compressed'
         rows = 0
         _, rows = struct.unpack('<bi', read_buffer.read(5))
-        if header[1] == 'F':
+        if header[1] == 'F' or header[1].decode() == 'F':
             tmp_mat = np.frombuffer(read_buffer.read(rows*4), dtype=np.float32)
-        elif header[1] == 'D':
+        elif header[1] == 'D' or header[1].decode() == 'D':
             tmp_mat = np.frombuffer(read_buffer.read(rows*8), dtype=np.float64)
+        else:
+            pdb.set_trace()
+
         mat = np.reshape(tmp_mat, (rows))
         read_buffer.close()
         return mat.astype(np.int_)
@@ -102,6 +108,7 @@ class AudioProcessor(object):
         else:
             mat_vad = self.read_ark(ark_path, offset)
         return mat_vad
+
     def get_features_no_sil(self, vad_mat, mfcc_mat):
         #mfcc_mat:   (1,num_frames,num_coeficient)
         #vad_mat:   (num_frames,)
@@ -117,9 +124,10 @@ class AudioProcessor(object):
         else:
             print('Error frame of vad is less than frame of mfcc')
             return 'Error frame of vad is less than frame of mfcc'
+
     def generate_features(self, data_dir, audio_settings):
         '''
-        read wav.scp vad.scp,and generate  mfcc features for all utts
+        read wav.scp vad.scp, and generate  mfcc features for all utts
         wav.scp and vad.scp must be sorted in the same order
         '''
         with tf.Session(graph=tf.Graph()) as sess:
@@ -156,7 +164,7 @@ class AudioProcessor(object):
         2. generate trials negative
         '''
         # generate a dictionnary: spk_id -->  list of all his or her utts
-        spk2utt_file = os.path.join(data_dir,'spk2utt')
+        spk2utt_file = os.path.join(data_dir, 'spk2utt')
         read_buffer = open(spk2utt_file, 'r')
         dict_spk2utts = {}
         #construction of dicionary: spk_id --> all his or her utts
@@ -165,26 +173,37 @@ class AudioProcessor(object):
             spk_id = content[0]
             dict_spk2utts[spk_id] = content[1:]
         read_buffer.close()
+
         # trials positive
         write_buffer_p = open(os.path.join(data_dir, 'trials_positive'), 'w')
+        # utt1 utt2 utt3 ... 1
         for i in range(num_repeats):
             for spk in dict_spk2utts.keys():
-                utt_samples = random.sample(dict_spk2utts[spk],
-                    num_utt_enrollment+1)
+                try:
+                    utt_samples = random.sample(dict_spk2utts[spk], num_utt_enrollment + 1)
+                except:
+                    continue
+
                 for utt in utt_samples:
                     write_buffer_p.write(utt + ' ')
                 write_buffer_p.write('1' + '\n')
         write_buffer_p.close()
+
         #trials negative
+        # eval_utt1 enroll_utt2 enroll_utt3 ... 0
         write_buffer_n = open(os.path.join(data_dir, 'trials_negative'), 'w')
         for spk_eval in dict_spk2utts.keys():
-            spk_list = dict_spk2utts.keys()[:]
+            spk_list = list(dict_spk2utts.keys())[:]
             spk_list.remove(spk_eval)
             for i in range(num_repeats):
                 spk_enroll = random.sample(spk_list, 1)[0]
                 utt_eval = random.sample(dict_spk2utts[spk_eval], 1)
-                samlpes_utt_enroll = random.sample(dict_spk2utts[spk_enroll],
-                    num_utt_enrollment)
+                try:
+                    samlpes_utt_enroll = random.sample(dict_spk2utts[spk_enroll], num_utt_enrollment)
+                except:
+                    continue
+                # samlpes_utt_enroll = np.random.choice(dict_spk2utts[spk_enroll], num_utt_enrollment, replace=False)
+
                 write_buffer_n.write(utt_eval[0] + ' ')
                 for utt_enroll in samlpes_utt_enroll:
                     write_buffer_n.write(utt_enroll + ' ')
@@ -192,25 +211,37 @@ class AudioProcessor(object):
         write_buffer_n.close() 
 
     def get_data(self, trials, read_buffer, label):
-        # trials: list of batch_size lines,each line is an tuple
+        """
+        get series of input date based on trials files
+        :param trials:
+        :param read_buffer:
+        :param label:
+        :return:
+        """
+        # trials: list of batch_size lines, each line is an tuple
         batch_size = len(trials)
         tuple_size = self.num_utt_enrollment+1
         desired_frames = self.audio_settings['desired_spectrogramme_length']
-        feature_size =  self.audio_settings['num_coefficient']
+        feature_size = self.audio_settings['num_coefficient']
         data = np.zeros((batch_size, tuple_size, desired_frames, feature_size))
-        for i,trial in enumerate(trials):
+
+        for i, trial in enumerate(trials):
             content = trial.split()
-            for j,utt in enumerate(content[:-1]):
+
+            for j, utt in enumerate(content[:-1]):
                 mat_mfcc = read_buffer[utt]
                 shape_mfcc = mat_mfcc.shape
                 num_frames_mfcc = shape_mfcc[0]
                 manque_frames = num_frames_mfcc - desired_frames
+
                 if manque_frames < 0:
                     #padding 0
+                    #Todo: should be self-padding
                     data[i, j] = np.lib.pad(mat_mfcc, ((0, -manque_frames),(0, 0)), 'constant', constant_values=0)
                 else: #dont need padding, but we want to chose a start frame randomly
                     start_frame = random.randint(0, manque_frames)
                     data[i, j] = mat_mfcc[start_frame: start_frame+desired_frames]
+
         return data, label
 
 
