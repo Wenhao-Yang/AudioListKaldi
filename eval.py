@@ -59,7 +59,6 @@ def main(_):
     audio_data_processor = input_data_test.EvalAudioProcessor(
         FLAGS.enroll_data_dir,
         FLAGS.test_data_dir,
-        FLAGS.num_repeats,
         audio_settings,
         FLAGS.skip_generate_feature,
         FLAGS.num_utt_enrollment)
