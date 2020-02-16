@@ -43,23 +43,31 @@ if [ $stage -le 0 ]; then
 #  utils/combine_data.sh data/train data/voxceleb2_train data/voxceleb2_test data/voxceleb1_train
     utils/utt2spk_to_spk2utt.pl data/CN-Celeb/dev/utt2spk >data/CN-Celeb/dev/spk2utt
     utils/utt2spk_to_spk2utt.pl data/CN-Celeb/enroll/utt2spk >data/CN-Celeb/enroll/spk2utt
+    utils/utt2spk_to_spk2utt.pl data/CN-Celeb/test/utt2spk >data/CN-Celeb/test/spk2utt
 fi
 
 if [ $stage -le 1 ]; then
     # Make MFCCs and compute the energy-based VAD for each dataset
 #    steps/make_fbank.sh --write-utt2num-frames true --fbank_config conf/fbank.conf --nj 4 --cmd "$train_cmd" \
 #        data/CN-Celeb/dev exp/make_fb40 $fbankdir
-    utils/fix_data_dir.sh data/CN-Celeb/dev
-
-    sid/compute_vad_decision.sh --nj 4 --cmd "$train_cmd" data/CN-Celeb/dev exp/make_fb40 $vaddir
-    utils/fix_data_dir.sh data/CN-Celeb/dev
+#    utils/fix_data_dir.sh data/CN-Celeb/dev
+#
+#    sid/compute_vad_decision.sh --nj 4 --cmd "$train_cmd" data/CN-Celeb/dev exp/make_fb40 $vaddir
+#    utils/fix_data_dir.sh data/CN-Celeb/dev
+#
+#    steps/make_fbank.sh --write-utt2num-frames true --fbank_config conf/fbank.conf --nj 4 --cmd "$train_cmd" \
+#        data/CN-Celeb/enroll exp/make_fb40 $fbankdir
+#    utils/fix_data_dir.sh data/CN-Celeb/enroll
+#
+#    sid/compute_vad_decision.sh --nj 4 --cmd "$train_cmd" data/CN-Celeb/enroll exp/make_fb40 $vaddir
+#    utils/fix_data_dir.sh data/CN-Celeb/enroll
 
     steps/make_fbank.sh --write-utt2num-frames true --fbank_config conf/fbank.conf --nj 4 --cmd "$train_cmd" \
-        data/CN-Celeb/enroll exp/make_fb40 $fbankdir
-    utils/fix_data_dir.sh data/CN-Celeb/enroll
+        data/CN-Celeb/test exp/make_fb40 $fbankdir
+    utils/fix_data_dir.sh data/CN-Celeb/test
 
-    sid/compute_vad_decision.sh --nj 4 --cmd "$train_cmd" data/CN-Celeb/enroll exp/make_fb40 $vaddir
-    utils/fix_data_dir.sh data/CN-Celeb/enroll
+    sid/compute_vad_decision.sh --nj 4 --cmd "$train_cmd" data/CN-Celeb/test exp/make_fb40 $vaddir
+    utils/fix_data_dir.sh data/CN-Celeb/test
 
 
 fi
