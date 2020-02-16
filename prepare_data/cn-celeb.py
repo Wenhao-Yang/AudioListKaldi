@@ -155,7 +155,7 @@ with open(args.output_dir + '/test/wav.scp', 'w') as f1, \
 
 
 trials_uid = []
-trials_lst = args.dataset_dir + '/eval/lists/trials.lst.lst'
+trials_lst = args.dataset_dir + '/eval/lists/trials.lst'
 trials_lst_f = open(trials_lst, 'r')
 
 trials = trials_lst_f.readlines()
