@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 import os
+import pdb
 import random
 import numpy as np 
 import tensorflow as tf 
@@ -170,7 +171,10 @@ class AudioProcessor(object):
             spk_list.remove(spk_eval)
             for i in range(num_repeats):
                 spk_enroll = random.sample(spk_list, 1)[0]
-                utt_eval = random.sample(dict_spk2utts[spk_eval], 1)
+                try:
+                    utt_eval = random.sample(dict_spk2utts[spk_eval], 1)
+                except:
+                    pdb.set_trace()
                 samlpes_utt_enroll = random.sample(dict_spk2utts[spk_enroll], num_utt_enrollment)
                 write_buffer_n.write(utt_eval[0] + ' ')
                 for utt_enroll in samlpes_utt_enroll:
