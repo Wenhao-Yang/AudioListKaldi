@@ -322,8 +322,8 @@ class EvalAudioProcessor(object):
             mfcc = contrib_audio.mfcc(spectrogram, wav_decoder.sample_rate,
                                       dct_coefficient_count=audio_settings['num_coefficient'])
 
-            wav_scp = data_dir + '/wav.scp'
-            vad_scp = data_dir + '/vad.scp'
+            wav_scp = data_dir + 'wav.scp'
+            vad_scp = data_dir + 'vad.scp'
             read_buffer = open(wav_scp, 'r')
             h5df_filename = data_dir + 'feature_mfcc.h5'
             write_buffer = h5py.File(h5df_filename, 'w')
