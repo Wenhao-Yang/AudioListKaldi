@@ -89,7 +89,7 @@ def main(_):
         # initial_learning_rate = 0.001  # 初始学习率
         learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
         learning_rate = tf.train.polynomial_decay(learning_rate_input,
-                                                   global_step=1356,
+                                                   global_step=2712,
                                                    decay_steps=200,
                                                    end_learning_rate=0.0001)
 
