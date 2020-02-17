@@ -350,6 +350,7 @@ class EvalAudioProcessor(object):
 
         for i, trial in enumerate(trials):
             content = trial.split()
+            pdb.set_trace()
             label[i] = int(content[-1])
             for j, utt in enumerate(content[:-1]):
                 mat_mfcc = enroll_buffer[utt] if j==0 else eval_buffer[utt]
