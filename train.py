@@ -67,7 +67,8 @@ def main(_):
             dropout_prob=dropout_prob_input)
 
     # hold the place for label: 0:nontarget  1:target
-    labels = tf.placeholder(tf.int64, [], name='labels')
+    labels = tf.placeholder(tf.int64, [FLAGS.batch_size*2], name='labels')
+
     # check Nan or other numeriical errors
     control_dependencies = []
     if FLAGS.check_nans:
@@ -129,8 +130,8 @@ def main(_):
         #samples negative
         train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer, 0)   # get one batch of tuples for training
 
-        train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
-        label = np.concatenate((label_p, label_n), axis=0)
+        train_voiceprint = tf.concat(0, [train_voiceprint_p, train_voiceprint_n])
+        label = tf.concat(0, [label_p, label_n])
 
         #shape of train_voiceprint: (tuple_size, feature_size)    
         #shape of  label:  (1)
