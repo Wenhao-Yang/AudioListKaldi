@@ -78,7 +78,7 @@ def my_tuple_loss(batch_size, tuple_size, spk_representation, labels):
         wi_eval = w[indice_bash, 0]
 
         # normalize all vectors and avg enroll
-        normlize_wi_enroll = tf.nn.l2_normalize(wi_enroll, dim=1)
+        normlize_wi_enroll = tf.nn.l2_normalize(wi_enroll, axis=1)
         c_k = tf.reduce_mean(normlize_wi_enroll, 0)              # shape: (feature_size)
         normlize_ck = tf.nn.l2_normalize(c_k, dim=0)
         normlize_wi_eval = tf.nn.l2_normalize(wi_eval, dim=0)

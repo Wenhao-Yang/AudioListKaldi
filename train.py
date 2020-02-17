@@ -130,8 +130,10 @@ def main(_):
         #samples negative
         train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer, 0)   # get one batch of tuples for training
 
-        train_voiceprint = tf.concat([train_voiceprint_p, train_voiceprint_n], axis=0)
-        label = tf.concat([label_p, label_n], axis=0)
+        train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
+        label = np.concatenate((label_p, label_n), axis=0)
+
+        # label = tf.concat([label_p, label_n], axis=0)
 
         #shape of train_voiceprint: (tuple_size, feature_size)    
         #shape of  label:  (1)
