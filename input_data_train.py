@@ -224,6 +224,7 @@ class AudioProcessor(object):
         desired_frames = self.audio_settings['desired_spectrogramme_length']
         feature_size = self.audio_settings['num_coefficient']
         data = np.zeros((batch_size, tuple_size, desired_frames, feature_size))
+        labels = np.ones(batch_size) * label
 
         for i, trial in enumerate(trials):
             content = trial.split()
@@ -242,7 +243,7 @@ class AudioProcessor(object):
                     start_frame = random.randint(0, manque_frames)
                     data[i, j] = mat_mfcc[start_frame: start_frame+desired_frames]
 
-        return data, label
+        return data, labels
 
 
 

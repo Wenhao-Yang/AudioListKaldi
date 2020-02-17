@@ -88,9 +88,11 @@ def my_tuple_loss(batch_size, tuple_size, spk_representation, labels):
 
         score = cos_similarity
         pdb.set_trace()
-        loss += tf.sigmoid(score) if tf.equal(labels[indice_bash], 1) else (1 - tf.sigmoid(score))
+        loss_one = tf.multiply(labels[indice_bash], -tf.log(tf.sigmoid(score)))
+        loss_zero = tf.multiply((1-labels[indice_bash]) * -tf.log((1 - tf.sigmoid(score))))
+        loss += loss_one + loss_zero
 
-    return -tf.log(loss/batch_size*2)
+    return -loss/batch_size*2
 
     # return tf.cond(tf.equal(labels, 1), f1, f2)
 

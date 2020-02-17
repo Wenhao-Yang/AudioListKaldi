@@ -116,7 +116,7 @@ def main(_):
     max_training_step = (int(len(all_trials_p)/FLAGS.batch_size)) * 2
     max_training_step = int(max_training_step/2)           ######################3#######
 
-    tf.logging.info('total steps %d: ', max_training_step)
+    tf.logging.info('Total steps %d: ', max_training_step)
     for training_step in range(max_training_step):
         # if training_step%2 == 0:
         #samples positive
