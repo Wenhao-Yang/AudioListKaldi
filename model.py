@@ -90,7 +90,7 @@ def my_tuple_loss(batch_size, tuple_size, spk_representation, labels):
         # pdb.set_trace()
         label = tf.cast(labels[indice_bash], dtype=tf.float32)
         loss_one = tf.multiply(label, -tf.log(tf.sigmoid(score)))
-        loss_zero = tf.multiply((1-label) * -tf.log((1 - tf.sigmoid(score))))
+        loss_zero = tf.multiply((1-label), -tf.log((1 - tf.sigmoid(score))))
         loss += loss_one + loss_zero
 
     return -loss/batch_size*2
