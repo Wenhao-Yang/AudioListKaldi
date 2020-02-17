@@ -166,7 +166,7 @@ for idx, utt_pair in enumerate(trials):
     path = test_path.rstrip('.wav').split('/')  # test/id00999-singing-02-006.wav
     test_uid = '-'.join(path)  # test-id00999-singing-02-006.wav
 
-    trials_uid.append(enroll_uid + ' ' + test_uid + ' ' + target + '\n')
+    trials_uid.append(enroll_uid + ' ' + test_uid + ' ' + target)
 
 with open(args.output_dir + '/test/trials', 'w') as f:
     f.writelines(trials_uid)
