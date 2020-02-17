@@ -81,7 +81,7 @@ def my_tuple_loss(batch_size, tuple_size, spk_representation, labels):
         normlize_wi_enroll = tf.nn.l2_normalize(wi_enroll, axis=1)
         c_k = tf.reduce_mean(normlize_wi_enroll, 0)              # shape: (feature_size)
         normlize_ck = tf.nn.l2_normalize(c_k, dim=0)
-        normlize_wi_eval = tf.nn.l2_normalize(wi_eval, dim=0)
+        normlize_wi_eval = tf.nn.l2_normalize(wi_eval, axis=0)
 
         # compute cos(enroll_avg, eval)
         cos_similarity = tf.reduce_sum(tf.multiply(normlize_ck, normlize_wi_eval))
@@ -89,8 +89,8 @@ def my_tuple_loss(batch_size, tuple_size, spk_representation, labels):
         score = cos_similarity
         # pdb.set_trace()
         label = tf.cast(labels[indice_bash], dtype=tf.float32)
-        loss_one = tf.multiply(label, -tf.log(tf.sigmoid(score)))
-        loss_zero = tf.multiply((1-label), -tf.log((1 - tf.sigmoid(score))))
+        loss_one = tf.multiply(label, tf.log(tf.sigmoid(score)))
+        loss_zero = tf.multiply((1-label), tf.log((1 - tf.sigmoid(score))))
         loss += loss_one + loss_zero
 
     return -loss/batch_size
