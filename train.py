@@ -48,7 +48,7 @@ def main(_):
 
     #hold a place for input of the neural network
     input_audio_data = tf.placeholder(tf.float32,
-        [FLAGS.batch_size, 1+FLAGS.num_utt_enrollment, audio_settings['desired_spectrogramme_length'], FLAGS.num_coefficient],
+        [FLAGS.batch_size*2, 1+FLAGS.num_utt_enrollment, audio_settings['desired_spectrogramme_length'], FLAGS.num_coefficient],
         name='input_audio_data')
 
     # definit weight W and bias B for the linear layer on top of the LSTM
