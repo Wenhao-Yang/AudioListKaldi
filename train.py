@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 import os
+import pathlib
 import random
 import argparse
 import sys
@@ -77,15 +78,22 @@ def main(_):
     #weight_scalar = tf.Variable(1.0, name='weight_scalar')
     #bias_scalar = tf.Variable(0.1, name='bias_scalar')
     with tf.name_scope('train_loss'):
-        loss = model.tuple_loss(batch_size=FLAGS.batch_size,
-                                tuple_size=1+FLAGS.num_utt_enrollment,
-                                spk_representation=outputs,
-                                labels=labels)
+        loss = model.my_tuple_loss(batch_size=FLAGS.batch_size,
+                                   tuple_size=1+FLAGS.num_utt_enrollment,
+                                   spk_representation=outputs,
+                                   labels=labels)
 
     tf.summary.scalar('train_loss', loss)
     with tf.name_scope('train'), tf.control_dependencies(control_dependencies):
+        # initial_learning_rate = 0.001  # 初始学习率
         learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
-        train_step = tf.train.AdamOptimizer(learning_rate=learning_rate_input).minimize(loss)
+        learning_rate = tf.train.polynomial_decay(learning_rate_input,
+                                                   global_step=1356,
+                                                   decay_steps=200,
+                                                   end_learning_rate=0.0001)
+
+        # learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
+        train_step = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
 
     saver = tf.train.Saver(tf.global_variables())
 
@@ -110,14 +118,20 @@ def main(_):
 
     tf.logging.info('total steps %d: ', max_training_step)
     for training_step in range(max_training_step):
-        if training_step%2 == 0:
-            #samples positive
-            trials = all_trials_p[int(training_step/2)*FLAGS.batch_size:(int(training_step/2)+1)*FLAGS.batch_size]
-            train_voiceprint, label = audio_data_processor.get_data(trials, read_mfcc_buffer, 1)   # get one batch of tuples for training
-        else:
-            #samples negative
-            trials = all_trials_n[int((training_step-1)/2)*FLAGS.batch_size:(int((training_step-1)/2)+1)*FLAGS.batch_size]
-            train_voiceprint, label = audio_data_processor.get_data(trials, read_mfcc_buffer, 0)   # get one batch of tuples for training
+        # if training_step%2 == 0:
+        #samples positive
+        trials_p = all_trials_p[int(training_step/2)*FLAGS.batch_size:(int(training_step/2)+1)*FLAGS.batch_size]
+        trials_n = all_trials_n[int((training_step - 1) / 2) * FLAGS.batch_size:(int(
+            (training_step - 1) / 2) + 1) * FLAGS.batch_size]
+
+
+        train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer, 1)   # get one batch of tuples for training
+        #samples negative
+        train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer, 0)   # get one batch of tuples for training
+
+        train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
+        label = np.concatenate((label_p, label_n), axis=0)
+
         #shape of train_voiceprint: (tuple_size, feature_size)    
         #shape of  label:  (1)
         train_summary, train_loss, _ = sess.run([merged_summaries, loss, train_step],
@@ -133,7 +147,12 @@ def main(_):
         #save  the model final
         if training_step == max_training_step - 1 or (training_step+1)%500 == 0:
             times = time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime())
-            save_path = os.path.join(FLAGS.data_dir, FLAGS.model_architechture + '%s.ckpt'%(times))
+            save_path = os.path.join(FLAGS.checkpoint_dir, FLAGS.model_architechture, '%s.ckpt'%(times))
+
+            save_path_ob = pathlib.Path(save_path)
+            if not save_path_ob.parent.exists():
+                os.makedirs(str(save_path_ob.parent))
+
             tf.logging.info('Saving to "%s-%d"', save_path, training_step)
             saver.save(sess, save_path, global_step=training_step)
 
@@ -150,6 +169,7 @@ if __name__ == '__main__':
     parser.add_argument('--window_stride_ms', type=int, default=10, help='how far to move in time between two frames')
     parser.add_argument('--num_coefficient', type=int, default=40, help='numbers of coefficients of mfcc')
     parser.add_argument('--data_dir', type=str, default='data/CN-Celeb/dev/', help='work location')
+    parser.add_argument('--checkpoint_dir', type=str, default='data/CN-Celeb/checkpoint/', help='work location')
     parser.add_argument('--num_repeats', type=int, default=140, help='number of repeat when we prepare the trials')
     parser.add_argument('--skip_generate_feature', type=bool, default=True, help='whether to skip the phase of generating mfcc features')
     parser.add_argument('--num_utt_enrollment', type=int, default=5, help='numbers of enrollment utts for each speaker')
@@ -159,8 +179,8 @@ if __name__ == '__main__':
     parser.add_argument('--dimension_projection', type=int, default=64, help='dimension of projection layer of lstm')
     parser.add_argument('--num_layers', type=int, default=3, help='number of layers of multi-lstm')
     parser.add_argument('--dimension_linear_layer', type=int, default=64, help='dimension of linear layer on top of lstm')
-    parser.add_argument('--learning_rate', type=float, default=0.0001)
-    parser.add_argument('--dropout_prob', type=float, default=0.5)
+    parser.add_argument('--learning_rate', type=float, default=0.001)
+    parser.add_argument('--dropout_prob', type=float, default=0.1)
     parser.add_argument('--batch_size', type=int, default=80)
     parser.add_argument('--log-interval', type=int, default=10)
 

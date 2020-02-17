@@ -57,6 +57,41 @@ def create_lstm_baseline_model(audio_tuple_input, W, B,
     return tf.matmul(outputs[-1], W) + B
     #shape:   (batchsize*tuplesize, dimension_linear_layer)
 
+def my_tuple_loss(batch_size, tuple_size, spk_representation, labels):
+    '''
+    this function can calcul the tuple loss for a batch
+    spk_representation:    (bashsize*tuplesize, dimension of linear layer)
+    labels:                 0/1
+    weight and bias are scalar
+    '''
+
+    feature_size = spk_representation.shape[1]
+    w = tf.reshape(spk_representation, [batch_size, tuple_size, feature_size])
+
+    loss = 0
+    for indice_bash in range(batch_size*2):
+        # vec[1:] is enroll vectors
+        wi_enroll = w[indice_bash, 1:]    # shape:  (tuple_size-1, feature_size)
+
+        # vec[0] is eval vectors
+        wi_eval = w[indice_bash, 0]
+
+        # normalize all vectors and avg enroll
+        normlize_wi_enroll = tf.nn.l2_normalize(wi_enroll, dim=1)
+        c_k = tf.reduce_mean(normlize_wi_enroll, 0)              # shape: (feature_size)
+        normlize_ck = tf.nn.l2_normalize(c_k, dim=0)
+        normlize_wi_eval = tf.nn.l2_normalize(wi_eval, dim=0)
+
+        # compute cos(enroll_avg, eval)
+        cos_similarity = tf.reduce_sum(tf.multiply(normlize_ck, normlize_wi_eval))
+
+        score = cos_similarity
+        loss += tf.sigmoid(score) if labels[indice_bash]==1 else (1 - tf.sigmoid(score))
+
+    return -tf.log(loss/batch_size)
+
+    # return tf.cond(tf.equal(labels, 1), f1, f2)
+
 def tuple_loss(batch_size, tuple_size, spk_representation, labels):
     '''
     this function can calcul the tuple loss for a batch
@@ -83,7 +118,7 @@ def tuple_loss(batch_size, tuple_size, spk_representation, labels):
             normlize_wi_eval = tf.nn.l2_normalize(wi_eval, dim=0)
 
             # compute cos(enroll_avg, eval)
-            cos_similarity = tf.reduce_sum(tf.multiply(normlize_ck,normlize_wi_eval))
+            cos_similarity = tf.reduce_sum(tf.multiply(normlize_ck, normlize_wi_eval))
 
             score = cos_similarity
             loss += tf.sigmoid(score)
@@ -98,13 +133,14 @@ def tuple_loss(batch_size, tuple_size, spk_representation, labels):
             c_k = tf.reduce_mean(normlize_wi_enroll, 0)              # shape: (feature_size)
             normlize_ck = tf.nn.l2_normalize(c_k, dim=0)
             normlize_wi_eval = tf.nn.l2_normalize(wi_eval, dim=0)
-            cos_similarity = tf.reduce_sum(tf.multiply(normlize_ck,normlize_wi_eval))
+
+            cos_similarity = tf.reduce_sum(tf.multiply(normlize_ck, normlize_wi_eval))
             score = cos_similarity
+
             loss += (1 - tf.sigmoid(score))
         return -tf.log(loss/batch_size)
 
     return tf.cond(tf.equal(labels, 1), f1, f2)
-
 
 
 
