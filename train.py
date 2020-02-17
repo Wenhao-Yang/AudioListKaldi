@@ -117,7 +117,7 @@ def main(_):
     max_training_step = (int(len(all_trials_p)/FLAGS.batch_size)) * 2
     max_training_step = int(max_training_step/2)           ######################3#######
 
-    tf.logging.info('Total steps %d: ', max_training_step)
+    tf.logging.info('Total steps %5d: ', max_training_step)
     for training_step in range(max_training_step):
         # if training_step%2 == 0:
         #samples positive
@@ -145,7 +145,7 @@ def main(_):
 
         train_writer.add_summary(train_summary, training_step)
         if training_step % FLAGS.log_interval == 0:
-            tf.logging.info('Step #%d: loss %f' % (training_step, train_loss))
+            tf.logging.info('Curren step %5d: loss %f' % (training_step, train_loss))
 
         #save  the model final
         if training_step == max_training_step - 1 or (training_step+1)%500 == 0:
@@ -184,7 +184,7 @@ if __name__ == '__main__':
     parser.add_argument('--dimension_linear_layer', type=int, default=64, help='dimension of linear layer on top of lstm')
     parser.add_argument('--learning_rate', type=float, default=0.001)
     parser.add_argument('--dropout_prob', type=float, default=0.1)
-    parser.add_argument('--batch_size', type=int, default=80)
+    parser.add_argument('--batch_size', type=int, default=40)
     parser.add_argument('--log-interval', type=int, default=10)
 
     FLAGS, unparsed = parser.parse_known_args()
