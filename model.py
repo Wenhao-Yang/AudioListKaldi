@@ -70,7 +70,7 @@ def my_tuple_loss(batch_size, tuple_size, spk_representation, labels):
     w = tf.reshape(spk_representation, [batch_size, tuple_size, feature_size])
 
     loss = 0
-    for indice_bash in range(batch_size*2):
+    for indice_bash in range(batch_size):
         # vec[1:] is enroll vectors
         wi_enroll = w[indice_bash, 1:]    # shape:  (tuple_size-1, feature_size)
 
@@ -93,7 +93,7 @@ def my_tuple_loss(batch_size, tuple_size, spk_representation, labels):
         loss_zero = tf.multiply((1-label), -tf.log((1 - tf.sigmoid(score))))
         loss += loss_one + loss_zero
 
-    return -loss/batch_size*2
+    return -loss/batch_size
 
     # return tf.cond(tf.equal(labels, 1), f1, f2)
 
