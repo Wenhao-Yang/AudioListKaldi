@@ -11,6 +11,7 @@ import tensorflow as tf
 import input_data_test
 import model
 import h5py
+from tqdm import tqdm
 
 from tensorflow.python.platform import gfile
 
@@ -102,7 +103,10 @@ def main(_):
     batch_score = score(batch_size=batch_size, tuple_size=FLAGS.num_utt_enrollment+1, spk_rep=outputs, batch_label=batch_label)
     file_score = open(os.path.join(FLAGS.test_data_dir, 'score_eval'), 'w')
 
-    for i in range(num_iteration):
+    score_lst = []
+    label_lst = []
+    pbar = tqdm(range(num_iteration))
+    for i in pbar:
         trial_batch = trials[i*batch_size: (i+1)*batch_size]
         test_voiceprint, label = audio_data_processor.get_data(trial_batch, enroll_mfcc_buffer, test_mfcc_buffer)
         score_batch = sess.run(batch_score, feed_dict={input_audio_data:test_voiceprint, dropout_prob_input:0, batch_label:label})
@@ -110,8 +114,14 @@ def main(_):
         #shape of score_batch: batch_size
         for i in range(score_batch.shape[0]):
             file_score.write(str(score_batch[i]) + '\n')
+            score_lst.append(score_batch[i])
+            label_lst.append(True if label[i]==1 else False)
 
-    enroll_mfcc_buffer
+    eer, threshold = input_data_test.eval_kaldi_eer(score_lst, label_lst, re_thre=True)
+
+    print('For cos_distance: \n ERR: {:.4f}. Threshold: {:.4f}.'.format(100. * eer, threshold))
+
+    enroll_mfcc_buffer.close()
     test_mfcc_buffer.close()
     read_trials.close()
     file_score.close()

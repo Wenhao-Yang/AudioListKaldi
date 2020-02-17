@@ -366,3 +366,57 @@ class EvalAudioProcessor(object):
                     data[i, j] = mat_mfcc[start_frame: start_frame + desired_frames]
 
         return data, label
+
+def eval_kaldi_eer(distances, labels, cos=True, re_thre=False):
+    """
+    The distance score should be larger when two samples are more similar.
+    :param distances:
+    :param labels:
+    :param cos:
+    :return:
+    """
+    # split the target and non-target distance array
+    target = []
+    non_target = []
+    new_distances = []
+
+    for (distance, label) in zip(distances, labels):
+        if not cos:
+            distance = -distance
+
+        new_distances.append(-distance)
+        if label:
+            target.append(distance)
+        else:
+            non_target.append(distance)
+
+    new_distances = np.array(new_distances)
+    target = np.sort(target)
+    non_target = np.sort(non_target)
+
+    target_size = target.size
+    nontarget_size = non_target.size
+    # pdb.set_trace()
+    target_position = 0
+    while target_position+1<target_size:
+    # for target_position in range(target_size):
+        nontarget_n = nontarget_size * target_position * 1.0 / target_size
+        nontarget_position = int(nontarget_size - 1 - nontarget_n)
+
+        if (nontarget_position < 0):
+            nontarget_position = 0
+        # The exceptions from non targets are samples where cosine score is > the target score
+        # if (non_target[nontarget_position] <= target[target_position]):
+        #     break
+        if (non_target[nontarget_position] < target[target_position]):
+            # print('target[{}]={} is < non_target[{}]={}.'.format(target_position, target[target_position], nontarget_position, non_target[nontarget_position]))
+            break
+        target_position += 1
+
+    eer_threshold = target[target_position]
+    eer = target_position * 1.0 / target_size
+
+    if re_thre:
+        return eer, eer_threshold
+
+    return eer
