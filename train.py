@@ -59,8 +59,8 @@ def main(_):
     bias = tf.Variable(tf.random_normal([dimension_linear_layer], stddev=1), name='bias')
     dropout_prob_input = tf.placeholder(tf.float32, [], name='dropout_prob_input')
 
-    l_weight = tf.Variable(tf.random_normal([1], stddev=1), name='linear_weights')
-    l_bias = tf.Variable(tf.random_normal([1], stddev=1), name='linear_bias')
+    l_weight = tf.Variable(tf.random_normal([1], stddev=1), name='l_weight')
+    l_bias = tf.Variable(tf.random_normal([1], stddev=1), name='l_weight')
 
     #  output of the model
     if FLAGS.model_architechture == 'lstm_baseline':
