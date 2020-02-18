@@ -168,12 +168,10 @@ def main(_):
         cos_score, p_cos_score, cos_label = train_info
 
         try:
-            cos_score = [cos_score[i].eval() for i in range(len(cos_score))]
-            p_cos_score = [p_cos_score[i].eval() for i in range(len(p_cos_score))]
-            cos_label = [cos_label[i].eval() for i in range(len(cos_label))]
+            eer = eval_kaldi_eer(cos_score, cos_label, cos=True, re_thre=False)
         except:
             pdb.set_trace()
-        eer = eval_kaldi_eer(cos_score, cos_label, cos=True, re_thre=False)
+
         train_writer.add_summary(train_summary, training_step)
 
         # cos_eer, cos_thre, p_cos_eer, p_cos_thre = eers
