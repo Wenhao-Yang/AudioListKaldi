@@ -260,7 +260,7 @@ def tuple_loss(batch_size, tuple_size, spk_representation, labels):
             loss += (1 - tf.sigmoid(score))
         return -tf.log(loss/batch_size)
 
-    return tf.cond(tf.equal(labels, 1), f1, f2)
+    return tf.cond(tf.equal(labels[0], 1), f1, f2)
 
 
 
