@@ -165,18 +165,17 @@ def main(_):
 
         #shape of train_voiceprint: (tuple_size, feature_size)    
         #shape of  label:  (1)
-        train_summary, train_loss, train_info, _ = sess.run([merged_summaries, loss, eval_info, train_step],
+        train_summary, train_loss, _ = sess.run([merged_summaries, loss, train_step],
                                                 feed_dict={input_audio_data: train_voiceprint,
                                                            labels: label,
                                                            # learning_rate_input: FLAGS.learning_rate,
                                                            dropout_prob_input: FLAGS.dropout_prob})
 
         train_writer.add_summary(train_summary, training_step)
-
-        cos_eer, cos_thre, p_cos_eer, p_cos_thre = train_info
+        # cos_eer, cos_thre, p_cos_eer, p_cos_thre = train_info
         # print("accuracy:", sess.run(accuracy, feed_dict={x: mnist.test.images, y_actual: mnist.test.labels})
         if training_step % FLAGS.log_interval == 0:
-            tf.logging.info('Current step [%5d]/[%5d]: loss %f, eer: %.4f%%, linear eer: %.4f%%' % (training_step, max_training_step,train_loss, cos_eer, p_cos_eer))
+            tf.logging.info('Current step [%5d]/[%5d]: loss %f' % (training_step, max_training_step, train_loss))
 
         if training_step % FLAGS.test_interval == 0:
             trials_p = all_trials_p[int(training_step / 2) * FLAGS.batch_size / 2:(int(
