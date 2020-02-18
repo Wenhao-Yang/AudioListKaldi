@@ -145,7 +145,7 @@ def main(_):
         train_summary, train_loss, _ = sess.run([merged_summaries, loss, train_step],
                                                 feed_dict={input_audio_data: train_voiceprint,
                                                            labels: label,
-                                                           learning_rate_input: FLAGS.learning_rate,
+                                                           # learning_rate_input: FLAGS.learning_rate,
                                                            dropout_prob_input: FLAGS.dropout_prob})
 
         train_writer.add_summary(train_summary, training_step)
