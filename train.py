@@ -18,6 +18,9 @@ import model
 import h5py
 
 from tensorflow.python.platform import gfile
+
+from input_data_test import eval_kaldi_eer
+
 FLAGS = None
 
 
@@ -161,13 +164,14 @@ def main(_):
 
         # test_dict = {input_audio_data: train_voiceprint, labels: label, dropout_prob_input: FLAGS.dropout_prob}
         # eers = sess.run(eval_info, feed_dict=test_dict)
-
+        cos_score, p_cos_score, cos_label = train_info
+        eer = eval_kaldi_eer(cos_score.eval(), labels.eval(), cos=True, re_thre=False)
         train_writer.add_summary(train_summary, training_step)
 
         # cos_eer, cos_thre, p_cos_eer, p_cos_thre = eers
         # print("accuracy:", sess.run(accuracy, feed_dict={x: mnist.test.images, y_actual: mnist.test.labels})
         if training_step % FLAGS.log_interval == 0:
-            tf.logging.info('Curren step %5d: loss %f' % (training_step, train_loss))
+            tf.logging.info('Curren step %5d: loss %f, eer: %.4f\%' % (training_step, train_loss, eer))
 
         # if training_step % FLAGS.log_interval == 0:
         #     tf.logging.info('Curren step %5d: loss %f, eer for cos distance: %.4f\% with threshold %.4f. eer for linear regression: %.4f\% with threshold %.4f' % (training_step, train_loss, cos_eer, cos_thre, p_cos_eer, p_cos_thre))

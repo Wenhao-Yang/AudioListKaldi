@@ -7,9 +7,6 @@ import pdb
 import numpy as np
 import tensorflow as tf
 
-from input_data_test import eval_kaldi_eer
-
-
 def unit_lstm(num_units, dimension_projection, dropout_prob):
     lstm_cell = tf.contrib.rnn.LSTMCell(num_units=num_units,
         num_proj=dimension_projection,
@@ -151,12 +148,7 @@ def eval_batch(batch_size, tuple_size, spk_representation, labels, l_weight, l_b
         label = labels[indice_bash]
         cos_label.append(label)
 
-    # cos_score = np
-    cos_eer, cos_thre = eval_kaldi_eer(cos_score, cos_label, cos=True, re_thre=True)
-    p_cos_eer, p_cos_thre = eval_kaldi_eer(p_cos_score, cos_label, cos=True, re_thre=True)
-
-    return (cos_eer, cos_thre, p_cos_eer, p_cos_thre)
-
+    return cos_score, p_cos_score, cos_label
 
 def tuple_loss(batch_size, tuple_size, spk_representation, labels):
     '''
