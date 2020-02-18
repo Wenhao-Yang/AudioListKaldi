@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import math
 import pdb
-
+import numpy as np
 import tensorflow as tf
 
 from input_data_test import eval_kaldi_eer
@@ -115,6 +115,7 @@ def eval_batch(batch_size, tuple_size, spk_representation, labels, l_weight, l_b
 
     cos_score = []
     p_cos_score = []
+    cos_label = []
     for indice_bash in range(batch_size):
         # vec[1:] is enroll vectors
         wi_enroll = w[indice_bash, 1:]    # shape:  (tuple_size-1, feature_size)
@@ -130,6 +131,9 @@ def eval_batch(batch_size, tuple_size, spk_representation, labels, l_weight, l_b
         # compute cos(enroll_avg, eval)
         cos_similarity = tf.reduce_sum(tf.multiply(normlize_ck, normlize_wi_eval))
 
+        label = tf.cast(labels[indice_bash], dtype=tf.float32)
+        cos_label.append(tf.reshape(label, []))
+
         score = cos_similarity
         cos_score.append(tf.reshape(score, []))
 
@@ -137,8 +141,8 @@ def eval_batch(batch_size, tuple_size, spk_representation, labels, l_weight, l_b
         p_cos_score.append(tf.reshape(p_score, []))
 
     # cos_score = np
-    cos_eer, cos_thre = eval_kaldi_eer(cos_score, labels, cos=True, re_thre=True)
-    p_cos_eer, p_cos_thre = eval_kaldi_eer(p_cos_score, labels, cos=True, re_thre=True)
+    cos_eer, cos_thre = eval_kaldi_eer(cos_score, cos_label, cos=True, re_thre=True)
+    p_cos_eer, p_cos_thre = eval_kaldi_eer(p_cos_score, cos_label, cos=True, re_thre=True)
 
     return (cos_eer, cos_thre, p_cos_eer, p_cos_thre)
 
