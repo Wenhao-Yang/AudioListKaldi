@@ -170,7 +170,6 @@ def main(_):
                                                            labels: label,
                                                            # learning_rate_input: FLAGS.learning_rate,
                                                            dropout_prob_input: FLAGS.dropout_prob})
-
         train_writer.add_summary(train_summary, training_step)
         # cos_eer, cos_thre, p_cos_eer, p_cos_thre = train_info
         # print("accuracy:", sess.run(accuracy, feed_dict={x: mnist.test.images, y_actual: mnist.test.labels})
@@ -228,7 +227,7 @@ if __name__ == '__main__':
     parser.add_argument('--dimension_projection', type=int, default=64, help='dimension of projection layer of lstm')
     parser.add_argument('--num_layers', type=int, default=3, help='number of layers of multi-lstm')
     parser.add_argument('--dimension_linear_layer', type=int, default=64, help='dimension of linear layer on top of lstm')
-    parser.add_argument('--learning_rate', type=float, default=0.001)
+    parser.add_argument('--learning_rate', type=float, default=0.0001)
     parser.add_argument('--dropout_prob', type=float, default=0.05)
     parser.add_argument('--batch_size', type=int, default=80)
     parser.add_argument('--log-interval', type=int, default=1)
