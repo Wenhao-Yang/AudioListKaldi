@@ -145,10 +145,10 @@ def eval_batch(batch_size, tuple_size, spk_representation, labels, l_weight, l_b
         score = cos_similarity
         p_score = tf.add(tf.multiply(-l_weight, score), -l_bias)
 
-        cos_score.append(score.eval())
-        p_cos_score.append(p_score.eval())
+        cos_score.append(score)
+        p_cos_score.append(p_score)
 
-        label = labels[indice_bash].eval()
+        label = labels[indice_bash]
         cos_label.append(label)
 
     # cos_score = np
