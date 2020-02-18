@@ -7,6 +7,9 @@ import pdb
 
 import tensorflow as tf
 
+from input_data_test import eval_kaldi_eer
+
+
 def unit_lstm(num_units, dimension_projection, dropout_prob):
     lstm_cell = tf.contrib.rnn.LSTMCell(num_units=num_units,
         num_proj=dimension_projection,
@@ -97,6 +100,47 @@ def my_tuple_loss(batch_size, tuple_size, spk_representation, labels, l_weight, 
     return -loss/batch_size
 
     # return tf.cond(tf.equal(labels, 1), f1, f2)
+
+
+def eval_batch(batch_size, tuple_size, spk_representation, labels, l_weight, l_bias):
+    '''
+    this function can calcul the eer for a batch
+    spk_representation:    (bashsize*tuplesize, dimension of linear layer)
+    labels:                 [0/1]s
+    weight and bias are scalar
+    '''
+
+    feature_size = spk_representation.shape[1]
+    w = tf.reshape(spk_representation, [batch_size, tuple_size, feature_size])
+
+    cos_score = []
+    p_cos_score = []
+    for indice_bash in range(batch_size):
+        # vec[1:] is enroll vectors
+        wi_enroll = w[indice_bash, 1:]    # shape:  (tuple_size-1, feature_size)
+        # vec[0] is eval vectors
+        wi_eval = w[indice_bash, 0]
+
+        # normalize all vectors and avg enroll
+        normlize_wi_enroll = tf.nn.l2_normalize(wi_enroll, axis=1)
+        c_k = tf.reduce_mean(normlize_wi_enroll, 0)              # shape: (feature_size)
+        normlize_ck = tf.nn.l2_normalize(c_k, dim=0)
+        normlize_wi_eval = tf.nn.l2_normalize(wi_eval, axis=0)
+
+        # compute cos(enroll_avg, eval)
+        cos_similarity = tf.reduce_sum(tf.multiply(normlize_ck, normlize_wi_eval))
+
+        score = cos_similarity
+        cos_score.append(score)
+
+        p_score = tf.add(tf.multiply(-l_weight, score), -l_bias)
+        p_cos_score.append(p_score[0])
+
+    cos_eer, cos_thre = eval_kaldi_eer(cos_score, labels, cos=True, re_thre=True)
+    p_cos_eer, p_cos_thre = eval_kaldi_eer(p_cos_score, labels, cos=True, re_thre=True)
+
+    return (cos_eer, cos_thre, p_cos_eer, p_cos_thre)
+
 
 def tuple_loss(batch_size, tuple_size, spk_representation, labels):
     '''

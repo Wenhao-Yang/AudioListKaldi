@@ -414,7 +414,7 @@ def eval_kaldi_eer(distances, labels, cos=True, re_thre=False):
         target_position += 1
 
     eer_threshold = target[target_position]
-    eer = target_position * 1.0 / target_size
+    eer = target_position *100. / target_size
 
     if re_thre:
         return eer, eer_threshold

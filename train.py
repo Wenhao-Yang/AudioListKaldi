@@ -105,6 +105,15 @@ def main(_):
         # learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
         train_step = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss, global_step=global_step)
 
+    with tf.name_scope('test'):
+        # accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+        eval_info = model.eval_batch(batch_size=FLAGS.batch_size*2,
+                               tuple_size=1+FLAGS.num_utt_enrollment,
+                               spk_representation=outputs,
+                               labels=labels,
+                               l_weight=l_weight,
+                               l_bias=l_bias)
+
     saver = tf.train.Saver(tf.global_variables())
 
     #merge all the summaries
@@ -142,22 +151,28 @@ def main(_):
         train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
         label = np.concatenate((label_p, label_n), axis=0)
 
+
+
         # label = tf.concat([label_p, label_n], axis=0)
 
         #shape of train_voiceprint: (tuple_size, feature_size)    
         #shape of  label:  (1)
-        train_summary, train_loss, _ = sess.run([merged_summaries, loss, train_step],
+        train_summary, train_loss, _, eers = sess.run([merged_summaries, loss, train_step, eval_info],
                                                 feed_dict={input_audio_data: train_voiceprint,
                                                            labels: label,
                                                            # learning_rate_input: FLAGS.learning_rate,
                                                            dropout_prob_input: FLAGS.dropout_prob})
 
         train_writer.add_summary(train_summary, training_step)
+
+        cos_eer, cos_thre, p_cos_eer, p_cos_thre = eers
+        # print("accuracy:", sess.run(accuracy, feed_dict={x: mnist.test.images, y_actual: mnist.test.labels})
+
         if training_step % FLAGS.log_interval == 0:
-            tf.logging.info('Curren step %5d: loss %f' % (training_step, train_loss))
+            tf.logging.info('Curren step %5d: loss %f, eer for cos distance: %.4f\% with threshold %.4f. eer for linear regression: %.4f\% with threshold %.4f' % (training_step, train_loss, cos_eer, cos_thre, p_cos_eer, p_cos_thre))
 
         #save  the model final
-        if training_step == max_training_step - 1 or (training_step+1)%500 == 0:
+        if training_step == (max_training_step - 1) or (training_step+1)%500 == 0:
             times = time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime())
             save_path = os.path.join(FLAGS.checkpoint_dir, FLAGS.model_architechture, '%s.ckpt'%(times))
 
