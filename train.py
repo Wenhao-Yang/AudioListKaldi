@@ -28,6 +28,8 @@ FLAGS = None
 def main(_):
     tf.logging.set_verbosity(tf.logging.INFO)
 
+    tf.set_random_seed(1234)
+
     sess = tf.InteractiveSession()
     #generate  an dictionary which indicate some settings of traitement audio
     audio_settings = input_data.prepare_audio_settings(
@@ -106,12 +108,12 @@ def main(_):
     tf.summary.scalar('train_eer', eval_info[0])
 
     with tf.name_scope('train'), tf.control_dependencies(control_dependencies):
-        initial_learning_rate = 0.01  # 初始学习率
+        initial_learning_rate = FLAGS.learning_rate  # 初始学习率
         global_step = tf.Variable(0, trainable=False)
         # learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
         learning_rate = tf.train.polynomial_decay(initial_learning_rate,
                                                   global_step=global_step,
-                                                  decay_steps=1000,
+                                                  decay_steps=1200,
                                                   cycle=True,
                                                   end_learning_rate=0.0001)
 
@@ -206,7 +208,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_coefficient', type=int, default=40, help='numbers of coefficients of mfcc')
     parser.add_argument('--data_dir', type=str, default='data/CN-Celeb/dev/', help='work location')
     parser.add_argument('--checkpoint_dir', type=str, default='data/CN-Celeb/checkpoint/', help='work location')
-    parser.add_argument('--num_repeats', type=int, default=140, help='number of repeat when we prepare the trials')
+    parser.add_argument('--num_repeats', type=int, default=240, help='number of repeat when we prepare the trials')
     parser.add_argument('--skip_generate_feature', type=bool, default=True, help='whether to skip the phase of generating mfcc features')
     parser.add_argument('--num_utt_enrollment', type=int, default=5, help='numbers of enrollment utts for each speaker')
     parser.add_argument('--check_nans', type=bool, default=True, help='whether to check for invalid numbers during processing')
@@ -216,7 +218,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_layers', type=int, default=3, help='number of layers of multi-lstm')
     parser.add_argument('--dimension_linear_layer', type=int, default=64, help='dimension of linear layer on top of lstm')
     parser.add_argument('--learning_rate', type=float, default=0.001)
-    parser.add_argument('--dropout_prob', type=float, default=0.5)
+    parser.add_argument('--dropout_prob', type=float, default=0.05)
     parser.add_argument('--batch_size', type=int, default=40)
     parser.add_argument('--log-interval', type=int, default=1)
 
