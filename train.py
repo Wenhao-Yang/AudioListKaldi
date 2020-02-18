@@ -92,6 +92,17 @@ def main(_):
                                    l_bias=l_bias)
 
     tf.summary.scalar('train_loss', loss[0])
+
+    with tf.name_scope('test'):
+        # accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+        eval_info = model.eval_batch(batch_size=FLAGS.batch_size * 2,
+                                     tuple_size=1 + FLAGS.num_utt_enrollment,
+                                     spk_representation=outputs,
+                                     labels=labels,
+                                     l_weight=l_weight,
+                                     l_bias=l_bias)
+    tf.summary.scalar('test_eer', eval_info[0])
+
     with tf.name_scope('train'), tf.control_dependencies(control_dependencies):
         initial_learning_rate = 0.01  # 初始学习率
         global_step = tf.Variable(0, trainable=False)
@@ -104,15 +115,6 @@ def main(_):
 
         # learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
         train_step = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss, global_step=global_step)
-
-    with tf.name_scope('test'):
-        # accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-        eval_info = model.eval_batch(batch_size=FLAGS.batch_size*2,
-                               tuple_size=1+FLAGS.num_utt_enrollment,
-                               spk_representation=outputs,
-                               labels=labels,
-                               l_weight=l_weight,
-                               l_bias=l_bias)
 
     saver = tf.train.Saver(tf.global_variables())
 
@@ -150,8 +152,6 @@ def main(_):
 
         train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
         label = np.concatenate((label_p, label_n), axis=0)
-        label = np.array(label, dtype=np.int64)
-        # label = tf.concat([label_p, label_n], axis=0)
 
         #shape of train_voiceprint: (tuple_size, feature_size)    
         #shape of  label:  (1)
