@@ -150,9 +150,7 @@ def main(_):
 
         train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
         label = np.concatenate((label_p, label_n), axis=0)
-
-
-
+        label = np.array(label, dtype=np.int64)
         # label = tf.concat([label_p, label_n], axis=0)
 
         #shape of train_voiceprint: (tuple_size, feature_size)    
@@ -167,7 +165,6 @@ def main(_):
 
         cos_eer, cos_thre, p_cos_eer, p_cos_thre = eers
         # print("accuracy:", sess.run(accuracy, feed_dict={x: mnist.test.images, y_actual: mnist.test.labels})
-
         if training_step % FLAGS.log_interval == 0:
             tf.logging.info('Curren step %5d: loss %f, eer for cos distance: %.4f\% with threshold %.4f. eer for linear regression: %.4f\% with threshold %.4f' % (training_step, train_loss, cos_eer, cos_thre, p_cos_eer, p_cos_thre))
 
