@@ -87,14 +87,16 @@ def main(_):
     tf.summary.scalar('train_loss', loss)
     with tf.name_scope('train'), tf.control_dependencies(control_dependencies):
         # initial_learning_rate = 0.001  # 初始学习率
+        global_step = tf.Variable(0, trainable=False)
         learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
         learning_rate = tf.train.polynomial_decay(learning_rate_input,
-                                                   global_step=2712,
-                                                   decay_steps=200,
-                                                   end_learning_rate=0.0001)
+                                                  global_step=global_step,
+                                                  decay_steps=1000,
+                                                  cycle=True,
+                                                  end_learning_rate=0.0001)
 
         # learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
-        train_step = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
+        train_step = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss, global_step=global_step)
 
     saver = tf.train.Saver(tf.global_variables())
 
@@ -145,7 +147,7 @@ def main(_):
 
         train_writer.add_summary(train_summary, training_step)
         if training_step % FLAGS.log_interval == 0:
-            tf.logging.info('Curren step %5d: loss %f' % (training_step, train_loss))
+            tf.logging.info('Curren step %5d, lr %.5f: loss %f' % (training_step, learning_rate.eval(), train_loss))
 
         #save  the model final
         if training_step == max_training_step - 1 or (training_step+1)%500 == 0:
@@ -182,7 +184,7 @@ if __name__ == '__main__':
     parser.add_argument('--dimension_projection', type=int, default=64, help='dimension of projection layer of lstm')
     parser.add_argument('--num_layers', type=int, default=3, help='number of layers of multi-lstm')
     parser.add_argument('--dimension_linear_layer', type=int, default=64, help='dimension of linear layer on top of lstm')
-    parser.add_argument('--learning_rate', type=float, default=0.001)
+    parser.add_argument('--learning_rate', type=float, default=0.01)
     parser.add_argument('--dropout_prob', type=float, default=0.1)
     parser.add_argument('--batch_size', type=int, default=40)
     parser.add_argument('--log-interval', type=int, default=10)
