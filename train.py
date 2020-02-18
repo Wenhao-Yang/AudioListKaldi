@@ -143,18 +143,22 @@ def main(_):
 
     # tf.logging.info('Total steps %5d: ', max_training_step)
     for training_step in range(max_training_step):
-        # if training_step%2 == 0:
+
+        if training_step%2 == 0:
         #samples positive
-        trials_p = all_trials_p[int(training_step/2)*FLAGS.batch_size:(int(training_step/2)+1)*FLAGS.batch_size]
-        trials_n = all_trials_n[int((training_step - 1) / 2) * FLAGS.batch_size:(int(
-            (training_step - 1) / 2) + 1) * FLAGS.batch_size]
+            trials_p = all_trials_p[int(training_step/2)*FLAGS.batch_size:(int(training_step/2)+1)*FLAGS.batch_size]
+            train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer, 1)  # get one batch of tuples for training
+            train_voiceprint = train_voiceprint_p
+            label = label_p
+        else:
+            trials_n = all_trials_n[int((training_step - 1) / 2) * FLAGS.batch_size:(int(
+                (training_step - 1) / 2) + 1) * FLAGS.batch_size]
+            train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer, 0)   # get one batch of tuples for training
+            train_voiceprint = train_voiceprint_n
+            label = label_n
 
-
-        train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer, 1)   # get one batch of tuples for training
-        train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer, 0)   # get one batch of tuples for training
-
-        train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
-        label = np.concatenate((label_p, label_n), axis=0)
+        # train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
+        # label = np.concatenate((label_p, label_n), axis=0)
 
         #shape of train_voiceprint: (tuple_size, feature_size)    
         #shape of  label:  (1)
@@ -164,23 +168,29 @@ def main(_):
                                                            # learning_rate_input: FLAGS.learning_rate,
                                                            dropout_prob_input: FLAGS.dropout_prob})
 
-        # test_dict = {input_audio_data: train_voiceprint, labels: label, dropout_prob_input: FLAGS.dropout_prob}
-        # eers = sess.run(eval_info, feed_dict=test_dict)
-        # cos_score, p_cos_score, cos_label = train_info
-        # cos_eer = eval_kaldi_eer(cos_score, cos_label, cos=True, re_thre=False)
-        # p_cos_eer = eval_kaldi_eer(p_cos_score, cos_label, cos=True, re_thre=False)
-        # pdb.set_trace()
-
-
         train_writer.add_summary(train_summary, training_step)
 
         cos_eer, cos_thre, p_cos_eer, p_cos_thre = train_info
         # print("accuracy:", sess.run(accuracy, feed_dict={x: mnist.test.images, y_actual: mnist.test.labels})
         if training_step % FLAGS.log_interval == 0:
-            tf.logging.info('Curren step [%5d]/[%5d]: loss %f, eer: %.4f%%, linear eer: %.4f%%' % (training_step, max_training_step,train_loss, cos_eer, p_cos_eer))
+            tf.logging.info('Current step [%5d]/[%5d]: loss %f, eer: %.4f%%, linear eer: %.4f%%' % (training_step, max_training_step,train_loss, cos_eer, p_cos_eer))
 
-        # if training_step % FLAGS.log_interval == 0:
-        #     tf.logging.info('Curren step %5d: loss %f, eer for cos distance: %.4f\% with threshold %.4f. eer for linear regression: %.4f\% with threshold %.4f' % (training_step, train_loss, cos_eer, cos_thre, p_cos_eer, p_cos_thre))
+        if training_step % FLAGS.test_interval == 0:
+            trials_p = all_trials_p[int(training_step / 2) * FLAGS.batch_size / 2:(int(
+                training_step / 2) + 1) * FLAGS.batch_size / 2]
+            train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer,
+                                                                        1)  # get one batch of tuples for training
+            trials_n = all_trials_n[int((training_step - 1) / 2) * FLAGS.batch_size / 2:(int(
+                (training_step - 1) / 2) + 1) * FLAGS.batch_size / 2]
+            train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer,
+                                                                        0)  # get one batch of tuples for training
+            test_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
+            test_label = np.concatenate((label_p, label_n), axis=0)
+
+            test_dict = {input_audio_data: test_voiceprint, labels: test_label, dropout_prob_input: 0.}
+            test_info = sess.run(eval_info, feed_dict=test_dict)
+            cos_eer, cos_thre, p_cos_eer, p_cos_thre = test_info
+            tf.logging.info('Test eer: %.4f%%, linear eer: %.4f%%' % (cos_eer, p_cos_eer))
 
         #save  the model final
         if training_step == (max_training_step - 1) or (training_step+1)%500 == 0:
@@ -221,6 +231,7 @@ if __name__ == '__main__':
     parser.add_argument('--dropout_prob', type=float, default=0.05)
     parser.add_argument('--batch_size', type=int, default=40)
     parser.add_argument('--log-interval', type=int, default=1)
+    parser.add_argument('--test-interval', type=int, default=4)
 
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)

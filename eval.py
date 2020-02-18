@@ -47,6 +47,7 @@ def score(batch_size, tuple_size, spk_rep, batch_label):
     return score_batch
 
 def main(_):
+    tf.set_random_seed(1234)
     tf.logging.set_verbosity(tf.logging.INFO)
     sess = tf.InteractiveSession()
     #generate  an dictionary which indicate some settings of traitement audio
@@ -129,6 +130,7 @@ def main(_):
 
 if __name__ == '__main__':
     pwd = os.getcwd()
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--sample_rate', type=int, default=16000, help='sample rate of the wavs')
     parser.add_argument('--duration_ms', type=int, default=2000, help='duration of wavs used for training')
