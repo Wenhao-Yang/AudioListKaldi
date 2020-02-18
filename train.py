@@ -59,6 +59,9 @@ def main(_):
     bias = tf.Variable(tf.random_normal([dimension_linear_layer], stddev=1), name='bias')
     dropout_prob_input = tf.placeholder(tf.float32, [], name='dropout_prob_input')
 
+    l_weights = tf.Variable(tf.random_normal([1], stddev=1), name='linear_weights')
+    l_bias = tf.Variable(tf.random_normal([1], stddev=1), name='linear_bias')
+
     #  output of the model
     if FLAGS.model_architechture == 'lstm_baseline':
         outputs = model.create_lstm_baseline_model(
@@ -84,7 +87,9 @@ def main(_):
         loss = model.my_tuple_loss(batch_size=FLAGS.batch_size*2,
                                    tuple_size=1+FLAGS.num_utt_enrollment,
                                    spk_representation=outputs,
-                                   labels=labels)
+                                   labels=labels,
+                                   l_weights=l_weights,
+                                   l_bias=l_bias)
 
     tf.summary.scalar('train_loss', loss)
     with tf.name_scope('train'), tf.control_dependencies(control_dependencies):
@@ -132,7 +137,6 @@ def main(_):
 
 
         train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer, 1)   # get one batch of tuples for training
-        #samples negative
         train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer, 0)   # get one batch of tuples for training
 
         train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)

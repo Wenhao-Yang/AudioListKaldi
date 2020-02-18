@@ -58,7 +58,7 @@ def create_lstm_baseline_model(audio_tuple_input, W, B,
     return tf.matmul(outputs[-1], W) + B
     #shape:   (batchsize*tuplesize, dimension_linear_layer)
 
-def my_tuple_loss(batch_size, tuple_size, spk_representation, labels):
+def my_tuple_loss(batch_size, tuple_size, spk_representation, labels, l_weight, l_bias):
     '''
     this function can calcul the tuple loss for a batch
     spk_representation:    (bashsize*tuplesize, dimension of linear layer)
@@ -87,10 +87,11 @@ def my_tuple_loss(batch_size, tuple_size, spk_representation, labels):
         cos_similarity = tf.reduce_sum(tf.multiply(normlize_ck, normlize_wi_eval))
 
         score = cos_similarity
+        p_score = tf.add(tf.multiply(-l_weight, score), -l_bias)
         # pdb.set_trace()
         label = tf.cast(labels[indice_bash], dtype=tf.float32)
-        loss_one = tf.multiply(label, tf.log(tf.sigmoid(score)))
-        loss_zero = tf.multiply((1-label), tf.log((1 - tf.sigmoid(score))))
+        loss_one = tf.multiply(label, tf.log(tf.sigmoid(p_score)))
+        loss_zero = tf.multiply((1-label), tf.log((1 - tf.sigmoid(p_score))))
         loss += loss_one + loss_zero
 
     return -loss/batch_size
