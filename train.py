@@ -116,9 +116,9 @@ def main(_):
         # learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
         learning_rate = tf.train.polynomial_decay(initial_learning_rate,
                                                   global_step=global_step,
-                                                  decay_steps=1200,
+                                                  decay_steps=1100,
                                                   cycle=True,
-                                                  end_learning_rate=0.0001)
+                                                  end_learning_rate=0.00001)
 
         # learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
         train_step = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss, global_step=global_step)
@@ -145,64 +145,73 @@ def main(_):
     max_training_step = int(max_training_step/2)           ######################3#######
 
     # tf.logging.info('Total steps %5d: ', max_training_step)
-    for training_step in range(max_training_step):
+    for epoch in range(FLAGS.epoch):
 
-        if training_step%2 == 0:
-        #samples positive
-            trials_p = all_trials_p[int(training_step/2)*FLAGS.batch_size:(int(training_step/2)+1)*FLAGS.batch_size]
-            train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer, 1)  # get one batch of tuples for training
-            train_voiceprint = train_voiceprint_p
-            label = label_p
-        else:
-            trials_n = all_trials_n[int((training_step - 1) / 2) * FLAGS.batch_size:(int(
-                (training_step - 1) / 2) + 1) * FLAGS.batch_size]
-            train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer, 0)   # get one batch of tuples for training
-            train_voiceprint = train_voiceprint_n
-            label = label_n
+        for training_step in range(max_training_step):
 
-        # train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
-        # label = np.concatenate((label_p, label_n), axis=0)
-
-        #shape of train_voiceprint: (tuple_size, feature_size)    
-        #shape of  label:  (1)
-        train_summary, train_loss, _ = sess.run([merged_summaries, loss, train_step],
-                                                feed_dict={input_audio_data: train_voiceprint,
-                                                           labels: label,
-                                                           # learning_rate_input: FLAGS.learning_rate,
-                                                           dropout_prob_input: FLAGS.dropout_prob})
-        train_writer.add_summary(train_summary, training_step)
-        # cos_eer, cos_thre, p_cos_eer, p_cos_thre = train_info
-        # print("accuracy:", sess.run(accuracy, feed_dict={x: mnist.test.images, y_actual: mnist.test.labels})
-        if training_step % FLAGS.log_interval == 0:
-            tf.logging.info('Current step [%5d]/[%5d]: loss %f' % (training_step, max_training_step, train_loss))
-
-        if training_step % FLAGS.test_interval == 0:
-            batch_size = int(FLAGS.batch_size/2)
+            # if training_step % 2 == 0:
+                # samples positive
+            # trials_p = all_trials_p[
+            #            int(training_step / 2) * FLAGS.batch_size:(int(training_step / 2) + 1) * FLAGS.batch_size]
+            # train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer, 1)  # get one batch of tuples for training
+                # train_voiceprint = train_voiceprint_p
+                # label = label_p
+            # else:
+            # trials_n = all_trials_n[int((training_step - 1) / 2) * FLAGS.batch_size:(int(
+            #     (training_step - 1) / 2) + 1) * FLAGS.batch_size]
+            # train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer, 0)  # get one batch of tuples for training
+                # train_voiceprint = train_voiceprint_n
+                # label = label_n
+            batch_size = int(FLAGS.batch_size / 2)
             trials_p = all_trials_p[int(training_step / 2) * batch_size:(int(training_step / 2) + 1) * batch_size]
             train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer,
                                                                         1)  # get one batch of tuples for training
             trials_n = all_trials_n[int((training_step - 1) / 2) * batch_size:(int((training_step - 1) / 2) + 1) * batch_size]
-            train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer,
-                                                                        0)  # get one batch of tuples for training
-            test_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
-            test_label = np.concatenate((label_p, label_n), axis=0)
+            train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer, 0)  # get one batch of tuples for training
 
-            test_dict = {input_audio_data: test_voiceprint, labels: test_label, dropout_prob_input: 0.}
-            test_info = sess.run(eval_info, feed_dict=test_dict)
-            cos_eer, cos_thre, p_cos_eer, p_cos_thre = test_info
-            tf.logging.info('Test eer: %.4f%%, linear eer: %.4f%%' % (cos_eer, p_cos_eer))
+            train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
+            label = np.concatenate((label_p, label_n), axis=0)
 
-        #save  the model final
-        if training_step == (max_training_step - 1) or (training_step+1)%500 == 0:
-            times = time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime())
-            save_path = os.path.join(FLAGS.checkpoint_dir, FLAGS.model_architechture, '%s.ckpt'%(times))
+            # shape of train_voiceprint: (tuple_size, feature_size)
+            # shape of  label:  (1)
+            train_summary, train_loss, _ = sess.run([merged_summaries, loss, train_step],
+                                                    feed_dict={input_audio_data: train_voiceprint,
+                                                               labels: label,
+                                                               # learning_rate_input: FLAGS.learning_rate,
+                                                               dropout_prob_input: FLAGS.dropout_prob})
+            train_writer.add_summary(train_summary, training_step)
+            # cos_eer, cos_thre, p_cos_eer, p_cos_thre = train_info
+            # print("accuracy:", sess.run(accuracy, feed_dict={x: mnist.test.images, y_actual: mnist.test.labels})
+            if training_step % FLAGS.log_interval == 0:
+                tf.logging.info('Epoch [%3d]: Current step [%5d]/[%5d]: loss %f' % (epoch, training_step, max_training_step, train_loss))
 
-            save_path_ob = pathlib.Path(save_path)
-            if not save_path_ob.parent.exists():
-                os.makedirs(str(save_path_ob.parent))
+            if training_step % FLAGS.test_interval == 0:
+                # batch_size = int(FLAGS.batch_size / 2)
+                # trials_p = all_trials_p[int(training_step / 2) * batch_size:(int(training_step / 2) + 1) * batch_size]
+                # train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer,
+                #                                                             1)  # get one batch of tuples for training
+                # trials_n = all_trials_n[
+                #            int((training_step - 1) / 2) * batch_size:(int((training_step - 1) / 2) + 1) * batch_size]
+                # train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer,
+                #                                                             0)  # get one batch of tuples for training
+                # test_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
+                # test_label = np.concatenate((label_p, label_n), axis=0)
+                test_dict = {input_audio_data: train_voiceprint, labels: label, dropout_prob_input: 0.}
+                test_info = sess.run(eval_info, feed_dict=test_dict)
+                cos_eer, cos_thre, p_cos_eer, p_cos_thre = test_info
+                tf.logging.info('Test eer: %.4f%%, linear eer: %.4f%%' % (cos_eer, p_cos_eer))
 
-            tf.logging.info('Saving to "%s-%d"', save_path, training_step)
-            saver.save(sess, save_path, global_step=training_step)
+            # save  the model final
+            if training_step == (max_training_step - 1) or (training_step + 1) % 1500 == 0:
+                times = time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime())
+                save_path = os.path.join(FLAGS.checkpoint_dir, str(epoch), FLAGS.model_architechture, '%s.ckpt' % (times))
+
+                save_path_ob = pathlib.Path(save_path)
+                if not save_path_ob.parent.exists():
+                    os.makedirs(str(save_path_ob.parent))
+
+                tf.logging.info('Saving to "%s-%d"', save_path, training_step)
+                saver.save(sess, save_path, global_step=training_step)
 
     read_mfcc_buffer.close()
     read_trials_n.close()
@@ -228,10 +237,11 @@ if __name__ == '__main__':
     parser.add_argument('--num_layers', type=int, default=3, help='number of layers of multi-lstm')
     parser.add_argument('--dimension_linear_layer', type=int, default=64, help='dimension of linear layer on top of lstm')
     parser.add_argument('--learning_rate', type=float, default=0.0001)
-    parser.add_argument('--dropout_prob', type=float, default=0.05)
+    parser.add_argument('--dropout_prob', type=float, default=0.1)
     parser.add_argument('--batch_size', type=int, default=80)
+    parser.add_argument('--epoch', type=int, default=30)
     parser.add_argument('--log-interval', type=int, default=1)
-    parser.add_argument('--test-interval', type=int, default=4)
+    parser.add_argument('--test-interval', type=int, default=2)
 
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
