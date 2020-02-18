@@ -59,7 +59,7 @@ def main(_):
     bias = tf.Variable(tf.random_normal([dimension_linear_layer], stddev=1), name='bias')
     dropout_prob_input = tf.placeholder(tf.float32, [], name='dropout_prob_input')
 
-    l_weights = tf.Variable(tf.random_normal([1], stddev=1), name='linear_weights')
+    l_weight = tf.Variable(tf.random_normal([1], stddev=1), name='linear_weights')
     l_bias = tf.Variable(tf.random_normal([1], stddev=1), name='linear_bias')
 
     #  output of the model
@@ -88,7 +88,7 @@ def main(_):
                                    tuple_size=1+FLAGS.num_utt_enrollment,
                                    spk_representation=outputs,
                                    labels=labels,
-                                   l_weights=l_weights,
+                                   l_weight=l_weight,
                                    l_bias=l_bias)
 
     tf.summary.scalar('train_loss', loss)
