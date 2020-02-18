@@ -131,11 +131,12 @@ def eval_batch(batch_size, tuple_size, spk_representation, labels, l_weight, l_b
         cos_similarity = tf.reduce_sum(tf.multiply(normlize_ck, normlize_wi_eval))
 
         score = cos_similarity
-        cos_score.append(score)
+        cos_score.append(tf.reshape(score, []))
 
         p_score = tf.add(tf.multiply(-l_weight, score), -l_bias)
-        p_cos_score.append(p_score[0])
+        p_cos_score.append(tf.reshape(p_score, []))
 
+    # cos_score = np
     cos_eer, cos_thre = eval_kaldi_eer(cos_score, labels, cos=True, re_thre=True)
     p_cos_eer, p_cos_thre = eval_kaldi_eer(p_cos_score, labels, cos=True, re_thre=True)
 
