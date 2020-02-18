@@ -178,12 +178,11 @@ def main(_):
             tf.logging.info('Current step [%5d]/[%5d]: loss %f' % (training_step, max_training_step, train_loss))
 
         if training_step % FLAGS.test_interval == 0:
-            trials_p = all_trials_p[int(training_step / 2) * (FLAGS.batch_size/2):(int(
-                training_step / 2) + 1) * (FLAGS.batch_size/2)]
+            batch_size = int(FLAGS.batch_size/2)
+            trials_p = all_trials_p[int(training_step / 2) * batch_size:(int(training_step / 2) + 1) * batch_size]
             train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer,
                                                                         1)  # get one batch of tuples for training
-            trials_n = all_trials_n[int((training_step - 1) / 2) * (FLAGS.batch_size /2):(int(
-                (training_step - 1) / 2) + 1) * (FLAGS.batch_size /2)]
+            trials_n = all_trials_n[int((training_step - 1) / 2) * batch_size:(int((training_step - 1) / 2) + 1) * batch_size]
             train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer,
                                                                         0)  # get one batch of tuples for training
             test_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
