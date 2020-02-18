@@ -215,8 +215,8 @@ if __name__ == '__main__':
     parser.add_argument('--dimension_projection', type=int, default=64, help='dimension of projection layer of lstm')
     parser.add_argument('--num_layers', type=int, default=3, help='number of layers of multi-lstm')
     parser.add_argument('--dimension_linear_layer', type=int, default=64, help='dimension of linear layer on top of lstm')
-    parser.add_argument('--learning_rate', type=float, default=0.01)
-    parser.add_argument('--dropout_prob', type=float, default=0.1)
+    parser.add_argument('--learning_rate', type=float, default=0.001)
+    parser.add_argument('--dropout_prob', type=float, default=0.5)
     parser.add_argument('--batch_size', type=int, default=40)
     parser.add_argument('--log-interval', type=int, default=1)
 
