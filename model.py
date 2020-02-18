@@ -73,6 +73,9 @@ def my_tuple_loss(batch_size, tuple_size, spk_representation, labels, l_weight, 
     w = tf.reshape(spk_representation, [batch_size, tuple_size, feature_size])
 
     loss = 0
+    # cos_score = []
+    # p_cos_score = []
+    # cos_label = []
     for indice_bash in range(batch_size):
         # vec[1:] is enroll vectors
         wi_enroll = w[indice_bash, 1:]    # shape:  (tuple_size-1, feature_size)
@@ -91,11 +94,20 @@ def my_tuple_loss(batch_size, tuple_size, spk_representation, labels, l_weight, 
 
         score = cos_similarity
         p_score = tf.add(tf.multiply(-l_weight, score), -l_bias)
-        # pdb.set_trace()
         label = tf.cast(labels[indice_bash], dtype=tf.float32)
+
+        # cos_score.append(score.eval())
+        # p_cos_score.append(p_score.eval())
+        # cos_label.append(label.eval())
+        #
+        # pdb.set_trace()
+
         loss_one = tf.multiply(label, tf.log(tf.sigmoid(p_score)))
         loss_zero = tf.multiply((1-label), tf.log((1 - tf.sigmoid(p_score))))
         loss += loss_one + loss_zero
+    #
+    # cos_eer, cos_thre = eval_kaldi_eer(cos_score, cos_label, cos=True, re_thre=True)
+    # p_cos_eer, p_cos_thre = eval_kaldi_eer(p_cos_score, cos_label, cos=True, re_thre=True)
 
     return -loss/batch_size
 
@@ -134,11 +146,7 @@ def eval_batch(batch_size, tuple_size, spk_representation, labels, l_weight, l_b
         label = labels[indice_bash].eval()
         cos_label.append(label)
 
-        score = cos_similarity.eval()
-        cos_score.append(score)
 
-        p_score = tf.add(tf.multiply(-l_weight, score), -l_bias)
-        p_cos_score.append(p_score.eval())
 
     # cos_score = np
     cos_eer, cos_thre = eval_kaldi_eer(cos_score, cos_label, cos=True, re_thre=True)
