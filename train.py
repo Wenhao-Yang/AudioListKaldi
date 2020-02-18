@@ -10,7 +10,9 @@ import sys
 import time
 
 import numpy as np
-import tensorflow as tf 
+import tensorflow as tf
+from tqdm import tqdm
+
 import input_data_train as input_data
 import model
 import h5py
@@ -86,10 +88,10 @@ def main(_):
 
     tf.summary.scalar('train_loss', loss)
     with tf.name_scope('train'), tf.control_dependencies(control_dependencies):
-        # initial_learning_rate = 0.001  # 初始学习率
+        initial_learning_rate = 0.01  # 初始学习率
         global_step = tf.Variable(0, trainable=False)
-        learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
-        learning_rate = tf.train.polynomial_decay(learning_rate_input,
+        # learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
+        learning_rate = tf.train.polynomial_decay(initial_learning_rate,
                                                   global_step=global_step,
                                                   decay_steps=1000,
                                                   cycle=True,
@@ -120,7 +122,8 @@ def main(_):
     max_training_step = int(max_training_step/2)           ######################3#######
 
     tf.logging.info('Total steps %5d: ', max_training_step)
-    for training_step in range(max_training_step):
+    pbar = tqdm(range(max_training_step))
+    for training_step in pbar:
         # if training_step%2 == 0:
         #samples positive
         trials_p = all_trials_p[int(training_step/2)*FLAGS.batch_size:(int(training_step/2)+1)*FLAGS.batch_size]
