@@ -99,7 +99,7 @@ def main(_):
         #                            labels=labels,
         #                            l_weight=l_weight,
         #                            l_bias=l_bias)
-
+    with tf.name_scope('eval'):
         eval_info = model.eval_batch(batch_size=FLAGS.batch_size,
                                      tuple_size=1 + FLAGS.num_utt_enrollment,
                                      spk_representation=outputs,
@@ -108,7 +108,7 @@ def main(_):
                                      l_bias=l_bias)
 
     tf.summary.scalar('train_loss', loss)
-    tf.summary.scalar('train_eer', eval_info[0])
+    # tf.summary.scalar('eval_eer', eval_info[0])
 
     with tf.name_scope('train'), tf.control_dependencies(control_dependencies):
         initial_learning_rate = FLAGS.learning_rate  # 初始学习率
