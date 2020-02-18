@@ -174,8 +174,8 @@ def tf_kaldi_eer(distances, labels, cos=True, re_thre=False):
     non_target_idx = tf.where(tf.equal(labels, 0))
     non_target = tf.gather_nd(new_distances, non_target_idx)
 
-    target = tf.sort(target)
-    non_target = tf.sort(non_target)
+    target = tf.contrib.framework.sort(target)
+    non_target = tf.contrib.framework.sort(non_target)
 
     target_size = tf.shape(target)[0]
     nontarget_size = tf.shape(non_target)[0]
