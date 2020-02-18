@@ -150,6 +150,7 @@ def eval_batch(batch_size, tuple_size, spk_representation, labels, l_weight, l_b
 
     return cos_score, p_cos_score, cos_label
 
+
 def tuple_loss(batch_size, tuple_size, spk_representation, labels):
     '''
     this function can calcul the tuple loss for a batch
