@@ -108,7 +108,7 @@ def main(_):
                                      l_bias=l_bias)
 
     tf.summary.scalar('train_loss', loss)
-    # tf.summary.scalar('eval_eer', eval_info[0])
+    tf.summary.scalar('eval_eer', eval_info[0])
 
     with tf.name_scope('train'), tf.control_dependencies(control_dependencies):
         initial_learning_rate = FLAGS.learning_rate  # 初始学习率
@@ -221,7 +221,7 @@ if __name__ == '__main__':
     pwd = os.getcwd()
     parser = argparse.ArgumentParser()
     parser.add_argument('--sample_rate', type=int, default=16000, help='sample rate of the wavs')
-    parser.add_argument('--duration_ms', type=int, default=2000, help='duration of wavs used for training' )
+    parser.add_argument('--duration_ms', type=int, default=800, help='duration of wavs used for training' )
     parser.add_argument('--window_size_ms', type=int, default=25, help='how long each frame of spectrograme')
     parser.add_argument('--window_stride_ms', type=int, default=10, help='how far to move in time between two frames')
     parser.add_argument('--num_coefficient', type=int, default=40, help='numbers of coefficients of mfcc')
@@ -236,7 +236,7 @@ if __name__ == '__main__':
     parser.add_argument('--dimension_projection', type=int, default=64, help='dimension of projection layer of lstm')
     parser.add_argument('--num_layers', type=int, default=3, help='number of layers of multi-lstm')
     parser.add_argument('--dimension_linear_layer', type=int, default=64, help='dimension of linear layer on top of lstm')
-    parser.add_argument('--learning_rate', type=float, default=0.0005)
+    parser.add_argument('--learning_rate', type=float, default=0.0001)
     parser.add_argument('--dropout_prob', type=float, default=0.1)
     parser.add_argument('--batch_size', type=int, default=80)
     parser.add_argument('--epoch', type=int, default=30)
