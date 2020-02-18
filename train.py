@@ -102,7 +102,7 @@ def main(_):
                                      l_bias=l_bias)
 
     tf.summary.scalar('train_loss', loss[0])
-    tf.summary.scalar('train_eer', eval_info[0])
+    # tf.summary.scalar('train_eer', eval_info[0])
 
     with tf.name_scope('train'), tf.control_dependencies(control_dependencies):
         initial_learning_rate = 0.01  # 初始学习率
