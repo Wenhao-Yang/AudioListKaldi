@@ -125,6 +125,7 @@ def eval_batch(batch_size, tuple_size, spk_representation, labels, l_weight, l_b
     cos_score = []
     p_cos_score = []
     cos_label = []
+
     for indice_bash in range(batch_size):
         # vec[1:] is enroll vectors
         wi_enroll = w[indice_bash, 1:]    # shape:  (tuple_size-1, feature_size)
@@ -148,8 +149,68 @@ def eval_batch(batch_size, tuple_size, spk_representation, labels, l_weight, l_b
         label = labels[indice_bash]
         cos_label.append(label)
 
-    return cos_score, p_cos_score, cos_label
+    eer, thre = tf_kaldi_eer(cos_score, cos_label, re_thre=True)
+    p_eer, p_thre = tf_kaldi_eer(p_cos_score, cos_label, re_thre=True)
 
+    return (eer, thre, p_eer, p_thre)
+
+def tf_kaldi_eer(distances, labels, cos=True, re_thre=False):
+    """
+    The distance score should be larger when two samples are more similar.
+    :param distances:
+    :param labels:
+    :param cos:
+    :return:
+    """
+    # split the target and non-target distance array
+    if not cos:
+        new_distances = -distances
+    else:
+        new_distances = distances
+
+    target_idx = tf.where(tf.equal(labels, 1))
+    target = tf.gather_nd(new_distances, target_idx)
+
+    non_target_idx = tf.where(tf.equal(labels, 0))
+    non_target = tf.gather_nd(new_distances, non_target_idx)
+
+    target = tf.sort(target)
+    non_target = tf.sort(non_target)
+
+    target_size = tf.shape(target)[0]
+    nontarget_size = tf.shape(non_target)[0]
+
+    # pdb.set_trace()
+    target_position = tf.constant(0)
+    nontarget_n = tf.to_int32(tf.multiply(tf.to_float(nontarget_size), tf.div(tf.to_float(target_position), tf.to_float(target_size))))
+    nontarget_position = tf.cond(tf.less(nontarget_size - 1 - nontarget_n, 0), lambda: 0,
+                                 lambda: nontarget_size - 1 - nontarget_n)
+
+    def con(target_position, nontarget_position):
+        return tf.logical_and(tf.less(target_position, target_size), tf.greater(non_target[nontarget_position],target[target_position]))
+
+    def body(target_position, nontarget_position):
+        nontarget_n = tf.to_int32(tf.multiply(tf.to_float(nontarget_size), tf.div(tf.to_float(target_position), tf.to_float(target_size))))
+
+        true_f = lambda: 0
+        false_f = lambda: tf.subtract(nontarget_size, 1 + nontarget_n)
+
+        nontarget_position = tf.cond(tf.less(nontarget_size-1-nontarget_n, 0), true_f, false_f)
+        target_position=target_position+1
+
+        return target_position, nontarget_position
+
+    target_position, nontarget_position = tf.while_loop(con, body, [target_position, nontarget_position])
+
+    eer_threshold = target[target_position]
+    eer = tf.multiply(100., tf.div(tf.to_float(target_position), tf.to_float(target_size)))
+
+    return eer, eer_threshold
+# import tensorflow as tf
+# from model import tf_kaldi_eer
+# label = tf.constant([0,1,1,0,1,0,1])
+# distance = tf.constant([10, 2, 1.5, 4, 3.5, 6, 10.3])
+# eer, thre = tf_kaldi_eer(distance, label)
 
 def tuple_loss(batch_size, tuple_size, spk_representation, labels):
     '''

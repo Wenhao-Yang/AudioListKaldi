@@ -103,7 +103,7 @@ def main(_):
                                      l_bias=l_bias)
 
     tf.summary.scalar('train_loss', loss)
-    # tf.summary.scalar('train_eer', eval_info[0])
+    tf.summary.scalar('train_eer', eval_info[0])
 
     with tf.name_scope('train'), tf.control_dependencies(control_dependencies):
         initial_learning_rate = 0.01  # 初始学习率
@@ -139,7 +139,7 @@ def main(_):
     max_training_step = (int(len(all_trials_p)/FLAGS.batch_size)) * 2
     max_training_step = int(max_training_step/2)           ######################3#######
 
-    tf.logging.info('Total steps %5d: ', max_training_step)
+    # tf.logging.info('Total steps %5d: ', max_training_step)
     for training_step in range(max_training_step):
         # if training_step%2 == 0:
         #samples positive
@@ -164,16 +164,18 @@ def main(_):
 
         # test_dict = {input_audio_data: train_voiceprint, labels: label, dropout_prob_input: FLAGS.dropout_prob}
         # eers = sess.run(eval_info, feed_dict=test_dict)
-        cos_score, p_cos_score, cos_label = train_info
-        eer = eval_kaldi_eer(cos_score, cos_label, cos=True, re_thre=False)
-        pdb.set_trace()
+        # cos_score, p_cos_score, cos_label = train_info
+        # cos_eer = eval_kaldi_eer(cos_score, cos_label, cos=True, re_thre=False)
+        # p_cos_eer = eval_kaldi_eer(p_cos_score, cos_label, cos=True, re_thre=False)
+        # pdb.set_trace()
+
 
         train_writer.add_summary(train_summary, training_step)
 
-        # cos_eer, cos_thre, p_cos_eer, p_cos_thre = eers
+        cos_eer, cos_thre, p_cos_eer, p_cos_thre = train_info
         # print("accuracy:", sess.run(accuracy, feed_dict={x: mnist.test.images, y_actual: mnist.test.labels})
         if training_step % FLAGS.log_interval == 0:
-            tf.logging.info('Curren step [%5d]/[%5d]: loss %f, eer: %.4f\%' % (training_step, max_training_step,train_loss, eer))
+            tf.logging.info('Curren step [%5d]/[%5d]: loss %f, eer: %.4f%%, linear eer: %.4f%%' % (training_step, max_training_step,train_loss, cos_eer, p_cos_eer))
 
         # if training_step % FLAGS.log_interval == 0:
         #     tf.logging.info('Curren step %5d: loss %f, eer for cos distance: %.4f\% with threshold %.4f. eer for linear regression: %.4f\% with threshold %.4f' % (training_step, train_loss, cos_eer, cos_thre, p_cos_eer, p_cos_thre))
