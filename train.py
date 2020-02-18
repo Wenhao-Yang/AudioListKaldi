@@ -89,12 +89,16 @@ def main(_):
     #weight_scalar = tf.Variable(1.0, name='weight_scalar')
     #bias_scalar = tf.Variable(0.1, name='bias_scalar')
     with tf.name_scope('train_loss'):
-        loss = model.my_tuple_loss(batch_size=FLAGS.batch_size,
-                                   tuple_size=1+FLAGS.num_utt_enrollment,
-                                   spk_representation=outputs,
-                                   labels=labels,
-                                   l_weight=l_weight,
-                                   l_bias=l_bias)
+        loss = model.tuple_loss(batch_size=FLAGS.batch_size,
+                                tuple_size=1 + FLAGS.num_utt_enrollment,
+                                spk_representation=outputs,
+                                labels=labels)
+        # loss = model.my_tuple_loss(batch_size=FLAGS.batch_size,
+        #                            tuple_size=1+FLAGS.num_utt_enrollment,
+        #                            spk_representation=outputs,
+        #                            labels=labels,
+        #                            l_weight=l_weight,
+        #                            l_bias=l_bias)
 
         eval_info = model.eval_batch(batch_size=FLAGS.batch_size,
                                      tuple_size=1 + FLAGS.num_utt_enrollment,
