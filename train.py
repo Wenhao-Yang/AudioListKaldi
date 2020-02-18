@@ -93,15 +93,15 @@ def main(_):
 
     tf.summary.scalar('train_loss', loss[0])
 
-    with tf.name_scope('test'):
-        # accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-        eval_info = model.eval_batch(batch_size=FLAGS.batch_size * 2,
-                                     tuple_size=1 + FLAGS.num_utt_enrollment,
-                                     spk_representation=outputs,
-                                     labels=labels,
-                                     l_weight=l_weight,
-                                     l_bias=l_bias)
-    tf.summary.scalar('test_eer', eval_info[0])
+    # with tf.name_scope('test'):
+    #     # accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+    #     eval_info = model.eval_batch(batch_size=FLAGS.batch_size * 2,
+    #                                  tuple_size=1 + FLAGS.num_utt_enrollment,
+    #                                  spk_representation=outputs,
+    #                                  labels=labels,
+    #                                  l_weight=l_weight,
+    #                                  l_bias=l_bias)
+    # tf.summary.scalar('test_eer', eval_info[0])
 
     with tf.name_scope('train'), tf.control_dependencies(control_dependencies):
         initial_learning_rate = 0.01  # 初始学习率
