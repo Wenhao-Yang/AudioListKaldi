@@ -150,7 +150,7 @@ def main(_):
 
         train_writer.add_summary(train_summary, training_step)
         if training_step % FLAGS.log_interval == 0:
-            tf.logging.info('Curren step %5d, lr %.5f: loss %f' % (training_step, sess.run(learning_rate), train_loss))
+            tf.logging.info('Curren step %5d: loss %f' % (training_step, train_loss))
 
         #save  the model final
         if training_step == max_training_step - 1 or (training_step+1)%500 == 0:
