@@ -91,7 +91,7 @@ def main(_):
                                    l_weight=l_weight,
                                    l_bias=l_bias)
 
-    tf.summary.scalar('train_loss', loss)
+    tf.summary.scalar('train_loss', loss[0])
     with tf.name_scope('train'), tf.control_dependencies(control_dependencies):
         initial_learning_rate = 0.01  # 初始学习率
         global_step = tf.Variable(0, trainable=False)
