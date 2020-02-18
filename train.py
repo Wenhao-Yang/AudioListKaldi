@@ -91,10 +91,6 @@ def main(_):
                                    l_weight=l_weight,
                                    l_bias=l_bias)
 
-    tf.summary.scalar('train_loss', loss[0])
-
-    with tf.name_scope('test'):
-        # accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
         eval_info = model.eval_batch(batch_size=FLAGS.batch_size * 2,
                                      tuple_size=1 + FLAGS.num_utt_enrollment,
                                      spk_representation=outputs,
@@ -102,7 +98,8 @@ def main(_):
                                      l_weight=l_weight,
                                      l_bias=l_bias)
 
-    tf.summary.scalar('test_eer', eval_info[0])
+    tf.summary.scalar('train_loss', loss[0])
+    tf.summary.scalar('train_eer', eval_info[0])
 
     with tf.name_scope('train'), tf.control_dependencies(control_dependencies):
         initial_learning_rate = 0.01  # 初始学习率
@@ -156,14 +153,14 @@ def main(_):
 
         #shape of train_voiceprint: (tuple_size, feature_size)    
         #shape of  label:  (1)
-        train_summary, train_loss, _ = sess.run([merged_summaries, loss, train_step],
+        train_summary, train_loss, train_info, _ = sess.run([merged_summaries, loss, eval_info, train_step],
                                                 feed_dict={input_audio_data: train_voiceprint,
                                                            labels: label,
                                                            # learning_rate_input: FLAGS.learning_rate,
                                                            dropout_prob_input: FLAGS.dropout_prob})
 
-        test_dict = {input_audio_data: train_voiceprint, labels: label, dropout_prob_input: FLAGS.dropout_prob}
-        eers = sess.run(eval_info, feed_dict=test_dict)
+        # test_dict = {input_audio_data: train_voiceprint, labels: label, dropout_prob_input: FLAGS.dropout_prob}
+        # eers = sess.run(eval_info, feed_dict=test_dict)
 
         train_writer.add_summary(train_summary, training_step)
 
