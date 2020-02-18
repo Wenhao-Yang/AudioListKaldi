@@ -55,8 +55,7 @@ def main(_):
         FLAGS.num_utt_enrollment)
 
     #hold a place for input of the neural network
-    input_audio_data = tf.placeholder(tf.float32,
-        [FLAGS.batch_size*2, 1+FLAGS.num_utt_enrollment, audio_settings['desired_spectrogramme_length'], FLAGS.num_coefficient],
+    input_audio_data = tf.placeholder(tf.float32, [FLAGS.batch_size, 1+FLAGS.num_utt_enrollment, audio_settings['desired_spectrogramme_length'], FLAGS.num_coefficient],
         name='input_audio_data')
 
     # definit weight W and bias B for the linear layer on top of the LSTM
@@ -78,7 +77,7 @@ def main(_):
             dropout_prob=dropout_prob_input)
 
     # hold the place for label: 0:nontarget  1:target
-    labels = tf.placeholder(tf.int64, [FLAGS.batch_size*2], name='labels')
+    labels = tf.placeholder(tf.int64, [FLAGS.batch_size], name='labels')
 
     # check Nan or other numeriical errors
     control_dependencies = []
