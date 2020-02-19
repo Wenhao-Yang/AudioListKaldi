@@ -209,7 +209,7 @@ if __name__ == '__main__':
     parser.add_argument('--check_nans', type=bool, default=True, help='whether to check for invalid numbers during processing')
     parser.add_argument('--model_architechture', type=str, default='lstm_class_model')
     parser.add_argument('--num_units', type=int, default=128, help='numbers of units for each layer of lstm')
-    parser.add_argument('--dimension_projection', type=int, default=64, help='dimension of projection layer of lstm')
+    parser.add_argument('--dimension_projection', type=int, default=128, help='dimension of projection layer of lstm')
     parser.add_argument('--num_layers', type=int, default=3, help='number of layers of multi-lstm')
     parser.add_argument('--dimension_linear_layer', type=int, default=64, help='dimension of linear layer on top of lstm')
     parser.add_argument('--learning_rate', type=float, default=0.01)
@@ -220,4 +220,6 @@ if __name__ == '__main__':
     parser.add_argument('--test-interval', type=int, default=50)
 
     FLAGS, unparsed = parser.parse_known_args()
+
+    print('Parsed options: {}'.format(vars(FLAGS)))
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
