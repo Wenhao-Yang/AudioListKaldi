@@ -108,10 +108,10 @@ def main(_):
     tf.summary.scalar('eval_eer', eval_info[0])
 
     with tf.name_scope('train'), tf.control_dependencies(control_dependencies):
-        initial_learning_rate = FLAGS.learning_rate  # 初始学习率
+        # initial_learning_rate = FLAGS.learning_rate  # 初始学习率
         global_step = tf.Variable(0, trainable=False)
-        # learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
-        learning_rate = tf.train.polynomial_decay(initial_learning_rate,
+        learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
+        learning_rate = tf.train.polynomial_decay(learning_rate_input,
                                                   global_step=global_step,
                                                   decay_steps=1100,
                                                   cycle=True,
@@ -157,11 +157,11 @@ def main(_):
             train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
             label = np.concatenate((label_p, label_n), axis=0)
 
-            pdb.set_trace()
+            # pdb.set_trace()
             train_summary, train_loss, _ = sess.run([merged_summaries, loss, train_step],
                                                     feed_dict={input_audio_data: train_voiceprint,
                                                                labels: label,
-                                                               # learning_rate_input: FLAGS.learning_rate,
+                                                               learning_rate_input: FLAGS.learning_rate,
                                                                dropout_prob_input: FLAGS.dropout_prob})
             train_writer.add_summary(train_summary, training_step)
             # cos_eer, cos_thre, p_cos_eer, p_cos_thre = train_info
@@ -171,7 +171,10 @@ def main(_):
 
             if training_step % FLAGS.test_interval == 0:
 
-                test_dict = {input_audio_data: train_voiceprint, labels: label, dropout_prob_input: 0.}
+                test_dict = {input_audio_data: train_voiceprint,
+                             labels: label,
+                             learning_rate_input: FLAGS.learning_rate,
+                             dropout_prob_input: 0.}
                 test_info, acc = sess.run([eval_info, accuracy], feed_dict=test_dict)
                 cos_eer, cos_thre = test_info
                 tf.logging.info('Test accuracy: %.4f%%, eer: %.4f%%' % (100.* acc, cos_eer))
