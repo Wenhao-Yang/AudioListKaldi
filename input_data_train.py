@@ -401,10 +401,11 @@ class ClassAudioProcessor(object):
                 for utt in utt_samples:
                     write_buffer_p.write(utt + ' ')
 
-                write_buffer_p.write('1' + ' ' + str(spk2idx[spk]))
+                write_buffer_p.write('1')
 
                 for utt in utt_samples:
                     write_buffer_p.write(' ' + str(spk2idx[spk]))
+
                 write_buffer_p.write('\n')
 
         write_buffer_p.close()
@@ -456,7 +457,7 @@ class ClassAudioProcessor(object):
         for i, trial in enumerate(trials):
             content = trial.split()
             utts = content[:tuple_size]
-            pdb.set_trace()
+            # pdb.set_trace()
             idxs = content[tuple_size:]
             idxs = np.array(idxs, dtype=np.int32)
             assert idxs[0]==label
