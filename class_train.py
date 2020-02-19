@@ -17,6 +17,7 @@ from tqdm import tqdm
 import input_data_train as input_data
 import model
 import h5py
+import random
 
 from tensorflow.python.platform import gfile
 
@@ -137,7 +138,10 @@ def main(_):
     # number of trials positive == number of trials negative
     # train_step is positive line / batch
     all_trials_p = read_trials_p.readlines()
+    random.shuffle(all_trials_p)
+
     all_trials_n = read_trials_n.readlines()
+    random.shuffle(all_trials_n)
     max_training_step = (int(len(all_trials_p)/FLAGS.batch_size)) * 2
     max_training_step = int(max_training_step/2)           ######################3#######
 
@@ -149,7 +153,7 @@ def main(_):
             batch_size = int(FLAGS.batch_size / 2)
             trials_p = all_trials_p[int(training_step / 2) * batch_size:(int(training_step / 2) + 1) * batch_size]
             train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer, 1)  # get one batch of tuples for training
-            trials_n = all_trials_n[int((training_step - 1) / 2) * batch_size:(int((training_step - 1) / 2) + 1) * batch_size]
+            trials_n = all_trials_n[int(training_step / 2) * batch_size:(int(training_step / 2) + 1) * batch_size]
             train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer, 0)  # get one batch of tuples for training
 
             # shape of train_voiceprint: (tuple_size, feature_size)
