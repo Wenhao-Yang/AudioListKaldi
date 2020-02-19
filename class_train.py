@@ -89,7 +89,7 @@ def main(_):
                                    spk_representation=outputs,
                                    labels=labels[:,0])
 
-        class_labels = tf.reshape(labels[:,1:], [FLAGS.batch_size*(2+FLAGS.num_utt_enrollment)])
+        class_labels = tf.reshape(labels[:,1:], [FLAGS.batch_size*(1+FLAGS.num_utt_enrollment)])
         ce_losses = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=class_labels)
         ce_loss = tf.reduce_mean(ce_losses)
 
