@@ -100,7 +100,7 @@ def main(_):
         eval_info = model.eval_batch(batch_size=FLAGS.batch_size,
                                      tuple_size=1 + FLAGS.num_utt_enrollment,
                                      spk_representation=outputs,
-                                     labels=labels[:,0])
+                                     labels=labels[:, 0])
 
     tf.summary.scalar('train_loss', loss)
     tf.summary.scalar('eval_eer', eval_info[0])
@@ -201,7 +201,7 @@ if __name__ == '__main__':
     parser.add_argument('--data_dir', type=str, default='data/CN-Celeb/dev/', help='work location')
     parser.add_argument('--checkpoint_dir', type=str, default='data/CN-Celeb/checkpoint/', help='work location')
     parser.add_argument('--num_repeats', type=int, default=240, help='number of repeat when we prepare the trials')
-    parser.add_argument('--skip_generate_feature', type=bool, default=True, help='whether to skip the phase of generating mfcc features')
+    parser.add_argument('--skip_generate_feature', type=bool, default=False, help='whether to skip the phase of generating mfcc features')
     parser.add_argument('--num_utt_enrollment', type=int, default=5, help='numbers of enrollment utts for each speaker')
     parser.add_argument('--num_class', type=int, default=800, help='numbers of speakers')
     parser.add_argument('--check_nans', type=bool, default=True, help='whether to check for invalid numbers during processing')
