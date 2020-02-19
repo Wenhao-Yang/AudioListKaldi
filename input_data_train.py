@@ -396,7 +396,8 @@ class ClassAudioProcessor(object):
                 try:
                     utt_samples = random.sample(dict_spk2utts[spk], num_utt_enrollment + 1)
                 except:
-                    continue
+                    utt_samples = np.random.choice(dict_spk2utts[spk], num_utt_enrollment + 1)
+                    # continue
 
                 for utt in utt_samples:
                     write_buffer_p.write(utt + ' ')
@@ -422,7 +423,8 @@ class ClassAudioProcessor(object):
                 try:
                     samlpes_utt_enroll = random.sample(dict_spk2utts[spk_enroll], num_utt_enrollment)
                 except:
-                    continue
+                    samlpes_utt_enroll = np.random.choice(dict_spk2utts[spk_enroll], num_utt_enrollment)
+                    # continue
                 # samlpes_utt_enroll = np.random.choice(dict_spk2utts[spk_enroll], num_utt_enrollment, replace=False)
                 write_buffer_n.write(utt_eval[0] + ' ')
 
@@ -436,6 +438,35 @@ class ClassAudioProcessor(object):
                 write_buffer_n.write('\n')
 
         write_buffer_n.close()
+
+        # trials randomly
+        # utt1 utt2 utt3 ... 0
+        # write_buffer_n = open(os.path.join(self.output_dir, 'trials_rand'), 'w')
+        # train_utt2spk = []
+        # for spk in dict_spk2utts.keys():
+        #
+        #     spk_utts=dict_spk2utts[spk]
+        #     samples = np.random.choice(spk_utts, num_repeats*6)
+        #     for s in samples:
+        #         train_utt2spk.append((s, str(spk2idx[spk])))
+        #
+        # random.shuffle(train_utt2spk)
+        # np_train_utt2spk = np.array(train_utt2spk)
+        # np_shape = np_train_utt2spk.shape[0]
+        # np_train = np_train_utt2spk.reshape((int(np_shape/6), 6, 2))
+        #
+        # for i in range(np_shape/6):
+        #     utts = []
+        #     idxs = [-1]
+        #
+        #     for (utt, spkid) in np_train[i]:
+        #         utts.append(utt)
+        #         idxs.append(spkid)
+        #
+        #     write_buffer_n.write(' '.join(utts) + ' ')
+        #     write_buffer_n.write(' '.join(idxs) + '\n')
+        #
+        # write_buffer_n.close()
 
     def get_data(self, trials, read_buffer, label):
         """
@@ -472,12 +503,14 @@ class ClassAudioProcessor(object):
                 if manque_frames < 0:
                     # padding 0
                     # Todo: should be self-padding
-                    data[i, j] = np.lib.pad(mat_mfcc, ((0, -manque_frames), (0, 0)), 'constant', constant_values=0)
+                    # data[i, j] = np.lib.pad(mat_mfcc, ((0, -manque_frames), (0, 0)), 'constant', constant_values=0)
+                    data[i, j] = np.lib.pad(mat_mfcc, ((0, -manque_frames), (0, 0)), 'wrap')
                 else:  # dont need padding, but we want to chose a start frame randomly
                     start_frame = random.randint(0, manque_frames)
                     data[i, j] = mat_mfcc[start_frame: start_frame + desired_frames]
 
         return data, labels
+
 
 
 

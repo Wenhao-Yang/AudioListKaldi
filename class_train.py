@@ -136,16 +136,19 @@ def main(_):
     read_mfcc_buffer = h5py.File(output_data + '/feature_mfcc.h5', 'r')
     read_trials_p = open(output_data + '/trials_positive', 'r')
     read_trials_n = open(output_data + '/trials_negative', 'r')
+    # read_trials_rand = open(output_data + '/trials_rand', 'r')
 
     # number of trials positive == number of trials negative
     # train_step is positive line / batch
     all_trials_p = read_trials_p.readlines()
     random.shuffle(all_trials_p)
-
     all_trials_n = read_trials_n.readlines()
     random.shuffle(all_trials_n)
+
+    # all_trials_rand = read_trials_rand.readlines()
+
     max_training_step = (int(len(all_trials_p)/FLAGS.batch_size)) * 2
-    max_training_step = int(max_training_step/2)           ######################3#######
+    max_training_step =int(max_training_step/2)# , int(len(all_trials_rand)/FLAGS.batch_size))
 
     # tf.logging.info('Total steps %5d: ', max_training_step)
     for epoch in range(FLAGS.epoch):
@@ -216,7 +219,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_coefficient', type=int, default=40, help='numbers of coefficients of mfcc')
     parser.add_argument('--data_dir', type=str, default='data/CN-Celeb/dev/', help='work location')
     parser.add_argument('--checkpoint_dir', type=str, default='data/CN-Celeb/checkpoint/', help='work location')
-    parser.add_argument('--num_repeats', type=int, default=240, help='number of repeat when we prepare the trials')
+    parser.add_argument('--num_repeats', type=int, default=160, help='number of repeat when we prepare the trials')
     parser.add_argument('--skip_generate_feature', type=bool, default=True, help='whether to skip the phase of generating mfcc features')
     parser.add_argument('--num_utt_enrollment', type=int, default=5, help='numbers of enrollment utts for each speaker')
     parser.add_argument('--num_class', type=int, default=800, help='numbers of speakers')
@@ -226,10 +229,10 @@ if __name__ == '__main__':
     parser.add_argument('--dimension_projection', type=int, default=64, help='dimension of projection layer of lstm')
     parser.add_argument('--num_layers', type=int, default=3, help='number of layers of multi-lstm')
     parser.add_argument('--dimension_linear_layer', type=int, default=64, help='dimension of linear layer on top of lstm')
-    parser.add_argument('--learning_rate', type=float, default=0.001)
+    parser.add_argument('--learning_rate', type=float, default=0.0001)
     parser.add_argument('--dropout_prob', type=float, default=0.1)
     parser.add_argument('--batch_size', type=int, default=40)
-    parser.add_argument('--epoch', type=int, default=30)
+    parser.add_argument('--epoch', type=int, default=60)
     parser.add_argument('--log-interval', type=int, default=1)
     parser.add_argument('--test-interval', type=int, default=1)
 
