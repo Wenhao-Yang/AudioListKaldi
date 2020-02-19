@@ -51,6 +51,7 @@ def main(_):
     #it will not calcul the mfcc feature and not prepare the file trials for training or testing
     output_data = os.path.join(FLAGS.data_dir, FLAGS.model_architechture)
     audio_data_processor = input_data.ClassAudioProcessor(FLAGS.data_dir,
+                                                          output_data,
                                                           FLAGS.num_repeats,
                                                           audio_settings,
                                                           FLAGS.skip_generate_feature,
