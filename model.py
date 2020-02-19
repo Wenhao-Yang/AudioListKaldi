@@ -143,7 +143,7 @@ def my_tuple_loss(batch_size, tuple_size, spk_representation, labels):
 
     return -loss/batch_size
 
-def eval_batch(batch_size, tuple_size, spk_representation, labels, l_weight, l_bias):
+def eval_batch(batch_size, tuple_size, spk_representation, labels):
     '''
     this function can calcul the eer for a batch
     spk_representation:    (bashsize*tuplesize, dimension of linear layer)
@@ -173,18 +173,18 @@ def eval_batch(batch_size, tuple_size, spk_representation, labels, l_weight, l_b
         # compute cos(enroll_avg, eval)
         cos_similarity = tf.reduce_sum(tf.multiply(normlize_ck, normlize_wi_eval))
         score = cos_similarity
-        p_score = tf.add(tf.multiply(-l_weight, score), -l_bias)
+        # p_score = tf.add(tf.multiply(-l_weight, score), -l_bias)
 
         cos_score.append(score)
-        p_cos_score.append(p_score)
+        # p_cos_score.append(p_score)
 
         label = labels[indice_bash]
         cos_label.append(label)
 
     eer, thre = tf_kaldi_eer(cos_score, cos_label, re_thre=True)
-    p_eer, p_thre = tf_kaldi_eer(p_cos_score, cos_label, re_thre=True)
+    # p_eer, p_thre = tf_kaldi_eer(p_cos_score, cos_label, re_thre=True)
 
-    return (eer, thre, p_eer, p_thre)
+    return (eer, thre) # , p_eer, p_thre)
 
 def tf_kaldi_eer(distances, labels, cos=True, re_thre=False):
     """
