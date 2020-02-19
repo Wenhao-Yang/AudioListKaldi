@@ -270,7 +270,7 @@ class ClassAudioProcessor(object):
         self.num_utt_enrollment = num_utt_enrollment
         self.generate_trials(data_dir, num_repeats, num_utt_enrollment)
         if not skip_generate_feature:
-            self.generate_features(data_dir, output_dir, audio_settings)
+            self.generate_features(data_dir, audio_settings)
 
     def read_ark(self, arkpath, offset):
         read_buffer = open(arkpath, 'rb')
