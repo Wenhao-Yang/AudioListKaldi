@@ -171,9 +171,9 @@ def main(_):
             if training_step % FLAGS.test_interval == 0:
 
                 test_dict = {input_audio_data: train_voiceprint, labels: label, dropout_prob_input: 0.}
-                test_info, accuracy = sess.run([eval_info, accuracy], feed_dict=test_dict)
+                test_info, acc = sess.run([eval_info, accuracy], feed_dict=test_dict)
                 cos_eer, cos_thre = test_info
-                tf.logging.info('Test accuracy: $.4f%%, eer: %.4f%%' % (100.* accuracy, cos_eer))
+                tf.logging.info('Test accuracy: %.4f%%, eer: %.4f%%' % (100.* acc, cos_eer))
 
             # save  the model final
             if training_step == (max_training_step - 1) or (training_step + 1) % 1500 == 0:
