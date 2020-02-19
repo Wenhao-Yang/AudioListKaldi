@@ -44,7 +44,7 @@ def main(_):
     lstm_model_setting['num_units'] = FLAGS.num_units
     lstm_model_setting['dimension_projection'] = FLAGS.dimension_projection
     lstm_model_setting['num_layers'] = FLAGS.num_layers
-    lstm_model_setting['dimension_linear_layer'] = FLAGS.lstm_model_setting
+    lstm_model_setting['dimension_linear_layer'] = FLAGS.dimension_linear_layer
     lstm_model_setting['num_class'] = FLAGS.num_class
 
     # if skip_generate_feature=True,
@@ -197,6 +197,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_repeats', type=int, default=240, help='number of repeat when we prepare the trials')
     parser.add_argument('--skip_generate_feature', type=bool, default=True, help='whether to skip the phase of generating mfcc features')
     parser.add_argument('--num_utt_enrollment', type=int, default=5, help='numbers of enrollment utts for each speaker')
+    parser.add_argument('--num_class', type=int, default=800, help='numbers of speakers')
     parser.add_argument('--check_nans', type=bool, default=True, help='whether to check for invalid numbers during processing')
     parser.add_argument('--model_architechture', type=str, default='lstm_class_model')
     parser.add_argument('--num_units', type=int, default=128, help='numbers of units for each layer of lstm')
