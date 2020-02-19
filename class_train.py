@@ -179,7 +179,7 @@ def main(_):
             # cos_eer, cos_thre, p_cos_eer, p_cos_thre = train_info
             # print("accuracy:", sess.run(accuracy, feed_dict={x: mnist.test.images, y_actual: mnist.test.labels})
             if training_step % FLAGS.log_interval == 0:
-                tf.logging.info('Epoch [%3d] step [%5d]/[%5d], loss %f [%.6f], Accuracy %.4f%% [%.6f]' % (epoch, training_step, max_training_step, train_loss, losses.avg, 100.*accuracy, 100.*acces.avg))
+                tf.logging.info('Epoch [%3d] step [%5d]/[%5d], loss %.6f [%.6f], Accuracy %.4f%% [%.6f]' % (epoch, training_step, max_training_step, train_loss, losses.avg, 100.*acc, 100.*acces.avg))
 
             if training_step % FLAGS.test_interval == 0:
                 test_info = sess.run(eval_info, feed_dict={input_audio_data: train_voiceprint,
