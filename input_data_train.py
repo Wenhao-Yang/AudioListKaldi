@@ -383,7 +383,7 @@ class ClassAudioProcessor(object):
         spks = list(dict_spk2utts.keys())
         spks.sort()
         spk2idx = {}
-        with open(os.path.join(self.output_dir, 'class2idx'), 'w') as f:
+        with open(self.output_dir+'/class2idx', 'w') as f:
             for i in range(len(spks)):
                 spk2idx[spks[i]] = i
                 f.write(spks[i] + ' ' + str(i) + '\n')
@@ -401,10 +401,10 @@ class ClassAudioProcessor(object):
                 for utt in utt_samples:
                     write_buffer_p.write(utt + ' ')
 
-                write_buffer_p.write('1' + ' ' + spk2idx[spks])
+                write_buffer_p.write('1' + ' ' + spk2idx[spk])
 
                 for utt in utt_samples:
-                    write_buffer_p.write(' ' + spk2idx[spks])
+                    write_buffer_p.write(' ' + spk2idx[spk])
                 write_buffer_p.write('\n')
 
         write_buffer_p.close()
