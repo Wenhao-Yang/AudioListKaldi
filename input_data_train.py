@@ -401,10 +401,10 @@ class ClassAudioProcessor(object):
                 for utt in utt_samples:
                     write_buffer_p.write(utt + ' ')
 
-                write_buffer_p.write('1' + ' ' + spk2idx[spk])
+                write_buffer_p.write('1' + ' ' + str(spk2idx[spk]))
 
                 for utt in utt_samples:
-                    write_buffer_p.write(' ' + spk2idx[spk])
+                    write_buffer_p.write(' ' + str(spk2idx[spk]))
                 write_buffer_p.write('\n')
 
         write_buffer_p.close()
@@ -428,9 +428,9 @@ class ClassAudioProcessor(object):
                 for utt_enroll in samlpes_utt_enroll:
                     write_buffer_n.write(utt_enroll + ' ')
 
-                write_buffer_n.write('0' + ' '+ spk2idx[spk_eval])
+                write_buffer_n.write('0' + ' '+ str(spk2idx[spk_eval]))
                 for utt_enroll in samlpes_utt_enroll:
-                    write_buffer_n.write(' ' + spk2idx[spk_enroll])
+                    write_buffer_n.write(' ' + str(spk2idx[spk_enroll]))
 
                 write_buffer_n.write('\n')
 
