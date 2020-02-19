@@ -456,7 +456,7 @@ class ClassAudioProcessor(object):
         for i, trial in enumerate(trials):
             content = trial.split()
             utts = content[:tuple_size]
-
+            pdb.set_trace()
             idxs = content[tuple_size:]
             idxs = np.array(idxs, dtype=np.int32)
             assert idxs[0]==label
