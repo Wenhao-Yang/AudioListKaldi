@@ -87,13 +87,13 @@ def main(_):
         end_loss = model.my_tuple_loss(batch_size=FLAGS.batch_size,
                                    tuple_size=1+FLAGS.num_utt_enrollment,
                                    spk_representation=outputs,
-                                   labels=labels[:,0])
+                                   labels=labels[:, 0])
 
         class_labels = tf.reshape(labels[:,1:], [FLAGS.batch_size*(1+FLAGS.num_utt_enrollment)])
         ce_losses = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=class_labels)
         ce_loss = tf.reduce_mean(ce_losses)
 
-        loss = end_loss + ce_loss
+        loss = ce_loss # end_loss +
 
 
     with tf.name_scope('eval'):
@@ -212,7 +212,7 @@ if __name__ == '__main__':
     parser.add_argument('--dimension_projection', type=int, default=64, help='dimension of projection layer of lstm')
     parser.add_argument('--num_layers', type=int, default=3, help='number of layers of multi-lstm')
     parser.add_argument('--dimension_linear_layer', type=int, default=64, help='dimension of linear layer on top of lstm')
-    parser.add_argument('--learning_rate', type=float, default=0.001)
+    parser.add_argument('--learning_rate', type=float, default=0.01)
     parser.add_argument('--dropout_prob', type=float, default=0.1)
     parser.add_argument('--batch_size', type=int, default=80)
     parser.add_argument('--epoch', type=int, default=30)
