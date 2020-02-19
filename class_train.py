@@ -49,6 +49,7 @@ def main(_):
 
     # if skip_generate_feature=True,
     #it will not calcul the mfcc feature and not prepare the file trials for training or testing
+    output_data = os.path.join(FLAGS.data_dir, FLAGS.model_architechture)
     audio_data_processor = input_data.ClassAudioProcessor(FLAGS.data_dir,
                                                           FLAGS.num_repeats,
                                                           audio_settings,
@@ -116,15 +117,15 @@ def main(_):
 
     #merge all the summaries
     merged_summaries = tf.summary.merge_all()
-    train_writer = tf.summary.FileWriter(FLAGS.data_dir + '/logs', sess.graph)
+    train_writer = tf.summary.FileWriter(output_data + '/logs', sess.graph)
     # training loop
     tf.global_variables_initializer().run()
     #save graph
-    tf.train.write_graph(sess.graph_def, FLAGS.data_dir, FLAGS.model_architechture + '.pbtxt')
+    tf.train.write_graph(sess.graph_def, output_data, FLAGS.model_architechture + '.pbtxt')
     
-    read_mfcc_buffer = h5py.File(FLAGS.data_dir + '/feature_mfcc.h5', 'r')
-    read_trials_p = open(FLAGS.data_dir + '/trials_positive', 'r')
-    read_trials_n = open(FLAGS.data_dir + '/trials_negative', 'r')
+    read_mfcc_buffer = h5py.File(output_data + '/feature_mfcc.h5', 'r')
+    read_trials_p = open(output_data + '/trials_positive', 'r')
+    read_trials_n = open(output_data + '/trials_negative', 'r')
 
     # number of trials positive == number of trials negative
     # train_step is positive line / batch

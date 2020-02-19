@@ -259,17 +259,18 @@ class ClassAudioProcessor(object):
     1. using methode get_data() when we feed a batch of data to our LSTM model.
     '''
 
-    def __init__(self, data_dir, num_repeats, audio_settings, skip_generate_feature, num_utt_enrollment):
+    def __init__(self, data_dir, output_dir, num_repeats, audio_settings, skip_generate_feature, num_utt_enrollment):
         '''
     the form of data_dir :   ..../train/  or  ...../test/
     the value of is training:  True or False
     the value of skip_generate_feature: True or False
         '''
         self.audio_settings = audio_settings
+        self.output_dir = output_dir
         self.num_utt_enrollment = num_utt_enrollment
         self.generate_trials(data_dir, num_repeats, num_utt_enrollment)
         if not skip_generate_feature:
-            self.generate_features(data_dir, audio_settings)
+            self.generate_features(data_dir, output_dir, audio_settings)
 
     def read_ark(self, arkpath, offset):
         read_buffer = open(arkpath, 'rb')
@@ -349,7 +350,7 @@ class ClassAudioProcessor(object):
             wav_scp = data_dir + '/wav.scp'
             vad_scp = data_dir + '/vad.scp'
             read_buffer = open(wav_scp, 'r')
-            h5df_filename = data_dir + 'feature_mfcc.h5'
+            h5df_filename = self.output_dir + 'feature_mfcc.h5'
             write_buffer = h5py.File(h5df_filename, 'w')
             for line in read_buffer.readlines():
                 content = line.split()
@@ -382,13 +383,13 @@ class ClassAudioProcessor(object):
         spks = list(dict_spk2utts.keys())
         spks.sort()
         spk2idx = {}
-        with open(os.path.join(data_dir, 'class2idx'), 'w') as f:
+        with open(os.path.join(self.output_dir, 'class2idx'), 'w') as f:
             for i in range(len(spks)):
                 spk2idx[spks[i]] = i
                 f.write(spks[i] + ' ' + str(i) + '\n')
 
         # trials positive
-        write_buffer_p = open(os.path.join(data_dir, 'trials_positive'), 'w')
+        write_buffer_p = open(os.path.join(self.output_dir, 'trials_positive'), 'w')
         # utt1 utt2 utt3 ... 1
         for i in range(num_repeats):
             for spk in dict_spk2utts.keys():
@@ -410,7 +411,7 @@ class ClassAudioProcessor(object):
 
         # trials negative
         # eval_utt1 enroll_utt2 enroll_utt3 ... 0
-        write_buffer_n = open(os.path.join(data_dir, 'trials_negative'), 'w')
+        write_buffer_n = open(os.path.join(self.output_dir, 'trials_negative'), 'w')
         for spk_eval in dict_spk2utts.keys():
             spk_list = list(dict_spk2utts.keys())[:]
             spk_list.remove(spk_eval)
