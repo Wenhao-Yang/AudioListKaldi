@@ -219,8 +219,8 @@ if __name__ == '__main__':
     parser.add_argument('--dropout_prob', type=float, default=0.1)
     parser.add_argument('--batch_size', type=int, default=40)
     parser.add_argument('--epoch', type=int, default=30)
-    parser.add_argument('--log-interval', type=int, default=100)
-    parser.add_argument('--test-interval', type=int, default=50)
+    parser.add_argument('--log-interval', type=int, default=1)
+    parser.add_argument('--test-interval', type=int, default=1)
 
     FLAGS, unparsed = parser.parse_known_args()
 
