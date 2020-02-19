@@ -171,8 +171,8 @@ def main(_):
 
                 test_dict = {input_audio_data: train_voiceprint, labels: label, dropout_prob_input: 0.}
                 test_info = sess.run(eval_info, feed_dict=test_dict)
-                cos_eer, cos_thre, p_cos_eer, p_cos_thre = test_info
-                tf.logging.info('Test eer: %.4f%%, linear eer: %.4f%%' % (cos_eer, p_cos_eer))
+                cos_eer, cos_thre = test_info
+                tf.logging.info('Test eer: %.4f%%' % (cos_eer))
 
             # save  the model final
             if training_step == (max_training_step - 1) or (training_step + 1) % 1500 == 0:
@@ -214,8 +214,8 @@ if __name__ == '__main__':
     parser.add_argument('--dropout_prob', type=float, default=0.1)
     parser.add_argument('--batch_size', type=int, default=80)
     parser.add_argument('--epoch', type=int, default=30)
-    parser.add_argument('--log-interval', type=int, default=100)
-    parser.add_argument('--test-interval', type=int, default=50)
+    parser.add_argument('--log-interval', type=int, default=1)
+    parser.add_argument('--test-interval', type=int, default=2)
 
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
