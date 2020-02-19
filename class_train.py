@@ -170,7 +170,7 @@ def main(_):
             label = np.concatenate((label_p, label_n), axis=0)
 
             # pdb.set_trace()
-            train_summary, train_loss, _, acc = sess.run([merged_summaries, loss, train_step, accuracy],
+            train_summary, train_loss, _, acc, test_info = sess.run([merged_summaries, loss, train_step, accuracy, eval_info],
                                                     feed_dict={input_audio_data: train_voiceprint,
                                                                labels: label,
                                                                learning_rate_input: FLAGS.learning_rate,
@@ -179,18 +179,13 @@ def main(_):
             losses.update(train_loss, FLAGS.batch_size)
             acces.update(acc, FLAGS.batch_size)
 
+            cos_eer, cos_thre = test_info
+            eers.update(cos_eer, FLAGS.batch_size)
+
             # cos_eer, cos_thre, p_cos_eer, p_cos_thre = train_info
             # print("accuracy:", sess.run(accuracy, feed_dict={x: mnist.test.images, y_actual: mnist.test.labels})
             if training_step % FLAGS.log_interval == 0:
                 tf.logging.info('Epoch [%3d] step [%5d]/[%5d], loss %.6f [%.6f], Accuracy %.4f%% [%.6f]' % (epoch, training_step, max_training_step, train_loss, losses.avg, 100.*acc, 100.*acces.avg))
-
-            if training_step % FLAGS.test_interval == 0:
-                test_info = sess.run(eval_info, feed_dict={input_audio_data: train_voiceprint,
-                                                           labels: label,
-                                                           learning_rate_input: FLAGS.learning_rate,
-                                                           dropout_prob_input: FLAGS.dropout_prob})
-                cos_eer, cos_thre = test_info
-                eers.update(cos_eer, FLAGS.batch_size)
                 tf.logging.info('EER: %.4f%% [%.4f%%]' % (cos_eer, eers.avg))
 
             # save  the model final
@@ -233,8 +228,8 @@ if __name__ == '__main__':
     parser.add_argument('--dropout_prob', type=float, default=0.1)
     parser.add_argument('--batch_size', type=int, default=40)
     parser.add_argument('--epoch', type=int, default=60)
-    parser.add_argument('--log-interval', type=int, default=1)
-    parser.add_argument('--test-interval', type=int, default=1)
+    parser.add_argument('--log-interval', type=int, default=320)
+    # parser.add_argument('--test-interval', type=int, default=50)
 
     FLAGS, unparsed = parser.parse_known_args()
 
