@@ -49,12 +49,11 @@ def main(_):
 
     # if skip_generate_feature=True,
     #it will not calcul the mfcc feature and not prepare the file trials for training or testing
-    audio_data_processor = input_data.AudioProcessor(
-        FLAGS.data_dir,
-        FLAGS.num_repeats,
-        audio_settings,
-        FLAGS.skip_generate_feature,
-        FLAGS.num_utt_enrollment)
+    audio_data_processor = input_data.ClassAudioProcessor(FLAGS.data_dir,
+                                                          FLAGS.num_repeats,
+                                                          audio_settings,
+                                                          FLAGS.skip_generate_feature,
+                                                          FLAGS.num_utt_enrollment)
 
     # hold a place for input of the neural network
     input_audio_data = tf.placeholder(tf.float32, [FLAGS.batch_size, 1+FLAGS.num_utt_enrollment, audio_settings['desired_spectrogramme_length'], FLAGS.num_coefficient], name='input_audio_data')
@@ -145,11 +144,12 @@ def main(_):
             trials_n = all_trials_n[int((training_step - 1) / 2) * batch_size:(int((training_step - 1) / 2) + 1) * batch_size]
             train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer, 0)  # get one batch of tuples for training
 
+            # shape of train_voiceprint: (tuple_size, feature_size)
+            # shape of  label:  (batch, 1+enroll)
             train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
             label = np.concatenate((label_p, label_n), axis=0)
 
-            # shape of train_voiceprint: (tuple_size, feature_size)
-            # shape of  label:  (1)
+
             train_summary, train_loss, _ = sess.run([merged_summaries, loss, train_step],
                                                     feed_dict={input_audio_data: train_voiceprint,
                                                                labels: label,
