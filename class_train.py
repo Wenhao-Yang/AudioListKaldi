@@ -157,7 +157,7 @@ def main(_):
             train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
             label = np.concatenate((label_p, label_n), axis=0)
 
-
+            pdb.set_trace()
             train_summary, train_loss, _ = sess.run([merged_summaries, loss, train_step],
                                                     feed_dict={input_audio_data: train_voiceprint,
                                                                labels: label,
@@ -196,7 +196,7 @@ if __name__ == '__main__':
     pwd = os.getcwd()
     parser = argparse.ArgumentParser()
     parser.add_argument('--sample_rate', type=int, default=16000, help='sample rate of the wavs')
-    parser.add_argument('--duration_ms', type=int, default=80, help='duration of wavs used for training' )
+    parser.add_argument('--duration_ms', type=int, default=800, help='duration of wavs used for training' )
     parser.add_argument('--window_size_ms', type=int, default=25, help='how long each frame of spectrograme')
     parser.add_argument('--window_stride_ms', type=int, default=10, help='how far to move in time between two frames')
     parser.add_argument('--num_coefficient', type=int, default=40, help='numbers of coefficients of mfcc')
@@ -221,5 +221,5 @@ if __name__ == '__main__':
 
     FLAGS, unparsed = parser.parse_known_args()
 
-    print('Parsed options: {}'.format(vars(FLAGS)))
+    print('Parsed options: {}\n'.format(vars(FLAGS)))
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
