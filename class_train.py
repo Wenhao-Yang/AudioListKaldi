@@ -194,7 +194,7 @@ if __name__ == '__main__':
     pwd = os.getcwd()
     parser = argparse.ArgumentParser()
     parser.add_argument('--sample_rate', type=int, default=16000, help='sample rate of the wavs')
-    parser.add_argument('--duration_ms', type=int, default=2000, help='duration of wavs used for training' )
+    parser.add_argument('--duration_ms', type=int, default=80, help='duration of wavs used for training' )
     parser.add_argument('--window_size_ms', type=int, default=25, help='how long each frame of spectrograme')
     parser.add_argument('--window_stride_ms', type=int, default=10, help='how far to move in time between two frames')
     parser.add_argument('--num_coefficient', type=int, default=40, help='numbers of coefficients of mfcc')
