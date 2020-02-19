@@ -22,6 +22,7 @@ import random
 from tensorflow.python.platform import gfile
 
 from input_data_test import eval_kaldi_eer
+from utils.common import AverageMeter
 
 FLAGS = None
 
@@ -119,7 +120,8 @@ def main(_):
                                                   end_learning_rate=0.00001)
 
         # learning_rate_input = tf.placeholder(tf.float32, name='learning_rate_input')
-        train_step = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss, global_step=global_step)
+        optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+        train_step = optimizer.minimize(loss, global_step=global_step)
 
     saver = tf.train.Saver(tf.global_variables())
 
@@ -147,6 +149,9 @@ def main(_):
 
     # tf.logging.info('Total steps %5d: ', max_training_step)
     for epoch in range(FLAGS.epoch):
+        losses = AverageMeter()
+        acces = AverageMeter()
+        eers = AverageMeter()
 
         for training_step in range(max_training_step):
 
@@ -162,26 +167,28 @@ def main(_):
             label = np.concatenate((label_p, label_n), axis=0)
 
             # pdb.set_trace()
-            train_summary, train_loss, _ = sess.run([merged_summaries, loss, train_step],
+            train_summary, train_loss, _, acc = sess.run([merged_summaries, loss, train_step, accuracy],
                                                     feed_dict={input_audio_data: train_voiceprint,
                                                                labels: label,
                                                                learning_rate_input: FLAGS.learning_rate,
                                                                dropout_prob_input: FLAGS.dropout_prob})
             train_writer.add_summary(train_summary, training_step)
+            losses.update(train_loss, FLAGS.batch_size)
+            acces.update(acc, FLAGS.batch_size)
+
             # cos_eer, cos_thre, p_cos_eer, p_cos_thre = train_info
             # print("accuracy:", sess.run(accuracy, feed_dict={x: mnist.test.images, y_actual: mnist.test.labels})
             if training_step % FLAGS.log_interval == 0:
-                tf.logging.info('Epoch [%3d]: Current step [%5d]/[%5d]: loss %f' % (epoch, training_step, max_training_step, train_loss))
+                tf.logging.info('Epoch [%3d] step [%5d]/[%5d], loss %f [%.6f], Accuracy %.4f%% [%.6f]' % (epoch, training_step, max_training_step, train_loss, losses.avg, 100.*accuracy, 100.*acces.avg))
 
             if training_step % FLAGS.test_interval == 0:
-
-                test_dict = {input_audio_data: train_voiceprint,
-                             labels: label,
-                             learning_rate_input: FLAGS.learning_rate,
-                             dropout_prob_input: 0.}
-                test_info, acc = sess.run([eval_info, accuracy], feed_dict=test_dict)
+                test_info = sess.run(eval_info, feed_dict={input_audio_data: train_voiceprint,
+                                                           labels: label,
+                                                           learning_rate_input: FLAGS.learning_rate,
+                                                           dropout_prob_input: FLAGS.dropout_prob})
                 cos_eer, cos_thre = test_info
-                tf.logging.info('Test accuracy: %.4f%%, eer: %.4f%%' % (100.* acc, cos_eer))
+                eers.update(cos_eer, FLAGS.batch_size)
+                tf.logging.info('EER: %.4f%% [%.4f%%]' % (cos_eer, eers.avg))
 
             # save  the model final
             if training_step == (max_training_step - 1) or (training_step + 1) % 1500 == 0:
@@ -216,10 +223,10 @@ if __name__ == '__main__':
     parser.add_argument('--check_nans', type=bool, default=True, help='whether to check for invalid numbers during processing')
     parser.add_argument('--model_architechture', type=str, default='lstm_class_model')
     parser.add_argument('--num_units', type=int, default=128, help='numbers of units for each layer of lstm')
-    parser.add_argument('--dimension_projection', type=int, default=128, help='dimension of projection layer of lstm')
+    parser.add_argument('--dimension_projection', type=int, default=64, help='dimension of projection layer of lstm')
     parser.add_argument('--num_layers', type=int, default=3, help='number of layers of multi-lstm')
     parser.add_argument('--dimension_linear_layer', type=int, default=64, help='dimension of linear layer on top of lstm')
-    parser.add_argument('--learning_rate', type=float, default=0.0001)
+    parser.add_argument('--learning_rate', type=float, default=0.001)
     parser.add_argument('--dropout_prob', type=float, default=0.1)
     parser.add_argument('--batch_size', type=int, default=40)
     parser.add_argument('--epoch', type=int, default=30)
