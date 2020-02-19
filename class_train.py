@@ -51,8 +51,8 @@ def main(_):
     #it will not calcul the mfcc feature and not prepare the file trials for training or testing
     output_data = os.path.join(FLAGS.data_dir, FLAGS.model_architechture)
     output_data_ob = pathlib.Path(output_data)
-    if not output_data_ob.parent.exists():
-        os.makedirs(str(output_data_ob.parent))
+    if not output_data_ob.exists():
+        os.makedirs(str(output_data_ob))
 
     audio_data_processor = input_data.ClassAudioProcessor(FLAGS.data_dir,
                                                           output_data,
