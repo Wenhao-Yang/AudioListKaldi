@@ -97,6 +97,7 @@ def main(_):
 
 
     with tf.name_scope('eval'):
+        accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(logits, 1), tf.cast(class_labels, tf.int64)), tf.float32))
         eval_info = model.eval_batch(batch_size=FLAGS.batch_size,
                                      tuple_size=1 + FLAGS.num_utt_enrollment,
                                      spk_representation=outputs,
@@ -170,9 +171,9 @@ def main(_):
             if training_step % FLAGS.test_interval == 0:
 
                 test_dict = {input_audio_data: train_voiceprint, labels: label, dropout_prob_input: 0.}
-                test_info = sess.run(eval_info, feed_dict=test_dict)
+                test_info, accuracy = sess.run([eval_info, accuracy], feed_dict=test_dict)
                 cos_eer, cos_thre = test_info
-                tf.logging.info('Test eer: %.4f%%' % (cos_eer))
+                tf.logging.info('Test accuracy: $.4f%%, eer: %.4f%%' % (100.* accuracy, cos_eer))
 
             # save  the model final
             if training_step == (max_training_step - 1) or (training_step + 1) % 1500 == 0:
