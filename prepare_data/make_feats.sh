@@ -62,12 +62,31 @@ if [ $stage -le 1 ]; then
 #    sid/compute_vad_decision.sh --nj 4 --cmd "$train_cmd" data/CN-Celeb/enroll exp/make_fb40 $vaddir
 #    utils/fix_data_dir.sh data/CN-Celeb/enroll
 
-    steps/make_fbank.sh --write-utt2num-frames true --fbank_config conf/fbank.conf --nj 4 --cmd "$train_cmd" \
-        data/CN-Celeb/test exp/make_fb40 $fbankdir
-    utils/fix_data_dir.sh data/CN-Celeb/test
+    # steps/make_fbank.sh --write-utt2num-frames true --fbank_config conf/fbank.conf --nj 4 --cmd "$train_cmd" \
+    #     data/CN-Celeb/test exp/make_fb40 $fbankdir
+    # utils/fix_data_dir.sh data/CN-Celeb/test
 
-    sid/compute_vad_decision.sh --nj 4 --cmd "$train_cmd" data/CN-Celeb/test exp/make_fb40 $vaddir
-    utils/fix_data_dir.sh data/CN-Celeb/test
+    # sid/compute_vad_decision.sh --nj 4 --cmd "$train_cmd" data/CN-Celeb/test exp/make_fb40 $vaddir
+    # utils/fix_data_dir.sh data/CN-Celeb/test
 
 
 fi
+
+if [ $stage -le 2 ]; then
+  echo "=====================================CMVN========================================"
+  # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
+  # wasteful, as it roughly doubles the amount of training data on disk.  After
+  # creating training examples, this can be removed.
+
+  local/nnet3/xvector/prepare_feats_for_egs.sh --nj 4 --cmd "$train_cmd" data/CN-Celeb/dev data/CN-Celeb/dev_no_sli data/CN-Celeb/dev/feats_no_sil
+  utils/fix_data_dir.sh data/CN-Celeb/dev_no_sli
+
+  # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
+  # wasteful, as it roughly doubles the amount of training data on disk.  After
+  # creating training examples, this can be removed.
+  local/nnet3/xvector/prepare_feats_for_egs.sh --nj 4 --cmd "$train_cmd" data/CN-Celeb/test data/CN-Celeb/test_no_sli data/CN-Celeb/test/feats_no_sil
+  utils/fix_data_dir.sh data/CN-Celeb/test_no_sli
+fi
+
+
+

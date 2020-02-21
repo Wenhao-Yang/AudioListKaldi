@@ -45,8 +45,7 @@ def create_lstm_baseline_model(audio_tuple_input, W, B,
     num_units = lstm_model_setting['num_units'] # 128
     dimension_projection = lstm_model_setting['dimension_projection'] # 64
     num_layers = lstm_model_setting['num_layers'] # 3
-    mult_lstm = tf.nn.rnn_cell.MultiRNNCell([unit_lstm(num_units, dimension_projection, dropout_prob) for i in range(num_layers)],
-        state_is_tuple=True)
+    mult_lstm = tf.nn.rnn_cell.MultiRNNCell([unit_lstm(num_units, dimension_projection, dropout_prob) for i in range(num_layers)], state_is_tuple=True)
 
     #get output of lstm
     outputs, _states = tf.contrib.rnn.static_rnn(mult_lstm, X_split, dtype=tf.float32)
