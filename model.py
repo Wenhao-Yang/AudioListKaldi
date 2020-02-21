@@ -154,7 +154,6 @@ def eval_batch(batch_size, tuple_size, spk_representation, labels):
     w = tf.reshape(spk_representation, [batch_size, tuple_size, feature_size])
 
     cos_score = []
-    p_cos_score = []
     cos_label = []
 
     for indice_bash in range(batch_size):
@@ -176,12 +175,10 @@ def eval_batch(batch_size, tuple_size, spk_representation, labels):
 
         cos_score.append(score)
         # p_cos_score.append(p_score)
-
         label = labels[indice_bash]
         cos_label.append(label)
-
+    pdb.set_trace()
     eer, thre = tf_kaldi_eer(cos_score, cos_label, re_thre=True)
-    # p_eer, p_thre = tf_kaldi_eer(p_cos_score, cos_label, re_thre=True)
 
     return (eer, thre) # , p_eer, p_thre)
 
