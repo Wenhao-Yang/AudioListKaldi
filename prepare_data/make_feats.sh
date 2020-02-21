@@ -68,7 +68,7 @@ if [ $stage -le 1 ]; then
 
     # sid/compute_vad_decision.sh --nj 4 --cmd "$train_cmd" data/CN-Celeb/test exp/make_fb40 $vaddir
     # utils/fix_data_dir.sh data/CN-Celeb/test
-
+    echo 'skip'
 
 fi
 
