@@ -64,9 +64,6 @@ def main(_):
     bias = tf.Variable(tf.random_normal([dimension_linear_layer], stddev=1), name='bias')
     dropout_prob_input = tf.placeholder(tf.float32, [], name='dropout_prob_input')
 
-    l_weight = tf.Variable(tf.random_normal([], stddev=1), name='l_weight')
-    l_bias = tf.Variable(tf.random_normal([], stddev=1), name='l_weight')
-
     #  output of the model
     if FLAGS.model_architechture == 'lstm_baseline':
         outputs = model.create_lstm_baseline_model(
@@ -93,19 +90,12 @@ def main(_):
                                 tuple_size=1 + FLAGS.num_utt_enrollment,
                                 spk_representation=outputs,
                                 labels=labels)
-        # loss = model.my_tuple_loss(batch_size=FLAGS.batch_size,
-        #                            tuple_size=1+FLAGS.num_utt_enrollment,
-        #                            spk_representation=outputs,
-        #                            labels=labels,
-        #                            l_weight=l_weight,
-        #                            l_bias=l_bias)
+
     with tf.name_scope('eval'):
         eval_info = model.eval_batch(batch_size=FLAGS.batch_size,
                                      tuple_size=1 + FLAGS.num_utt_enrollment,
                                      spk_representation=outputs,
-                                     labels=labels,
-                                     l_weight=l_weight,
-                                     l_bias=l_bias)
+                                     labels=labels)
 
     tf.summary.scalar('train_loss', loss)
     tf.summary.scalar('eval_eer', eval_info[0])
@@ -149,28 +139,15 @@ def main(_):
 
         for training_step in range(max_training_step):
 
-            # if training_step % 2 == 0:
-                # samples positive
-            # trials_p = all_trials_p[
-            #            int(training_step / 2) * FLAGS.batch_size:(int(training_step / 2) + 1) * FLAGS.batch_size]
-            # train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer, 1)  # get one batch of tuples for training
-                # train_voiceprint = train_voiceprint_p
-                # label = label_p
-            # else:
-            # trials_n = all_trials_n[int((training_step - 1) / 2) * FLAGS.batch_size:(int(
-            #     (training_step - 1) / 2) + 1) * FLAGS.batch_size]
-            # train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer, 0)  # get one batch of tuples for training
-                # train_voiceprint = train_voiceprint_n
-                # label = label_n
-            batch_size = int(FLAGS.batch_size / 2)
-            trials_p = all_trials_p[int(training_step / 2) * batch_size:(int(training_step / 2) + 1) * batch_size]
-            train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer,
-                                                                        1)  # get one batch of tuples for training
-            trials_n = all_trials_n[int((training_step - 1) / 2) * batch_size:(int((training_step - 1) / 2) + 1) * batch_size]
-            train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer, 0)  # get one batch of tuples for training
-
-            train_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
-            label = np.concatenate((label_p, label_n), axis=0)
+            if training_step % 2 == 0:
+            # samples positive
+                trials_p = all_trials_p[
+                           int(training_step / 2) * FLAGS.batch_size:(int(training_step / 2) + 1) * FLAGS.batch_size]
+                train_voiceprint, label = audio_data_processor.get_data(trials_p, read_mfcc_buffer, 1)  # get one batch of tuples for training
+            else:
+                trials_n = all_trials_n[int((training_step - 1) / 2) * FLAGS.batch_size:(int(
+                    (training_step - 1) / 2) + 1) * FLAGS.batch_size]
+                train_voiceprint, label = audio_data_processor.get_data(trials_n, read_mfcc_buffer, 0)  # get one batch of tuples for training
 
             # shape of train_voiceprint: (tuple_size, feature_size)
             # shape of  label:  (1)
@@ -186,17 +163,18 @@ def main(_):
                 tf.logging.info('Epoch [%3d]: Current step [%5d]/[%5d]: loss %f' % (epoch, training_step, max_training_step, train_loss))
 
             if training_step % FLAGS.test_interval == 0:
-                # batch_size = int(FLAGS.batch_size / 2)
-                # trials_p = all_trials_p[int(training_step / 2) * batch_size:(int(training_step / 2) + 1) * batch_size]
-                # train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer,
-                #                                                             1)  # get one batch of tuples for training
-                # trials_n = all_trials_n[
-                #            int((training_step - 1) / 2) * batch_size:(int((training_step - 1) / 2) + 1) * batch_size]
-                # train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer,
-                #                                                             0)  # get one batch of tuples for training
-                # test_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
-                # test_label = np.concatenate((label_p, label_n), axis=0)
-                test_dict = {input_audio_data: train_voiceprint, labels: label, dropout_prob_input: 0.}
+                batch_size = int(FLAGS.batch_size / 2)
+                trials_p = all_trials_p[int(training_step / 2) * batch_size:(int(training_step / 2) + 1) * batch_size]
+                train_voiceprint_p, label_p = audio_data_processor.get_data(trials_p, read_mfcc_buffer,
+                                                                            1)  # get one batch of tuples for training
+                trials_n = all_trials_n[
+                           int((training_step - 1) / 2) * batch_size:(int((training_step - 1) / 2) + 1) * batch_size]
+                train_voiceprint_n, label_n = audio_data_processor.get_data(trials_n, read_mfcc_buffer,
+                                                                            0)  # get one batch of tuples for training
+                test_voiceprint = np.concatenate((train_voiceprint_p, train_voiceprint_n), axis=0)
+                test_label = np.concatenate((label_p, label_n), axis=0)
+
+                test_dict = {input_audio_data: test_voiceprint, labels: test_label, dropout_prob_input: 0.}
                 test_info = sess.run(eval_info, feed_dict=test_dict)
                 cos_eer, cos_thre, p_cos_eer, p_cos_thre = test_info
                 tf.logging.info('Test eer: %.4f%%, linear eer: %.4f%%' % (cos_eer, p_cos_eer))
