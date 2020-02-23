@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 
 # Copyright 2014  Guoguo Chen
 #           2014  Johns Hopkins University (author: Daniel Povey)

@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 # Copyright 2010-2012   Microsoft Corporation
 #           2012-2016   Johns Hopkins University (author: Daniel Povey)
 #                2015   Xiaohui Zhang

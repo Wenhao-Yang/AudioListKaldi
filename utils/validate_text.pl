@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 #
 #===============================================================================
 # Copyright 2017  Johns Hopkins University (author: Yenda Trmal <jtrmal@gmail.com>)

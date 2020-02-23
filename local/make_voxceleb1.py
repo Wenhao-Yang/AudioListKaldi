@@ -108,6 +108,7 @@ def read_vox1_structure(directory, train_dir, test_dir):
         for i in range(len(utt2spk)):
             f1.write(wav_scp[i])
             f2.write(utt2spk[i])
+    print('train set preparing completed.')
 
     wav_scp = []
     utt2spk = []

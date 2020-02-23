@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 
 # THIS SCRIPT IS DEPRECATED AND WILL BE REMOVED.  See
 # utils/lang/make_lexicon_fst_silprob.py which is the python-based replacement.

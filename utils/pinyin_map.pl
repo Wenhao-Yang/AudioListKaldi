@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 use warnings; #sed replacement for -w perl parameter
 
 $num_args = $#ARGV + 1;
