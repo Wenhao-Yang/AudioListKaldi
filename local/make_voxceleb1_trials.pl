@@ -5,8 +5,6 @@
 #
 # Usage: make_voxceleb1.pl /export/voxceleb1 data/
 
-use warnings;
-use strict;
 if (@ARGV != 1) {
   print STDERR "Usage: $0 <path-to-data-dir>\n";
   print STDERR "e.g. $0 data/\n";
