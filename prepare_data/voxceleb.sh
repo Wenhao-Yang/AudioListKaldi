@@ -1,13 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-"""
-@Author: yangwenhao
-@Contact: 874681044@qq.com
-@Software: PyCharm
-@File: voxceleb.sh
-@Time: 2020/2/22 4:33 PM
-@Overview:
-"""
+# """
+# @Author: yangwenhao
+# @Contact: 874681044@qq.com
+# @Software: PyCharm
+# @File: voxceleb.sh
+# @Time: 2020/2/22 4:33 PM
+# @Overview:
+# """
 
 export train_cmd="run.pl --mem 4G"
 export KALDI_ROOT=/Work18/2017/liumeng/Software/kaldi/
