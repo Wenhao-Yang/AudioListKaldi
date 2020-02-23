@@ -91,7 +91,7 @@ def read_vox1_structure(directory, train_dir, test_dir):
         else:
             dev_wav_path.append(wav)
 
-    wav_scp = open(os.path.join(train_dir, 'wav_scp'), 'w')
+    wav_scp = open(os.path.join(train_dir, 'wav.scp'), 'w')
     utt2spk = open(os.path.join(train_dir, 'utt2spk'), 'w')
     for wav in dev_wav_path:
         spkid = wav.parents[1].name
@@ -105,7 +105,7 @@ def read_vox1_structure(directory, train_dir, test_dir):
     utt2spk.close()
     print('dev set preparing completed.')
 
-    wav_scp = open(os.path.join(test_dir, 'wav_scp'), 'w')
+    wav_scp = open(os.path.join(test_dir, 'wav.scp'), 'w')
     utt2spk = open(os.path.join(test_dir, 'utt2spk'), 'w')
     for wav in test_wav_path:
         spkid = wav.parents[1].name
