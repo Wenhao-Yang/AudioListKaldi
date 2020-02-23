@@ -10,6 +10,7 @@
 # """
 
 export train_cmd="run.pl --mem 4G"
+
 export KALDI_ROOT=/Work18/2017/liumeng/Software/kaldi/
 export PATH=$PWD/utils/:$KALDI_ROOT/tools/openfst/bin:$KALDI_ROOT/tools/sph2pipe_v2.5:$PWD:$PATH
 [ ! -f $KALDI_ROOT/tools/config/common_path.sh ] && echo >&2 "The standard file $KALDI_ROOT/tools/config/common_path.sh is not present -> Exit!" && exit 1
@@ -36,7 +37,7 @@ mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=0
+stage=1
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
