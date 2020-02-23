@@ -1,4 +1,4 @@
-#!/backup/liumeng/anaconda3/lib/python3.7
+#!/backup/liumeng/anaconda3/bin/python
 # encoding: utf-8
 
 """
