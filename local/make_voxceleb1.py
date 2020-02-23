@@ -76,6 +76,11 @@ def read_vox1_structure(directory, train_dir, test_dir):
     print('>>Data root is %s' % str(data_root))
 
     # /CDShare/voxceleb1/vox1_test_wav/id10270/5r0dWxy17C8/00019.wav
+    if not os.path.exists(train_dir):
+        os.makedirs(train_dir)
+    if not os.path.exists(test_dir):
+        os.makedirs(test_dir)
+
     all_wav_path = list(data_root.glob('*/*/*/*.wav'))
 
     dev_wav_path = []
