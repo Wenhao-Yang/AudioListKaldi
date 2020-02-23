@@ -97,7 +97,7 @@ def read_vox1_structure(directory, train_dir, test_dir):
         spkid = wav.parents[1].name
         utt = wav.parents[0].name
         uid = wav.name.rstrip('.wav')
-        uid = '-'.join(spkid, utt, uid)
+        uid = '-'.join((spkid, utt, uid))
         wav_scp.write(uid + ' ' + str(wav) + '\n')
         utt2spk.write(uid + ' ' + str(spkid) + '\n')
 
@@ -111,7 +111,7 @@ def read_vox1_structure(directory, train_dir, test_dir):
         spkid = wav.parents[1].name
         utt = wav.parents[0].name
         uid = wav.name.rstrip('.wav')
-        uid = '-'.join(spkid, utt, uid)
+        uid = '-'.join((spkid, utt, uid))
         wav_scp.write(uid + ' ' + str(wav) + '\n')
         utt2spk.write(uid + ' ' + str(spkid) + '\n')
 
