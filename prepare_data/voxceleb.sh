@@ -45,10 +45,12 @@ if [ $stage -le 0 ]; then
   local/make_voxceleb1_trials.pl ${vox1_test_dir}
   local/make_voxceleb1.py ${vox1_root} ${vox1_train_dir} ${vox1_test_dir}
 
-  utils/utt2spk_to_spk2utt.pl $vox1_test_dir/utt2spk >$vox1_test_dir/spk2utt
-  utils/validate_data_dir.sh --no-text --no-feats $vox1_test_dir
   utils/utt2spk_to_spk2utt.pl $vox1_train_dir/utt2spk >$vox1_train_dir/spk2utt
   utils/validate_data_dir.sh --no-text --no-feats $vox1_train_dir
+
+  utils/utt2spk_to_spk2utt.pl $vox1_test_dir/utt2spk >$vox1_test_dir/spk2utt
+  utils/validate_data_dir.sh --no-text --no-feats $vox1_test_dir
+
 
 fi
 
