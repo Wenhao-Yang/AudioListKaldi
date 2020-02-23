@@ -91,32 +91,42 @@ def read_vox1_structure(directory, train_dir, test_dir):
         else:
             dev_wav_path.append(wav)
 
-    wav_scp = open(os.path.join(train_dir, 'wav.scp'), 'w')
-    utt2spk = open(os.path.join(train_dir, 'utt2spk'), 'w')
+    wav_scp = []
+    utt2spk = []
     for wav in dev_wav_path:
         spkid = wav.parents[1].name
         utt = wav.parents[0].name
         uid = wav.name.rstrip('.wav')
         uid = '-'.join((spkid, utt, uid))
-        wav_scp.write(uid + ' ' + str(wav) + '\n')
-        utt2spk.write(uid + ' ' + str(spkid) + '\n')
+        wav_scp.append(uid + ' ' + str(wav) + '\n')
+        utt2spk.append(uid + ' ' + str(spkid) + '\n')
 
-    wav_scp.close()
-    utt2spk.close()
-    print('dev set preparing completed.')
+    wav_scp.sort()
+    utt2spk.sort()
+    with open(os.path.join(train_dir, 'wav.scp'), 'w') as f1, \
+         open(os.path.join(train_dir, 'utt2spk'), 'w') as f2:
+        for i in range(len(utt2spk)):
+            f1.write(wav_scp[i])
+            f2.write(utt2spk[i])
 
-    wav_scp = open(os.path.join(test_dir, 'wav.scp'), 'w')
-    utt2spk = open(os.path.join(test_dir, 'utt2spk'), 'w')
-    for wav in test_wav_path:
+    wav_scp = []
+    utt2spk = []
+    for wav in dev_wav_path:
         spkid = wav.parents[1].name
         utt = wav.parents[0].name
         uid = wav.name.rstrip('.wav')
         uid = '-'.join((spkid, utt, uid))
-        wav_scp.write(uid + ' ' + str(wav) + '\n')
-        utt2spk.write(uid + ' ' + str(spkid) + '\n')
+        wav_scp.append(uid + ' ' + str(wav) + '\n')
+        utt2spk.append(uid + ' ' + str(spkid) + '\n')
 
-    wav_scp.close()
-    utt2spk.close()
+    wav_scp.sort()
+    utt2spk.sort()
+    with open(os.path.join(test_dir, 'wav.scp'), 'w') as f1, \
+            open(os.path.join(test_dir, 'utt2spk'), 'w') as f2:
+        for i in range(len(utt2spk)):
+            f1.write(wav_scp[i])
+            f2.write(utt2spk[i])
+
     print('test set preparing completed.')
 
 read_vox1_structure(data_root, train_dir, test_dir)
