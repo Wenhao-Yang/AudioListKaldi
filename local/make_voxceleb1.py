@@ -86,7 +86,7 @@ def read_vox1_structure(directory, train_dir, test_dir):
     dev_wav_path = []
     test_wav_path = []
     for wav in all_wav_path:
-        if wav.parents[2]=='vox1_test_wav':
+        if wav.parents[2].name=='vox1_test_wav':
             test_wav_path.append(wav)
         else:
             dev_wav_path.append(wav)
