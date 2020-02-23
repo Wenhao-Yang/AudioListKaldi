@@ -12,11 +12,6 @@ if (@ARGV != 1) {
 }
 
 ($out_dir) = @ARGV;
-my $out_test_dir = "$out_dir/voxceleb1_test";
-
-if (system("mkdir -p $out_test_dir") != 0) {
-  die "Error making directory $out_test_dir";
-}
 
 if (! -e "$out_dir/voxceleb1_test.txt") {
   system("wget -O $out_dir/voxceleb1_test.txt http://www.openslr.org/resources/49/voxceleb1_test.txt");
@@ -28,7 +23,7 @@ if (! -e "$out_dir/vox1_meta.csv") {
 
 open(TRIAL_IN, "<", "$out_dir/voxceleb1_test.txt") or die "Could not open the verification trials file $out_dir/voxceleb1_test.txt";
 open(META_IN, "<", "$out_dir/vox1_meta.csv") or die "Could not open the meta data file $out_dir/vox1_meta.csv";
-open(TRIAL_OUT, ">", "$out_test_dir/trials") or die "Could not open the output file $out_test_dir/trials";
+open(TRIAL_OUT, ">", "$out_dir/trials") or die "Could not open the output file $out_dir/trials";
 
 my %id2spkr = ();
 while (<META_IN>) {
