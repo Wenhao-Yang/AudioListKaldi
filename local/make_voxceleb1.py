@@ -1,4 +1,4 @@
-#!/backup/liumeng/anaconda3/bin/python
+#!/usr/bin/env python
 # encoding: utf-8
 
 """
@@ -81,12 +81,12 @@ def read_vox1_structure(directory, train_dir, test_dir):
     if not os.path.exists(test_dir):
         os.makedirs(test_dir)
 
-    all_wav_path = list(data_root.glob('*/*/*/*.wav'))
+    all_wav_path = list(data_root.glob('*/*/*/*/*.wav'))
 
     dev_wav_path = []
     test_wav_path = []
     for wav in all_wav_path:
-        if wav.parents[2].name=='vox1_test_wav':
+        if wav.parents[3].name=='vox1_test_wav':
             test_wav_path.append(wav)
         else:
             dev_wav_path.append(wav)

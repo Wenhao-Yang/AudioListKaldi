@@ -16,7 +16,6 @@ if (@ARGV != 1) {
 if (! -e $out_dir) {
   system("mkdir $out_dir");
 }
-
 if (! -e "$out_dir/voxceleb1_test.txt") {
   system("wget -O $out_dir/voxceleb1_test.txt http://www.openslr.org/resources/49/voxceleb1_test.txt");
 }
