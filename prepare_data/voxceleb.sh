@@ -20,11 +20,9 @@ export LC_ALL=C
 set -e
 
 # The trials file is downloaded by local/make_voxceleb1.pl.
-vox1_trials=data/Vox1/trials
-vox1_root=/CDShare/voxceleb1
+vox1_root=/work20/yangwenhao/dataset/voxceleb1
 vox2_root=/export/corpora/VoxCeleb2
 #nnet_dir=exp/xvector_nnet_1a
-#
 #res_dir=exp/resnt
 #tdnn_dir=exp/tdnn
 
@@ -32,12 +30,13 @@ vox2_root=/export/corpora/VoxCeleb2
 vox1_out_dir=data/Vox1
 vox1_test_dir=data/Vox1/test
 vox1_train_dir=data/Vox1/dev
+vox1_trials=${vox1_test_dir}/trials
 
 mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=1
+stage=0
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
