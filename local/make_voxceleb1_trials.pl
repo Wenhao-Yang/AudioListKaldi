@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 #
 # Copyright 2018  Ewald Enzinger
 #           2018  David Snyder
@@ -12,6 +12,10 @@ if (@ARGV != 1) {
 }
 
 ($out_dir) = @ARGV;
+
+if (! -e $out_dir) {
+  system("mkdir $out_dir");
+}
 
 if (! -e "$out_dir/voxceleb1_test.txt") {
   system("wget -O $out_dir/voxceleb1_test.txt http://www.openslr.org/resources/49/voxceleb1_test.txt");
