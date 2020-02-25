@@ -42,7 +42,7 @@ if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
   # This script creates data/voxceleb1_test and data/voxceleb1_train.
   # Our evaluation set is the test portion of VoxCeleb1.
-  local/make_voxceleb1_trials.pl ${vox1_test_dir}
+  local/make_voxceleb1_trials.pl ${vox1_test_dir} ${vox1_out_dir}
   local/make_voxceleb1.py ${vox1_root} ${vox1_train_dir} ${vox1_test_dir}
 
   utils/utt2spk_to_spk2utt.pl $vox1_train_dir/utt2spk >$vox1_train_dir/spk2utt
