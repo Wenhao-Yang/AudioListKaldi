@@ -36,7 +36,7 @@ mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=0
+stage=2
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -50,7 +50,6 @@ if [ $stage -le 0 ]; then
 
   utils/utt2spk_to_spk2utt.pl $vox1_test_dir/utt2spk >$vox1_test_dir/spk2utt
   utils/validate_data_dir.sh --no-text --no-feats $vox1_test_dir
-
 
 fi
 
@@ -66,4 +65,20 @@ if [ $stage -le 1 ]; then
     sid/compute_vad_decision.sh --nj 10 --cmd "$train_cmd" ${name} exp/make_vad $vaddir
     utils/fix_data_dir.sh ${name}
   done
+fi
+
+if [ $stage -le 2 ]; then
+  echo "=====================================CMVN========================================"
+  # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
+  # wasteful, as it roughly doubles the amount of training data on disk.  After
+  # creating training examples, this can be removed.
+
+  local/nnet3/xvector/prepare_feats_for_egs.sh --nj 5 --cmd "$train_cmd" data/Vox1/dev data/Vox1/dev_no_sli data/Vox1/dev/feats_no_sil
+  utils/fix_data_dir.sh data/Vox1/dev_no_sli
+
+  # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
+  # wasteful, as it roughly doubles the amount of training data on disk.  After
+  # creating training examples, this can be removed.
+  local/nnet3/xvector/prepare_feats_for_egs.sh --nj 5 --cmd "$train_cmd" data/Vox1/test data/Vox1/test_no_sli data/Vox1/test/feats_no_sil
+  utils/fix_data_dir.sh data/Vox1/test_no_sli
 fi
