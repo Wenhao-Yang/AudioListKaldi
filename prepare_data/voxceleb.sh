@@ -9,7 +9,7 @@
 # @Overview:
 # """
 
-export train_cmd="run.pl --mem 16G"
+export train_cmd="run.pl --mem 12G"
 
 export KALDI_ROOT=/work20/yangwenhao/project/kaldi
 export PATH=$PWD/utils/:$KALDI_ROOT/tools/openfst/bin:$KALDI_ROOT/tools/sph2pipe_v2.5:$PWD:$PATH
