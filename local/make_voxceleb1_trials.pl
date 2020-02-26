@@ -13,12 +13,14 @@ if (@ARGV != 2) {
 
 my ($out_dir, $lst_dir) = @ARGV;
 
-if (! -e $out_dir) {
-  system("mkdir $out_dir");
-}
 if (! -e $lst_dir) {
   system("mkdir $lst_dir");
 }
+
+if (! -e $out_dir) {
+  system("mkdir $out_dir");
+}
+
 if (! -e "$out_dir/voxceleb1_test.txt") {
   # print "$out_dir\n";
   system("wget -O $out_dir/voxceleb1_test.txt http://www.openslr.org/resources/49/voxceleb1_test.txt");
