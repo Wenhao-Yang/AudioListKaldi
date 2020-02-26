@@ -52,6 +52,7 @@ if [ $stage -le 0 ]; then
   utils/validate_data_dir.sh --no-text --no-feats $vox1_test_dir
 
 fi
+stage=100
 
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
