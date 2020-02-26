@@ -43,16 +43,18 @@ while (<META_IN>) {
 my $test_spkrs = ();
 while (<TRIAL_IN>) {
   chomp;
+  # 0 Ezra_Miller/0cYFdtyWVds_0000005.wav Eric_McCormack/Y-qKARMSO7k_0000001.wav
   my ($tar_or_non, $path1, $path2) = split;
 
   # Create entry for left-hand side of trial
   my ($spkr_id, $filename) = split('/', $path1);
   my $rec_id = substr($filename, 0, 11);
-  my $segment = substr($filename, 15, 8);
+  my $segment = substr($filename, 14, 5);
   my $utt_id1 = "$spkr_id-$rec_id-$segment";
   $test_spkrs{$spkr_id} = ();
 
   # Create entry for right-hand side of trial
+
   my ($spkr_id, $filename) = split('/', $path2);
   my $rec_id = substr($filename, 0, 11);
   my $segment = substr($filename, 15, 8);
