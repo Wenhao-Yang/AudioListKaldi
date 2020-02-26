@@ -9,7 +9,7 @@
 # @Overview:
 # """
 
-export train_cmd="run.pl --mem 12G"
+export train_cmd="run.pl --mem 16G"
 
 export KALDI_ROOT=/work20/yangwenhao/project/kaldi
 export PATH=$PWD/utils/:$KALDI_ROOT/tools/openfst/bin:$KALDI_ROOT/tools/sph2pipe_v2.5:$PWD:$PATH
@@ -27,10 +27,15 @@ vox2_root=/export/corpora/VoxCeleb2
 #tdnn_dir=exp/tdnn
 
 #musan_root=/export/corpora/JHU/musan
-vox1_out_dir=data/Vox1
-vox1_test_dir=data/Vox1/test
-vox1_train_dir=data/Vox1/dev
+vox1_out_dir=data/Vox1_fb24
+fbank_config=conf/fbank_24.conf
+
+vox1_test_dir=${vox1_out_dir}/test
+vox1_train_dir=${vox1_out_dir}/dev
 vox1_trials=${vox1_test_dir}/trials
+
+vox1_vad_train_dir=${vox1_train_dir}_no_sil
+vox1_vad_test_dir=${vox1_test_dir}_no_sil
 
 mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
@@ -45,25 +50,24 @@ if [ $stage -le 0 ]; then
   local/make_voxceleb1_trials.pl ${vox1_test_dir} ${vox1_out_dir}
   local/make_voxceleb1.py ${vox1_root} ${vox1_train_dir} ${vox1_test_dir}
 
-  utils/utt2spk_to_spk2utt.pl $vox1_train_dir/utt2spk >$vox1_train_dir/spk2utt
+  utils/utt2spk_to_spk2utt.pl ${vox1_train_dir}/utt2spk >${vox1_train_dir}/spk2utt
   utils/validate_data_dir.sh --no-text --no-feats $vox1_train_dir
 
-  utils/utt2spk_to_spk2utt.pl $vox1_test_dir/utt2spk >$vox1_test_dir/spk2utt
+  utils/utt2spk_to_spk2utt.pl ${vox1_test_dir}/utt2spk >${vox1_test_dir}/spk2utt
   utils/validate_data_dir.sh --no-text --no-feats $vox1_test_dir
 
 fi
-stage=100
 
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
   for name in ${vox1_train_dir} ${vox1_test_dir}; do
-    steps/make_fbank.sh --write-utt2num-frames true --fbank_config conf/fbank.conf --nj 10 --cmd "$train_cmd" \
+    steps/make_fbank.sh --write-utt2num-frames true --fbank_config ${fbank_config} --nj 12 --cmd "$train_cmd" \
         ${name} exp/make_fbank $fbankdir
     utils/fix_data_dir.sh ${name}
 
     # Todo: Is there any better VAD solutioin?
-    sid/compute_vad_decision.sh --nj 10 --cmd "$train_cmd" ${name} exp/make_vad $vaddir
+    sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${name} exp/make_vad $vaddir
     utils/fix_data_dir.sh ${name}
   done
 fi
@@ -74,12 +78,10 @@ if [ $stage -le 2 ]; then
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
 
-  local/nnet3/xvector/prepare_feats_for_egs.sh --nj 5 --cmd "$train_cmd" data/Vox1/dev data/Vox1/dev_no_sli data/Vox1/dev/feats_no_sil
-  utils/fix_data_dir.sh data/Vox1/dev_no_sli
+  local/nnet3/xvector/prepare_feats_for_egs.sh --nj 5 --cmd "$train_cmd" ${vox1_train_dir} ${vox1_vad_train_dir} ${vox1_train_dir}/feats_no_sil
+  utils/fix_data_dir.sh ${vox1_vad_train_dir}
 
-  # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
-  # wasteful, as it roughly doubles the amount of training data on disk.  After
-  # creating training examples, this can be removed.
-  local/nnet3/xvector/prepare_feats_for_egs.sh --nj 5 --cmd "$train_cmd" data/Vox1/test data/Vox1/test_no_sli data/Vox1/test/feats_no_sil
-  utils/fix_data_dir.sh data/Vox1/test_no_sli
+  local/nnet3/xvector/prepare_feats_for_egs.sh --nj 5 --cmd "$train_cmd" ${vox1_test_dir} ${vox1_vad_test_dir} ${vox1_test_dir}/feats_no_sil
+  utils/fix_data_dir.sh ${vox1_vad_test_dir}
+
 fi
