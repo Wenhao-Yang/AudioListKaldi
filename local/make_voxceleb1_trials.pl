@@ -22,7 +22,7 @@ if (! -e $out_dir) {
 }
 
 # http://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test.txt
-if (! -e "$out_dir/voxceleb1_test.txt") {
+if (! -e "$out_dir/veri_test.txt") {
   # print "$out_dir\n";
   system("wget -O $out_dir/veri_test.txt http://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test.txt");
 }
