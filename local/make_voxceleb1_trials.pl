@@ -21,9 +21,10 @@ if (! -e $out_dir) {
   system("mkdir $out_dir");
 }
 
+# http://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test.txt
 if (! -e "$out_dir/voxceleb1_test.txt") {
   # print "$out_dir\n";
-  system("wget -O $out_dir/voxceleb1_test.txt http://www.openslr.org/resources/49/voxceleb1_test.txt");
+  system("wget -O $out_dir/veri_test.txt http://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test.txt");
 }
 
 if (! -e "$lst_dir/vox1_meta.csv") {
@@ -31,7 +32,7 @@ if (! -e "$lst_dir/vox1_meta.csv") {
 }
 
 
-open(TRIAL_IN, "<", "$out_dir/voxceleb1_test.txt") or die "Could not open the verification trials file $out_dir/voxceleb1_test.txt";
+open(TRIAL_IN, "<", "$out_dir/veri_test.txt") or die "Could not open the verification trials file $out_dir/veri_test.txt";
 open(META_IN, "<", "$lst_dir/vox1_meta.csv") or die "Could not open the meta data file $out_dir/vox1_meta.csv";
 open(TRIAL_OUT, ">", "$out_dir/trials") or die "Could not open the output file $out_dir/trials";
 
@@ -46,20 +47,21 @@ my $test_spkrs = ();
 while (<TRIAL_IN>) {
   chomp;
   # 0 Ezra_Miller/0cYFdtyWVds_0000005.wav Eric_McCormack/Y-qKARMSO7k_0000001.wav
+  # 1 id10270/x6uYqmx31kE/00002.wav id10270/GWXujl-xAVM/00038.wav
   my ($tar_or_non, $path1, $path2) = split;
 
   # Create entry for left-hand side of trial
-  my ($spkr_id, $filename) = split('/', $path1);
-  my $rec_id = substr($filename, 0, 11);
-  my $segment = substr($filename, 14, 5);
-  my $utt_id1 = "$spkr_id-$rec_id-$segment";
+  # id10270/x6uYqmx31kE/00002.wav
+  my ($spkr_id, $uid, $filename) = split('/', $path1);
+  my $segment = substr($filename, 0, 5);
+  my $utt_id1 = "$spkr_id-$uid-$segment";
   $test_spkrs{$spkr_id} = ();
 
   # Create entry for right-hand side of trial
 
-  my ($spkr_id, $filename) = split('/', $path2);
-  my $rec_id = substr($filename, 0, 11);
-  my $segment = substr($filename, 14, 5);
+  my ($spkr_id, $uid, $filename) = split('/', $path2);
+  my $segment = substr($filename, 0, 5);
+  my $utt_id1 = "$spkr_id-$uid-$segment";
   my $utt_id2 = "$spkr_id-$rec_id-$segment";
   $test_spkrs{$spkr_id} = ();
 
