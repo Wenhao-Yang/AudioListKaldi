@@ -58,6 +58,7 @@ if [ $stage -le 0 ]; then
 
 fi
 
+stage=10
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
