@@ -61,8 +61,7 @@ while (<TRIAL_IN>) {
 
   my ($spkr_id, $uid, $filename) = split('/', $path2);
   my $segment = substr($filename, 0, 5);
-  my $utt_id1 = "$spkr_id-$uid-$segment";
-  my $utt_id2 = "$spkr_id-$rec_id-$segment";
+  my $utt_id2 = "$spkr_id-$uid-$segment";
   $test_spkrs{$spkr_id} = ();
 
   my $target = "nontarget";
