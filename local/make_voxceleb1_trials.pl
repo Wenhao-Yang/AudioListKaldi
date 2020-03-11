@@ -6,34 +6,30 @@
 # Usage: make_voxceleb1.pl /export/voxceleb1 data/
 
 if (@ARGV != 2) {
-  print STDERR "Usage: $0 <path-to-data-dir> <path-to-data-lst-dir>\n";
+  print STDERR "Usage: $0 <path-to-data-dir> <path-to-out-data-dir>\n";
   print STDERR "e.g. $0 data/ data/lst/\n";
   exit(1);
 }
 
-my ($out_dir, $lst_dir) = @ARGV;
-
-if (! -e $lst_dir) {
-  system("mkdir $lst_dir");
-}
+my ($vox1_root, $out_dir) = @ARGV;
 
 if (! -e $out_dir) {
   system("mkdir $out_dir");
 }
 
 # http://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test.txt
-if (! -e "$out_dir/veri_test.txt") {
+if (! -e "$vox1_root/veri_test.txt") {
   # print "$out_dir\n";
-  system("wget -O $out_dir/veri_test.txt http://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test.txt");
+  system("wget -O $vox1_root/veri_test.txt http://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test.txt");
 }
 
-if (! -e "$lst_dir/vox1_meta.csv") {
-  system("wget -O $lst_dir/vox1_meta.csv http://www.openslr.org/resources/49/vox1_meta.csv");
+if (! -e "$vox1_root/vox1_meta.csv") {
+  system("wget -O $vox1_root/vox1_meta.csv http://www.openslr.org/resources/49/vox1_meta.csv");
 }
 
 
-open(TRIAL_IN, "<", "$out_dir/veri_test.txt") or die "Could not open the verification trials file $out_dir/veri_test.txt";
-open(META_IN, "<", "$lst_dir/vox1_meta.csv") or die "Could not open the meta data file $out_dir/vox1_meta.csv";
+open(TRIAL_IN, "<", "$vox1_root/veri_test.txt") or die "Could not open the verification trials file $vox1_root/veri_test.txt";
+open(META_IN, "<", "$vox1_root/vox1_meta.csv") or die "Could not open the meta data file $vox1_root/vox1_meta.csv";
 open(TRIAL_OUT, ">", "$out_dir/trials") or die "Could not open the output file $out_dir/trials";
 
 my %id2spkr = ();
