@@ -27,8 +27,8 @@ vox2_root=/export/corpora/VoxCeleb2
 #tdnn_dir=exp/tdnn
 
 #musan_root=/export/corpora/JHU/musan
-vox1_out_dir=data/Vox1_fb24
-fbank_config=conf/fbank_24.conf
+vox1_out_dir=data/Vox1_fb64
+fbank_config=conf/fbank_64.conf
 
 vox1_test_dir=${vox1_out_dir}/test
 vox1_train_dir=${vox1_out_dir}/dev
