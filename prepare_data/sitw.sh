@@ -59,7 +59,7 @@ if [ $stage -le 1 ]; then
         ${sitw_out_dir}/${name} exp/make_fbank $fbankdir
     utils/fix_data_dir.sh ${sitw_out_dir}/${name}
 
-    sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${name} exp/make_vad $vaddir
+    sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${sitw_out_dir}/${name} exp/make_vad $vaddir
     utils/fix_data_dir.sh ${sitw_out_dir}/${name}
   done
 fi
