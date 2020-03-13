@@ -45,7 +45,7 @@ if [ $stage -le 0 ]; then
   # This script creates data/voxceleb1_test and data/voxceleb1_train.
   # Our evaluation set is the test portion of VoxCeleb1.
   local/make_sitw.sh
-  for name in sitw_dev_enroll, sitw_dev_test, sitw_eval_enroll,sitw_eval_test ; do
+  for name in sitw_dev_enroll sitw_dev_test sitw_eval_enroll sitw_eval_test ; do
     utils/utt2spk_to_spk2utt.pl ${sitw_out_dir}/${name}/utt2spk >${sitw_out_dir}/${name}/spk2utt
     utils/validate_data_dir.sh --no-text --no-feats ${sitw_out_dir}/${name}
   done
@@ -54,7 +54,7 @@ fi
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
-  for name in sitw_dev_enroll, sitw_dev_test, sitw_eval_enroll,sitw_eval_test ; do
+  for name in sitw_dev_enroll sitw_dev_test sitw_eval_enroll sitw_eval_test ; do
     steps/make_fbank.sh --write-utt2num-frames true --fbank_config ${fbank_config} --nj 12 --cmd "$train_cmd" \
         ${sitw_out_dir}/${name} exp/make_fbank $fbankdir
     utils/fix_data_dir.sh ${sitw_out_dir}/${name}
@@ -69,7 +69,7 @@ if [ $stage -le 2 ]; then
   # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
-  for name in sitw_dev_enroll, sitw_dev_test, sitw_eval_enroll, sitw_eval_test ; do
+  for name in sitw_dev_enroll sitw_dev_test sitw_eval_enroll sitw_eval_test ; do
     local/nnet3/xvector/prepare_feats_for_egs.sh --nj 5 --cmd "$train_cmd" ${sitw_out_dir}/${name} ${sitw_out_dir}/${name}_no_sil ${sitw_out_dir}/${name}/feats_no_sil
     utils/fix_data_dir.sh ${sitw_out_dir}/${name}_no_sil
 
