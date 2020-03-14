@@ -10,6 +10,7 @@
 in_dir=/work20/yangwenhao/dataset/sitw
 wav_dir=/work20/yangwenhao/dataset/sitw_wav
 out_dir=data/sitw_wav
+date
 # Prepare the enrollment data
 for mode in dev eval; do
   this_out_dir=${out_dir}/sitw_${mode}_enroll
@@ -24,8 +25,10 @@ for mode in dev eval; do
   mkdir -p ${this_wav_dir}/audio
 
   for enroll in core assist; do
+    j=0
     cat $this_in_dir/lists/enroll-${enroll}.lst | \
     while read line; do
+      {
       wav_id=`echo $line| awk '{print $2}' | awk 'BEGIN{FS="[./]"}{print $(NF-1)}'`
       spkr_id=`echo $line| awk '{print $1}'`
 
@@ -37,8 +40,14 @@ for mode in dev eval; do
       echo "${spkr_id}_${wav_id} $WAV_PATH" >> $WAVFILE
       echo "${spkr_id}_${wav_id} ${spkr_id}" >> $SPKFILE
       echo "${spkr_id}_${wav_id} $enroll $mode" >> $MODFILE
+      } &
+      if [ $((j % 12)) -eq 0 ]; then
+        wait
+      fi
     done
+
   done
+  wait
   utils/fix_data_dir.sh $this_out_dir
 done
 
@@ -55,10 +64,11 @@ for mode in dev eval; do
   this_in_dir=${in_dir}/$mode
   this_wav_dir=${wav_dir}/$mode
 
-
+  j=0
   for trial in core multi; do
     cat $this_in_dir/lists/test-${trial}.lst | awk '{print $1,$2}' |\
     while read line; do
+      {
       wav_id=`echo $line | awk 'BEGIN{FS="[./]"} {print $(NF-1)}'`
       WAV=`echo $line | awk '{print this_in_dir"/"$1}' this_in_dir=$this_in_dir`
       WAV_PATH=`echo ${line//'.flac'/'.wav'} | awk '{print this_in_dir"/"$1}' this_in_dir=$this_wav_dir`
@@ -67,9 +77,14 @@ for mode in dev eval; do
       echo "${wav_id} $WAV_PATH" >> $WAVFILE
       echo "${wav_id} ${wav_id}" >> $SPKFILE
       echo "${wav_id} $trial $mode" >> $MODFILE
+      }&
+      if [ $((j % 12)) -eq 0 ]; then
+        wait
+      fi
     done
   done
 
+  wait
   for trial in core-core core-multi assist-core assist-multi; do
     cat $this_in_dir/keys/$trial.lst | sed 's@audio/@@g' | sed 's@.flac@@g' |\
     awk '{if ($3=="tgt")
