@@ -31,7 +31,7 @@ for mode in dev eval; do
       spkr_id=`echo $line| awk '{print $1}'`
 
       WAV=`echo $line | awk '{print this_in_dir"/"$2}' this_in_dir=$this_in_dir`
-      WAV_PATH=`echo $line | awk '{print this_in_dir"/"$2}' this_in_dir=$this_wav_dir`
+      WAV_PATH=`echo ${line//'.flac'/'.wav'} | awk '{print this_in_dir"/"$2}' this_in_dir=$this_wav_dir`
 
       sox -t flac $WAV -t wav -r 16k -b 16 -c 1  $WAV_PATH
 
@@ -62,7 +62,7 @@ for mode in dev eval; do
     while read line; do
       wav_id=`echo $line | awk 'BEGIN{FS="[./]"} {print $(NF-1)}'`
       WAV=`echo $line | awk '{print this_in_dir"/"$1}' this_in_dir=$this_in_dir`
-      WAV_PATH=`echo $line | awk '{print this_in_dir"/"$2}' this_in_dir=$this_wav_dir`
+      WAV_PATH=`echo ${line//'.flac'/'.wav'} | awk '{print this_in_dir"/"$1}' this_in_dir=$this_wav_dir`
 
       sox -t flac $WAV -t wav -r 16k -b 16 -c 1  $WAV_PATH
       echo "${wav_id} $WAV_PATH" >> $WAVFILE
