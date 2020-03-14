@@ -9,8 +9,7 @@
 
 in_dir=/work20/yangwenhao/dataset/sitw
 wav_dir=/work20/yangwenhao/dataset/sitw_wav
-out_dir=data/sitw
-
+out_dir=data/sitw_wav
 # Prepare the enrollment data
 for mode in dev eval; do
   this_out_dir=${out_dir}/sitw_${mode}_enroll
