@@ -136,6 +136,8 @@ function filter_speakers {
 function filter_utts {
   cat $data/utt2spk | awk '{print $1}' > $tmpdir/utts
 
+  echo `wc -l $tmpdir/utts`
+
   ! cat $data/utt2spk | sort | cmp - $data/utt2spk && \
     echo "utt2spk is not in sorted order (fix this yourself)" && exit 1;
 
@@ -173,6 +175,8 @@ function filter_utts {
   for x in feats.scp text segments utt2lang $maybe_wav $maybe_utt2dur $maybe_utt2num_frames; do
     if [ -f $data/$x ]; then
       utils/filter_scp.pl $data/$x $tmpdir/utts > $tmpdir/utts.tmp
+
+      echo `wc -l $tmpdir/utts.tmp`
       mv $tmpdir/utts.tmp $tmpdir/utts
     fi
   done
