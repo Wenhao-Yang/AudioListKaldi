@@ -73,6 +73,57 @@ if [ $stage -le 1 ]; then
 fi
 
 if [ $stage -le 2 ]; then
+  frame_shift=0.01
+  awk -v frame_shift=$frame_shift '{print $1, $2*frame_shift;}' ${vox1_train_dir}/utt2num_frames > ${vox1_train_dir}/reco2dur
+
+  # Make a version with reverberated speech
+  rvb_opts=()
+  rvb_opts+=(--rir-set-parameters "0.5, ${rirs_root}/simulated_rirs/smallroom/my_rir_list")
+  rvb_opts+=(--rir-set-parameters "0.5, ${rirs_root}/simulated_rirs/mediumroom/my_rir_list")
+
+  # Make a reverberated version of the VoxCeleb2 list.  Note that we don't add any
+  # additive noise here.
+  steps/data/reverberate_data_dir.py \
+    "${rvb_opts[@]}" \
+    --speech-rvb-probability 1 \
+    --pointsource-noise-addition-probability 0 \
+    --isotropic-noise-addition-probability 0 \
+    --num-replications 1 \
+    --source-sampling-rate 16000 \
+    ${vox1_train_dir} ${vox1_rev_train_dir}
+
+  cp ${vox1_train_dir}/vad.scp ${vox1_rev_train_dir}/
+  utils/copy_data_dir.sh --utt-suffix "-reverb" ${vox1_rev_train_dir} ${vox1_rev_train_dir}.new
+  rm -rf ${vox1_rev_train_dir}
+  mv ${vox1_rev_train_dir}.new ${vox1_rev_train_dir}
+
+  # Prepare the MUSAN corpus, which consists of music, speech, and noise
+  # suitable for augmentation.
+  steps/data/make_musan.sh --sampling-rate 16000 $musan_root ${musan_out_dir}
+
+  # Get the duration of the MUSAN recordings.  This will be used by the
+  # script augment_data_dir.py.
+  for name in speech noise music; do
+    utils/data/get_utt2dur.sh ${musan_out_dir}/musan_${name}
+    mv ${musan_out_dir}/musan_${name}/utt2dur ${musan_out_dir}/musan_${name}/reco2dur
+  done
+fi
+
+if [ $stage -le 3 ]; then
+
+  # Augment with musan_noise
+  steps/data/augment_data_dir.py --utt-suffix "noise" --fg-interval 1 --fg-snrs "15:10:5:0" --fg-noise-dir "${musan_out_dir}/musan_noise" ${vox1_train_dir} ${vox1_train_dir}_noise
+  # Augment with musan_music
+  steps/data/augment_data_dir.py --utt-suffix "music" --bg-snrs "15:10:8:5" --num-bg-noises "1" --bg-noise-dir "${musan_out_dir}/musan_music" ${vox1_train_dir} ${vox1_train_dir}_music
+  # Augment with musan_speech
+  steps/data/augment_data_dir.py --utt-suffix "babble" --bg-snrs "20:17:15:13" --num-bg-noises "3:4:5:6:7" --bg-noise-dir "${musan_out_dir}/musan_speech" ${vox1_train_dir} ${vox1_train_dir}_babble
+
+  # Combine reverb, noise, music, and babble into one directory.
+  utils/combine_data.sh ${vox1_train_dir}_aug ${vox1_train_dir}_reverb ${vox1_train_dir}_noise ${vox1_train_dir}_music ${vox1_train_dir}_babble
+fi
+
+stage=12
+if [ $stage -le 4 ]; then
   echo "=====================================CMVN========================================"
   # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
   # wasteful, as it roughly doubles the amount of training data on disk.  After
