@@ -20,7 +20,7 @@ import time
 import numpy as np
 import subprocess
 
-def RunCommand(command, wait=True):
+def RunCommand(command):
     """ Runs commands frequently seen in scripts. These are usually a
         sequence of commands connected by pipes, so we use shell=True """
     #logger.info("Running the command\n{0}".format(command))
@@ -28,21 +28,23 @@ def RunCommand(command, wait=True):
                          stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
 
-    if wait:
-        [stdout, stderr] = p.communicate()
-        if p.returncode is not 0:
-            raise Exception("There was an error while running the command {0}\n".format(command)+"-"*10+"\n"+stderr)
-        return stdout, stderr
-    else:
-        return p
+    [stdout, stderr] = p.communicate()
 
-def SaveFromCommands(comms, proid, queue):
+    return p.returncode
+
+
+def SaveFromCommands(comms, proid, errqueue, queue):
     for comm in comms:
-        RunCommand(comm)
-        queue.put('1')
+        pcode = RunCommand(comm[1])
+        if pcode is not 0:
+            errqueue.put(comm[0])
+        else:
+            queue.put(comm[0])
 
         if queue.qsize() % 100 == 0:
-            print('\rProcessed [%6s]' % str(queue.qsize()), end='')
+            print('\rProcessed [%6s] with [%6s] errors.' % (str(queue.qsize()), str(errqueue.qsize())), end='')
+
+    print('\n>> Process {} finished!'.format(proid))
 
 if __name__ == "__main__":
 
@@ -79,8 +81,10 @@ if __name__ == "__main__":
                 l_lst = l.split(' ')
                 l_lst[-2] = l_lst[-3].replace('voxceleb1', 'voxceleb1_%s' % s)
                 comm = ' '.join(l_lst[1:-1])
+                uid = l_lst[0]
 
-                all_convert.append(comm)
+                all_convert.append([uid, comm])
+
                 wav_w_path = pathlib.Path(l_lst[-2])
                 if not wav_w_path.parent.exists():
                     os.makedirs(str(wav_w_path.parent))
@@ -97,6 +101,7 @@ if __name__ == "__main__":
     # completed_queue = Queue()
     manager = Manager()
     completed_queue = manager.Queue()
+    err_queue = manager.Queue()
     # processpool = []
     print('Plan to save augmented %d utterances in %s.' % (num_utt, str(time.asctime())))
     # MakeFeatsProcess(out_dir, wav_scp, 0, completed_queue)
@@ -107,11 +112,7 @@ if __name__ == "__main__":
         if i == (nj - 1):
             j = num_utt
 
-        write_dir = os.path.join(out_dir, 'Split%d/%d' % (nj, i))
-        if not os.path.exists(write_dir):
-            os.makedirs(write_dir)
-
-        pool.apply_async(SaveFromCommands, args=(all_convert[i * chunk:j], i, completed_queue))
+        pool.apply_async(SaveFromCommands, args=(all_convert[i * chunk:j], i, err_queue, completed_queue))
 
     pool.close()  # 关闭进程池，表示不能在往进程池中添加进程
     pool.join()  # 等待进程池中的所有进程执行完毕，必须在close()之后调用
