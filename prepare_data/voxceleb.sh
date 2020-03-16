@@ -32,6 +32,8 @@ rirs_root=/home/yangwenhao/local/dataset/rirs/RIRS_NOISES
 
 #musan_root=/export/corpora/JHU/musan
 vox1_out_dir=data/Vox1_fb64
+musan_out_dir=data/musan
+
 fbank_config=conf/fbank_64.conf
 
 vox1_test_dir=${vox1_out_dir}/test
@@ -40,6 +42,7 @@ vox1_trials=${vox1_test_dir}/trials
 
 vox1_vad_train_dir=${vox1_train_dir}_no_sil
 vox1_vad_test_dir=${vox1_test_dir}_no_sil
+vox1_rev_train_dir=${vox1_train_dir}_reverb
 
 mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
@@ -82,8 +85,8 @@ if [ $stage -le 2 ]; then
 
   # Make a version with reverberated speech
   rvb_opts=()
-  rvb_opts+=(--rir-set-parameters "0.5, ${rirs_root}/simulated_rirs/smallroom/my_rir_list")
-  rvb_opts+=(--rir-set-parameters "0.5, ${rirs_root}/simulated_rirs/mediumroom/my_rir_list")
+  rvb_opts+=(--rir-set-parameters "0.5, ${rirs_root}/simulated_rirs/smallroom/zg_rir_list")
+  rvb_opts+=(--rir-set-parameters "0.5, ${rirs_root}/simulated_rirs/mediumroom/zg_rir_list")
 
   # Make a reverberated version of the VoxCeleb2 list.  Note that we don't add any
   # additive noise here.
