@@ -80,6 +80,8 @@ if [ $stage -le 1 ]; then
 fi
 
 if [ $stage -le 2 ]; then
+  echo "===================================RIRS Reverb Aug=================================="
+
   frame_shift=0.01
   awk -v frame_shift=$frame_shift '{print $1, $2*frame_shift;}' ${vox1_train_dir}/utt2num_frames > ${vox1_train_dir}/reco2dur
 
@@ -104,7 +106,11 @@ if [ $stage -le 2 ]; then
   rm -rf ${vox1_rev_train_dir}
   mv ${vox1_rev_train_dir}.new ${vox1_rev_train_dir}
 
-  # Prepare the MUSAN corpus, which consists of music, speech, and noise
+fi
+
+if [ $stage -le 3 ]; then
+  echo "===================================Musan Aug=================================="
+    # Prepare the MUSAN corpus, which consists of music, speech, and noise
   # suitable for augmentation.
   steps/data/make_musan.sh --sampling-rate 16000 $musan_root ${musan_out_dir}
 
@@ -114,10 +120,6 @@ if [ $stage -le 2 ]; then
     utils/data/get_utt2dur.sh ${musan_out_dir}/musan_${name}
     mv ${musan_out_dir}/musan_${name}/utt2dur ${musan_out_dir}/musan_${name}/reco2dur
   done
-fi
-
-if [ $stage -le 3 ]; then
-
   # Augment with musan_noise
   steps/data/augment_data_dir.py --utt-suffix "noise" --fg-interval 1 --fg-snrs "15:10:5:0" --fg-noise-dir "${musan_out_dir}/musan_noise" ${vox1_train_dir} ${vox1_train_dir}_noise
   # Augment with musan_music
@@ -127,6 +129,7 @@ if [ $stage -le 3 ]; then
 
   # Combine reverb, noise, music, and babble into one directory.
   utils/combine_data.sh ${vox1_train_dir}_aug ${vox1_train_dir}_reverb ${vox1_train_dir}_noise ${vox1_train_dir}_music ${vox1_train_dir}_babble
+
 fi
 
 stage=12
