@@ -48,7 +48,7 @@ mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=2
+stage=3
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="

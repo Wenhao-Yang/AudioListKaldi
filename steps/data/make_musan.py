@@ -8,7 +8,7 @@
 import os, sys, argparse
 sys.path.append("steps/data/")
 sys.path.insert(0, 'steps/')
-import libs.common as common_lib
+import steps.libs.common as common_lib
 
 def get_args():
     parser = argparse.ArgumentParser(description="Create MUSAN corpus",
