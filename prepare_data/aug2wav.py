@@ -33,18 +33,19 @@ def RunCommand(command):
     return p.returncode
 
 
-def SaveFromCommands(comms, proid, errqueue, queue):
-    for comm in comms:
+def SaveFromCommands(proid, task_q, error_q):
+
+    while not task_q.empty():
+        comm = task_queue.get()
         pcode = RunCommand(comm[1])
+
         if pcode is not 0:
-            errqueue.put(comm[0])
-        else:
-            queue.put(comm[0])
+            error_q.put(comm[0])
 
-        if queue.qsize() % 100 == 0:
-            print('\rProcessed [%6s] with [%6s] errors.' % (str(queue.qsize()), str(errqueue.qsize())), end='')
-
-    print('\n>> Process {} finished!'.format(proid))
+        if task_q.qsize() % 100 == 0:
+            print('\rProcess [%3s] There are [%6s] utterances left, with [%6s] errors.' % (str(proid),
+                                                                                           str(task_q.qsize()),
+                                                                                           str(error_q.qsize())), end='')
 
 if __name__ == "__main__":
 
@@ -77,9 +78,10 @@ if __name__ == "__main__":
                 comm = ' '.join(l_lst[1:-1])
                 uid = l_lst[0]
 
-                all_convert.append([uid, comm])
-
                 wav_w_path = pathlib.Path(l_lst[-2])
+                if not wav_w_path.exists():
+                    all_convert.append([uid, comm])
+
                 if not wav_w_path.parent.exists():
                     os.makedirs(str(wav_w_path.parent))
 
@@ -87,30 +89,37 @@ if __name__ == "__main__":
 
     assert os.path.exists(data_dir)
     # assert os.path.exists(wav_scp_f)
+    all_convert.sort()
 
     num_utt = len(all_convert)
-    chunk = int(num_utt / nj)
     start_time = time.time()
 
     # completed_queue = Queue()
     manager = Manager()
-    completed_queue = manager.Queue()
-    err_queue = manager.Queue()
+    task_queue = manager.Queue()
+    error_queue = manager.Queue()
+
+    for com in all_convert:
+        task_queue.put(com)
+
     # processpool = []
-    print('Plan to save augmented %d utterances in %s.' % (num_utt, str(time.asctime())))
+    print('Plan to save augmented %d utterances in %s.' % (task_queue.qsize(), str(time.asctime())))
     # MakeFeatsProcess(out_dir, wav_scp, 0, completed_queue)
 
     pool = Pool(processes=nj)  # 创建nj个进程
     for i in range(0, nj):
-        j = (i + 1) * chunk
-        if i == (nj - 1):
-            j = num_utt
-
-        pool.apply_async(SaveFromCommands, args=(all_convert[i * chunk:j], i, err_queue, completed_queue))
+        pool.apply_async(SaveFromCommands, args=(i, task_queue, error_queue))
 
     pool.close()  # 关闭进程池，表示不能在往进程池中添加进程
     pool.join()  # 等待进程池中的所有进程执行完毕，必须在close()之后调用
-    print(' >> Saving Completed!')
+
+    if error_queue.qsize()>0:
+        print('>> Saving Completed with errors in: ')
+        while not error_queue.empty():
+            print(error_queue.get() + ' ', end='')
+        print('')
+    else:
+        print('>> Saving Completed without errors.!')
 
     sys.exit()
 
