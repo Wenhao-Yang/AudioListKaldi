@@ -49,21 +49,15 @@ def SaveFromCommands(comms, proid, errqueue, queue):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Conver flac to wav in sitw!')
-    parser.add_argument('--nj', type=int, default=4, metavar='E',
+    parser.add_argument('--nj', type=int, default=16, metavar='E',
                         help='number of jobs to make feats (default: 10)')
     parser.add_argument('--data-dir', type=str,
-                        default='/home/yangwenhao/local/dataset/sitw',
-                        help='number of jobs to make feats (default: 10)')
-    parser.add_argument('--out-dir', type=str,
-                        default='/home/yangwenhao/local/dataset/sitw_wav',
+                        default='/home/yangwenhao/local/project/lstm_speaker_verification/data/Vox1_fb64',
                         help='number of jobs to make feats (default: 10)')
     args = parser.parse_args()
 
     nj = args.nj
     data_dir = args.data_dir
-    out_dir = args.out_dir
-    if not os.path.exists(out_dir):
-        os.makedirs(out_dir)
 
     # sets = ['sitw_dev_enroll', 'sitw_dev_test', 'sitw_eval_enroll', 'sitw_eval_test']
     # dev_aug  dev_babble  dev_music  dev_noise  dev_no_sil  dev_reverb
