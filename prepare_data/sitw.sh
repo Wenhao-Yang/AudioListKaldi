@@ -27,7 +27,7 @@ sitw_root=/work20/yangwenhao/dataset/sitw
 #tdnn_dir=exp/tdnn
 #musan_root=/export/corpora/JHU/musan
 
-sitw_out_dir=data/sitw
+sitw_out_dir=data/sitw_wav
 fbank_config=conf/fbank_40.conf
 
 # sitw_dev_enroll  sitw_dev_test  sitw_eval_enroll  sitw_eval_test

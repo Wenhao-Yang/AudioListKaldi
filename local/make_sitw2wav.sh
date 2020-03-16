@@ -11,7 +11,7 @@ in_dir=/work20/yangwenhao/dataset/sitw
 wav_dir=/work20/yangwenhao/dataset/sitw_wav
 out_dir=data/sitw_wav
 date
-# Prepare the enrollment data
+echo "==>Prepare the enrollment data"
 for mode in dev eval; do
   this_out_dir=${out_dir}/sitw_${mode}_enroll
   mkdir -p $this_out_dir 2>/dev/null
@@ -51,7 +51,7 @@ for mode in dev eval; do
   utils/fix_data_dir.sh $this_out_dir
 done
 
-# Prepare the test data
+echo "==>Prepare the test data"
 for mode in dev eval; do
   this_out_dir=${out_dir}/sitw_${mode}_test
   mkdir -p $this_out_dir 2>/dev/null
