@@ -22,6 +22,10 @@ set -e
 # The trials file is downloaded by local/make_voxceleb1.pl.
 vox1_root=/work20/yangwenhao/dataset/voxceleb1
 vox2_root=/export/corpora/VoxCeleb2
+
+# The trials file is downloaded by local/make_voxceleb1.pl.
+musan_root=/home/yangwenhao/local/dataset/musan/musan
+rirs_root=/home/yangwenhao/local/dataset/rirs/RIRS_NOISES
 #nnet_dir=exp/xvector_nnet_1a
 #res_dir=exp/resnt
 #tdnn_dir=exp/tdnn
@@ -41,7 +45,7 @@ mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=0
+stage=2
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
