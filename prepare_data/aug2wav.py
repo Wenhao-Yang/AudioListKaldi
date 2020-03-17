@@ -15,7 +15,7 @@ import os
 import pathlib
 import sys
 import pdb
-from multiprocessing import Process, Queue, Pool, Manager
+from multiprocessing import Pool, Manager
 import time
 import numpy as np
 import subprocess
@@ -74,15 +74,20 @@ if __name__ == "__main__":
             for l in all_wav:
                 # id10001-7w0IBEWc9Qw-00003-music wav-reverberate --shift-output=true --additive-signals='wav-reverberate --duration=16.26 "/home/yangwenhao/local/dataset/musan/musan/music/fma-western-art/music-fma-wa-0023.wav" - |' --start-times='0' --snrs='10' /work20/yangwenhao/dataset/voxceleb1/vox1_dev_wav/wav/id10001/7w0IBEWc9Qw/00003.wav - |
                 l_lst = l.split(' ')
-                l_lst[-2] = l_lst[-3].replace('voxceleb1', 'voxceleb1_%s' % s)
-                comm = ' '.join(l_lst[1:-1])
-                uid = l_lst[0]
+                if s == 'reverb':
+                    l_lst[-2] = l_lst[2].replace('voxceleb1', 'voxceleb1_%s' % s)
+                else:
+                    l_lst[-2] = l_lst[-3].replace('voxceleb1', 'voxceleb1_%s' % s)
 
                 wav_w_path = pathlib.Path(l_lst[-2])
+                uid = l_lst[0]
+                comm = ' '.join(l_lst[1:-1])
+
                 if not wav_w_path.exists():
                     all_convert.append([uid, comm])
 
                 if not wav_w_path.parent.exists():
+                    print('\rMaking dir: %s' % str(wav_w_path.parent), end='')
                     os.makedirs(str(wav_w_path.parent))
 
                 # RunCommand(comm)
@@ -103,7 +108,7 @@ if __name__ == "__main__":
         task_queue.put(com)
 
     # processpool = []
-    print('Plan to save augmented %d utterances in %s.' % (task_queue.qsize(), str(time.asctime())))
+    print('\nPlan to save augmented %d utterances in %s.' % (task_queue.qsize(), str(time.asctime())))
     # MakeFeatsProcess(out_dir, wav_scp, 0, completed_queue)
 
     pool = Pool(processes=nj)  # 创建nj个进程
@@ -114,12 +119,12 @@ if __name__ == "__main__":
     pool.join()  # 等待进程池中的所有进程执行完毕，必须在close()之后调用
 
     if error_queue.qsize()>0:
-        print('>> Saving Completed with errors in: ')
+        print('\n>> Saving Completed with errors in: ')
         while not error_queue.empty():
             print(error_queue.get() + ' ', end='')
         print('')
     else:
-        print('>> Saving Completed without errors.!')
+        print('\n>> Saving Completed without errors.!')
 
     sys.exit()
 
