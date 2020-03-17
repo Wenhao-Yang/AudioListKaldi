@@ -17,7 +17,7 @@ set -e
 
 # The trials file is downloaded by local/make_voxceleb1.pl.
 # dev_babble  dev_music  dev_noise dev_reverb
-subsets=music
+subsets=noise
 vox1_root=/work20/yangwenhao/dataset/voxceleb1_${subsets}
 vox2_root=/export/corpora/VoxCeleb2
 
