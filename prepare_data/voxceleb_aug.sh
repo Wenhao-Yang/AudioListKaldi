@@ -16,7 +16,9 @@ export train_cmd="run.pl --mem 16G"
 set -e
 
 # The trials file is downloaded by local/make_voxceleb1.pl.
-vox1_root=/work20/yangwenhao/dataset/voxceleb1_reverb
+# dev_babble  dev_music  dev_noise dev_reverb
+subsets=babble
+vox1_root=/work20/yangwenhao/dataset/voxceleb1_${subsets}
 vox2_root=/export/corpora/VoxCeleb2
 
 # The trials file is downloaded by local/make_voxceleb1.pl.
@@ -53,7 +55,7 @@ if [ $stage -le 0 ]; then
   utils/utt2spk_to_spk2utt.pl ${vox1_train_dir}/utt2spk >${vox1_train_dir}/spk2utt
   utils/validate_data_dir.sh --no-text --no-feats ${vox1_train_dir}
 
-  utils/copy_data_dir.sh --utt-suffix "-reverb" ${vox1_train_dir} ${vox1_train_dir}.new
+  utils/copy_data_dir.sh --utt-suffix "-${subsets}" ${vox1_train_dir} ${vox1_train_dir}.new
   rm -rf ${vox1_train_dir}
   mv ${vox1_train_dir}.new ${vox1_train_dir}
 
@@ -83,3 +85,5 @@ if [ $stage -le 4 ]; then
   utils/fix_data_dir.sh ${vox1_vad_train_dir}
 
 fi
+
+exit 0;
