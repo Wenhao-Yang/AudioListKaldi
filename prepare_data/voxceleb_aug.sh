@@ -26,7 +26,7 @@ musan_root=/home/yangwenhao/local/dataset/musan/musan
 rirs_root=/home/yangwenhao/local/dataset/rirs/RIRS_NOISES
 
 #musan_root=/export/corpora/JHU/musan
-vox1_out_dir=data/Vox1_reverb_fb64
+vox1_out_dir=data/Vox1_${subsets}_fb64
 
 fbank_config=conf/fbank_64.conf
 
@@ -53,11 +53,12 @@ if [ $stage -le 0 ]; then
 
   cp data/Vox1_fb64/dev/vad.scp ${vox1_train_dir}/vad.scp
   utils/utt2spk_to_spk2utt.pl ${vox1_train_dir}/utt2spk >${vox1_train_dir}/spk2utt
-  utils/validate_data_dir.sh --no-text --no-feats ${vox1_train_dir}
 
   utils/copy_data_dir.sh --utt-suffix "-${subsets}" ${vox1_train_dir} ${vox1_train_dir}.new
   rm -rf ${vox1_train_dir}
   mv ${vox1_train_dir}.new ${vox1_train_dir}
+
+  utils/validate_data_dir.sh --no-text --no-feats ${vox1_train_dir}
 
 fi
 
