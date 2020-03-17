@@ -3,7 +3,7 @@ date
 
 nj=0
 
-head -2 data/Vox1/dev_reverb/wav.scp | \
+head -2 data/Vox1_fb64/dev_reverb/wav.scp | \
     while read line; do
         l=($line)
 
