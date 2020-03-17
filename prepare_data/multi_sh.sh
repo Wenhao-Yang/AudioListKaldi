@@ -12,7 +12,7 @@ head -2 data/Vox1_fb64/dev_reverb/wav.scp | \
         l_len=${#l[@]}
 
         l[-2]=${l[2]//voxceleb1/voxceleb1_reverb}
-
+        echo ${l[*]:1:$((l_len-2))}
         `echo ${l[*]:1:$((l_len-2))}`
         wait
         exit
