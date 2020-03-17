@@ -93,7 +93,7 @@ if [ $stage -le 5 ]; then
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
 
-  utils/combine_data.sh data/Vox1_aug_fb64/dev_no_sil data/Vox1_babble_fb64/dev_no_sil data/Vox1_noise_fb64/dev_no_sil data/Vox1_music_fb64/dev_no_sil data/Vox1_reverb_fb64/dev_no_sil
+  utils/combine_data.sh data/Vox1_aug_fb64/dev_no_sil data/Vox1_fb64/dev_no_sil data/Vox1_babble_fb64/dev_no_sil data/Vox1_noise_fb64/dev_no_sil data/Vox1_music_fb64/dev_no_sil data/Vox1_reverb_fb64/dev_no_sil
 
   utils/fix_data_dir.sh data/Vox1_aug_fb64/dev_no_sil
 
