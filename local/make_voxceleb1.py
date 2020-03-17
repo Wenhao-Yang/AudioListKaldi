@@ -78,8 +78,6 @@ def read_vox1_structure(directory, train_dir, test_dir):
     # /CDShare/voxceleb1/vox1_test_wav/id10270/5r0dWxy17C8/00019.wav
     if not os.path.exists(train_dir):
         os.makedirs(train_dir)
-    if not os.path.exists(test_dir):
-        os.makedirs(test_dir)
 
     all_wav_path = list(data_root.glob('*/*/*/*/*.wav'))
 
@@ -119,16 +117,22 @@ def read_vox1_structure(directory, train_dir, test_dir):
         uid = '-'.join((spkid, utt, uid))
         wav_scp.append(uid + ' ' + str(wav) + '\n')
         utt2spk.append(uid + ' ' + str(spkid) + '\n')
-    assert len(wav_scp)==4874
-    wav_scp.sort()
-    utt2spk.sort()
-    with open(os.path.join(test_dir, 'wav.scp'), 'w') as f1, \
-            open(os.path.join(test_dir, 'utt2spk'), 'w') as f2:
-        for i in range(len(utt2spk)):
-            f1.write(wav_scp[i])
-            f2.write(utt2spk[i])
 
-    print('test set preparing completed.')
+    if len(wav_scp)==4874:
+        if not os.path.exists(test_dir):
+            os.makedirs(test_dir)
+
+        wav_scp.sort()
+        utt2spk.sort()
+        with open(os.path.join(test_dir, 'wav.scp'), 'w') as f1, \
+                open(os.path.join(test_dir, 'utt2spk'), 'w') as f2:
+            for i in range(len(utt2spk)):
+                f1.write(wav_scp[i])
+                f2.write(utt2spk[i])
+
+        print('test set preparing completed.')
+    else:
+        print('test set skipped!')
 
 read_vox1_structure(data_root, train_dir, test_dir)
 #

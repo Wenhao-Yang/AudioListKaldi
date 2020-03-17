@@ -20,7 +20,7 @@ export LC_ALL=C
 set -e
 
 # The trials file is downloaded by local/make_voxceleb1.pl.
-vox1_root=/work20/yangwenhao/dataset/voxceleb1_reverb
+vox1_root=/work20/yangwenhao/dataset/voxceleb1
 vox2_root=/export/corpora/VoxCeleb2
 
 # The trials file is downloaded by local/make_voxceleb1.pl.
@@ -31,7 +31,7 @@ rirs_root=/home/yangwenhao/local/dataset/rirs/RIRS_NOISES
 #tdnn_dir=exp/tdnn
 
 #musan_root=/export/corpora/JHU/musan
-vox1_out_dir=data/Vox1_reverb_fb64
+vox1_out_dir=data/Vox1_fb64
 musan_out_dir=data/musan
 
 fbank_config=conf/fbank_64.conf
@@ -48,7 +48,7 @@ mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=0
+stage=3
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -57,15 +57,11 @@ if [ $stage -le 0 ]; then
   local/make_voxceleb1_trials.pl ${vox1_root} ${vox1_out_dir}
   local/make_voxceleb1.py ${vox1_root} ${vox1_train_dir} ${vox1_test_dir}
 
-  for name in ${vox1_train_dir} ${vox1_test_dir}; do
-      cp data/Vox1_fb64/dev/vad.scp ${name}/vad.scp
-      utils/utt2spk_to_spk2utt.pl ${name}/utt2spk >${name}/spk2utt
-      utils/validate_data_dir.sh --no-text --no-feats ${name}
+  utils/utt2spk_to_spk2utt.pl ${vox1_train_dir}/utt2spk >${vox1_train_dir}/spk2utt
+  utils/validate_data_dir.sh --no-text --no-feats $vox1_train_dir
 
-      utils/copy_data_dir.sh --utt-suffix "-reverb" ${name} ${name}.new
-      rm -rf ${name}
-      mv ${name}.new ${name}
-  done
+  utils/utt2spk_to_spk2utt.pl ${vox1_test_dir}/utt2spk >${vox1_test_dir}/spk2utt
+  utils/validate_data_dir.sh --no-text --no-feats $vox1_test_dir
 
 fi
 
@@ -78,12 +74,11 @@ if [ $stage -le 1 ]; then
     utils/fix_data_dir.sh ${name}
 
     # Todo: Is there any better VAD solutioin?
-#    sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${name} exp/make_vad $vaddir
-#    utils/fix_data_dir.sh ${name}
+    sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${name} exp/make_vad $vaddir
+    utils/fix_data_dir.sh ${name}
   done
 fi
 
-stage=4
 if [ $stage -le 2 ]; then
   echo "===================================RIRS Reverb Aug=================================="
 
@@ -137,7 +132,7 @@ if [ $stage -le 3 ]; then
 
 fi
 
-
+stage=12
 if [ $stage -le 4 ]; then
   echo "=====================================CMVN========================================"
   # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
