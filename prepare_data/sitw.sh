@@ -54,7 +54,7 @@ fi
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
-  for name in sitw_dev_enroll sitw_dev_test sitw_eval_enroll sitw_eval_test ; do
+  for name in sitw_eval_enroll sitw_eval_test ; do
     steps/make_fbank.sh --write-utt2num-frames true --fbank_config ${fbank_config} --nj 12 --cmd "$train_cmd" \
         ${sitw_out_dir}/${name} exp/make_fbank $fbankdir
     utils/fix_data_dir.sh ${sitw_out_dir}/${name}
