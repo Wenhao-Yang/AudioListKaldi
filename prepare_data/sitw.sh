@@ -20,15 +20,15 @@ export LC_ALL=C
 set -e
 
 # The trials file is downloaded by local/make_voxceleb1.pl.
-sitw_root=/work20/yangwenhao/dataset/sitw
+# sitw_root=/work20/yangwenhao/dataset/sitw
 
 #nnet_dir=exp/xvector_nnet_1a
 #res_dir=exp/resnt
 #tdnn_dir=exp/tdnn
 #musan_root=/export/corpora/JHU/musan
 
-sitw_out_dir=data/sitw_wav
-fbank_config=conf/fbank_40.conf
+sitw_out_dir=data/sitw_fb64
+fbank_config=conf/fbank_64.conf
 
 # sitw_dev_enroll  sitw_dev_test  sitw_eval_enroll  sitw_eval_test
 # sitw_test_dir=${sitw_out_dir}/test
@@ -72,6 +72,5 @@ if [ $stage -le 2 ]; then
   for name in sitw_dev_enroll sitw_dev_test sitw_eval_enroll sitw_eval_test ; do
     local/nnet3/xvector/prepare_feats_for_egs.sh --nj 5 --cmd "$train_cmd" ${sitw_out_dir}/${name} ${sitw_out_dir}/${name}_no_sil ${sitw_out_dir}/${name}/feats_no_sil
     utils/fix_data_dir.sh ${sitw_out_dir}/${name}_no_sil
-
   done
 fi
