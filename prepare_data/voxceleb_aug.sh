@@ -27,11 +27,11 @@ rirs_root=/home/yangwenhao/local/dataset/rirs/RIRS_NOISES
 
 #musan_root=/export/corpora/JHU/musan
 
-vox1_org_dir=Vox1_fb64
-vox1_bab_dir=Vox1_babble_fb64
-vox1_noi_dir=Vox1_noise_fb64
-vox1_mus_dir=Vox1_music_fb64
-vox1_aug_dir=Vox1_aug_fb64
+vox1_org_dir=data/Vox1_fb64
+vox1_bab_dir=data/Vox1_babble_fb64
+vox1_noi_dir=data/Vox1_noise_fb64
+vox1_mus_dir=data/Vox1_music_fb64
+vox1_aug_dir=data/Vox1_aug_fb64
 
 fbank_config=conf/fbank_64.conf
 
