@@ -83,7 +83,7 @@ if [ $stage -le 4 ]; then
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
 
-  local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvn false --nj 5 --cmd "$train_cmd" ${vox1_train_dir} ${vox1_vad_train_dir} ${vox1_train_dir}/feats_no_sil
+  local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns false --nj 5 --cmd "$train_cmd" ${vox1_train_dir} ${vox1_vad_train_dir} ${vox1_train_dir}/feats_no_sil
   utils/fix_data_dir.sh ${vox1_vad_train_dir}
 
 fi

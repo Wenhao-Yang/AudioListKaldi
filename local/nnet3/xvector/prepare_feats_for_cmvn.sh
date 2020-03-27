@@ -11,6 +11,7 @@
 nj=40
 cmd="run.pl"
 stage=0
+cmvns=true
 norm_vars=true
 center=true
 compress=true
@@ -65,12 +66,19 @@ sdata_in=$data_in/split$nj;
 utils/split_data.sh $data_in $nj || exit 1;
 
 # Apply sliding-window cepstral mean (and optionally variance)
-$cmd JOB=1:$nj $dir/log/create_xvector_feats_${name}.JOB.log \
-  apply-cmvn --norm-vars=true \
-  scp:${sdata_in}/JOB/feats.scp ark:- \| \
-  select-voiced-frames ark:- scp,s,cs:${sdata_in}/JOB/vad.scp ark:- \| \
-  copy-feats --compress=$compress $write_num_frames_opt ark:- \
-  ark,scp:$featdir/xvector_feats_${name}.JOB.ark,$featdir/xvector_feats_${name}.JOB.scp || exit 1;
+if [ $cmvn ]; then
+    $cmd JOB=1:$nj $dir/log/create_xvector_feats_${name}.JOB.log \
+      apply-cmvn --norm-vars=true \
+      scp:${sdata_in}/JOB/feats.scp ark:- \| \
+      select-voiced-frames ark:- scp,s,cs:${sdata_in}/JOB/vad.scp ark:- \| \
+      copy-feats --compress=$compress $write_num_frames_opt ark:- \
+      ark,scp:$featdir/xvector_feats_${name}.JOB.ark,$featdir/xvector_feats_${name}.JOB.scp || exit 1;
+else
+    $cmd JOB=1:$nj $dir/log/create_xvector_feats_${name}.JOB.log \
+      select-voiced-frames scp:${sdata_in}/JOB/feats.scp scp,s,cs:${sdata_in}/JOB/vad.scp ark:- \| \
+      copy-feats --compress=$compress $write_num_frames_opt ark:- \
+      ark,scp:$featdir/xvector_feats_${name}.JOB.ark,$featdir/xvector_feats_${name}.JOB.scp || exit 1;
+fi
 
 for n in $(seq $nj); do
   cat $featdir/xvector_feats_${name}.$n.scp || exit 1;
