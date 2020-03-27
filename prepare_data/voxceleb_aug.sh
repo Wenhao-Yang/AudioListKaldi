@@ -96,7 +96,7 @@ if [ $stage -le 4 ]; then
 #    utils/fix_data_dir.sh ${name}/dev_no_sil
 #  done
 
-  local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns false --nj 8 --cmd "$train_cmd" ${vox1_org_dir}/test ${vox1_org_dir}/test ${vox1_org_dir}/test/feats_no_sil
+  local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns false --nj 8 --cmd "$train_cmd" ${vox1_org_dir}/test ${vox1_org_dir}/test_no_sil ${vox1_org_dir}/test/feats_no_sil
   utils/fix_data_dir.sh ${vox1_org_dir}/test_no_sil
 
 fi
