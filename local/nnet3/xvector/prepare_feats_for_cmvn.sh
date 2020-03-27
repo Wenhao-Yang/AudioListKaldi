@@ -11,10 +11,9 @@
 nj=40
 cmd="run.pl"
 stage=0
-norm_vars=false
+norm_vars=true
 center=true
 compress=true
-cmn_window=300
 
 echo "$0 $@"  # Print the command line for logging
 
@@ -67,7 +66,7 @@ utils/split_data.sh $data_in $nj || exit 1;
 
 # Apply sliding-window cepstral mean (and optionally variance)
 $cmd JOB=1:$nj $dir/log/create_xvector_feats_${name}.JOB.log \
-  apply-cmvn-sliding --norm-vars=false --center=true --cmn-window=$cmn_window \
+  apply-cmvn --norm-vars=true \
   scp:${sdata_in}/JOB/feats.scp ark:- \| \
   select-voiced-frames ark:- scp,s,cs:${sdata_in}/JOB/vad.scp ark:- \| \
   copy-feats --compress=$compress $write_num_frames_opt ark:- \
