@@ -90,10 +90,11 @@ if [ $stage -le 4 ]; then
   # data/Vox1_fb64/dev_no_sil;       data/Vox1_babble_fb64/dev_no_sil
   # data/Vox1_noise_fb64/dev_no_sil  data/Vox1_music_fb64/dev_no_sil:
   # data/Vox1_reverb_fb64/dev_no_sil
-  for name in ${vox1_org_dir} ${vox1_bab_dir} ${vox1_noi_dir} ${vox1_mus_dir} ${vox1_aug_dir}; do
-    local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns false --nj 8 --cmd "$train_cmd" ${name}/dev ${name}/dev_no_sil ${name}/dev/feats_no_sil
-    utils/fix_data_dir.sh ${name}/dev_no_sil
-  done
+
+#  for name in ${vox1_org_dir} ${vox1_bab_dir} ${vox1_noi_dir} ${vox1_mus_dir}; do
+#    local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns false --nj 8 --cmd "$train_cmd" ${name}/dev ${name}/dev_no_sil ${name}/dev/feats_no_sil
+#    utils/fix_data_dir.sh ${name}/dev_no_sil
+#  done
 
   local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns false --nj 8 --cmd "$train_cmd" ${vox1_org_dir}/test ${vox1_org_dir}/test ${vox1_org_dir}/test/feats_no_sil
   utils/fix_data_dir.sh ${vox1_org_dir}/test_no_sil
