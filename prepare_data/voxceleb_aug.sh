@@ -31,6 +31,8 @@ vox1_org_dir=data/Vox1_fb64
 vox1_bab_dir=data/Vox1_babble_fb64
 vox1_noi_dir=data/Vox1_noise_fb64
 vox1_mus_dir=data/Vox1_music_fb64
+vox1_rev_dir=data/Vox1_reverb_fb64
+
 vox1_aug_dir=data/Vox1_aug_fb64
 
 fbank_config=conf/fbank_64.conf
@@ -119,6 +121,8 @@ if [ $stage -le 5 ]; then
   # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
+  local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns false --nj 8 --cmd "$train_cmd" ${vox1_rev_dir}/dev ${vox1_rev_dir}/dev_no_sil ${vox1_rev_dir}/dev/feats_no_sil
+  utils/fix_data_dir.sh ${vox1_rev_dir}/dev_no_sil
 
   utils/combine_data.sh data/Vox1_aug_fb64/dev_no_sil data/Vox1_fb64/dev_no_sil data/Vox1_babble_fb64/dev_no_sil data/Vox1_noise_fb64/dev_no_sil data/Vox1_music_fb64/dev_no_sil data/Vox1_reverb_fb64/dev_no_sil
 
