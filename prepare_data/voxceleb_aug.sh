@@ -47,7 +47,7 @@ fbank_config=conf/fbank_64.conf
 #fbankdir=${vox1_out_dir}/fbank
 #vaddir=${vox1_out_dir}/vad
 
-stage=4
+stage=5
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
