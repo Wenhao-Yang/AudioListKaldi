@@ -20,7 +20,7 @@ data_roots = sys.argv[1:]
 assert len(data_roots)>0
 print("Dirs are: \n" + '; '.join(data_roots))
 
-num_repeat = 100
+num_repeat = 1000
 
 for data_dir in data_roots:
     spk2utt = data_dir+'/spk2utt'
