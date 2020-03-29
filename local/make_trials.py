@@ -11,11 +11,12 @@
 """
 
 import os
-import csv
 import sys
 import numpy as np
 
 data_roots = sys.argv[1:]
+assert len(data_roots)>0
+
 num_repeat = 100
 
 for data_dir in data_roots:
