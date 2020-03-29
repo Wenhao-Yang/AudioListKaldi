@@ -58,7 +58,7 @@ for data_dir in data_roots:
             for i in range(num_utt):
                 for j in range(num_utt):
                     if i<j:
-                        this_line = ' '.join((spk2utt_dict[spk][i], spk2utt_dict[spk][i], 'target\n'))
+                        this_line = ' '.join((spk2utt_dict[spk][i], spk2utt_dict[spk][j], 'target\n'))
                         f.write(this_line)
                         pairs+=1
 
