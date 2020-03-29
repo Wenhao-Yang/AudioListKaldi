@@ -57,8 +57,6 @@ if [ $stage -le 0 ]; then
 
 fi
 
-
-
 if [ $stage -le 1 ]; then
     # Make MFCCs and compute the energy-based VAD for each dataset
     echo "==========================Making Fbank features and VAD============================"
@@ -86,10 +84,10 @@ if [ $stage -le 3 ]; then
     # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
     # wasteful, as it roughly doubles the amount of training data on disk.  After
     # creating training examples, this can be removed.
-    for name in sitw_dev_enroll sitw_dev_test sitw_eval_enroll sitw_eval_test ; do
-        local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns false --nj 8 --cmd "$train_cmd" ${sitw_out_dir}/${name} ${sitw_out_dir}/${name}_no_cmvn ${sitw_out_dir}/${name}/feats_no_cmvn
+    for name in ${dev} ${test} ; do
+        local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns false --nj 8 --cmd "$train_cmd" ${libri_out_dir}/${name} ${libri_out_dir}/${name}_no_cmvn ${libri_out_dir}/${name}/feats_no_cmvn
 
-        utils/fix_data_dir.sh ${sitw_out_dir}/${name}_no_cmvn
+        utils/fix_data_dir.sh ${libri_out_dir}/${name}_no_cmvn
     done
 fi
 
