@@ -176,7 +176,7 @@ function filter_utts {
     if [ -f $data/$x ]; then
       utils/filter_scp.pl $data/$x $tmpdir/utts > $tmpdir/utts.tmp
 
-      echo `wc -l $tmpdir/utts.tmp`
+      # echo `wc -l $tmpdir/utts.tmp`
       mv $tmpdir/utts.tmp $tmpdir/utts
     fi
   done
