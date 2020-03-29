@@ -85,7 +85,7 @@ fi
 
 if [ $stage -le 4 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
-  echo "==========================Making Fbank features and VAD============================"
+  echo "===================Making Fbank features and VAD test set========================"
 
   steps/make_fbank.sh --write-utt2num-frames true --fbank_config ${fbank_config} --nj 12 --cmd "$train_cmd" \
         ${vox1_org_dir}/test exp/make_fbank ${vox1_org_dir}/fbank
