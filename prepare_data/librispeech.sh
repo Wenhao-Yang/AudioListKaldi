@@ -45,7 +45,7 @@ mfccdir=${libri_out_dir}/mfcc
 fbankdir=${libri_out_dir}/fbank
 vaddir=${libri_out_dir}/vad
 
-stage=0
+stage=3
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -84,12 +84,12 @@ if [ $stage -le 1 ]; then
 fi
 
 if [ $stage -le 3 ]; then
-  echo "=====================================VAD========================================"
+  echo "=====================================Remove Silence========================================"
   # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
   for name in ${dev} ${test}; do
-    local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns true --nj 8 --cmd "$train_cmd" ${libri_out_dir}/${name} ${libri_out_dir}/${name}_no_cmvn ${libri_out_dir}/${name}/feats_no_sil
+    local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns true --nj 8 --cmd "$train_cmd" ${libri_out_dir}/${name} ${libri_out_dir}/${name}_no_sil ${libri_out_dir}/${name}/feats_no_sil
 
     utils/fix_data_dir.sh ${libri_out_dir}/${name}_no_sil
   done
