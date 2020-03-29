@@ -43,7 +43,7 @@ mfccdir=${libri_out_dir}/mfcc
 fbankdir=${libri_out_dir}/fbank
 vaddir=${libri_out_dir}/vad
 
-stage=0
+stage=33
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -89,7 +89,7 @@ if [ $stage -le 3 ]; then
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
   for name in ${dev} ${test}; do
-    local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns false --nj 8 --cmd "$train_cmd" ${libri_out_dir}/${name} ${libri_out_dir}/${name}_no_cmvn ${libri_out_dir}/${name}/feats_no_cmvn
+    local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns true --nj 8 --cmd "$train_cmd" ${libri_out_dir}/${name} ${libri_out_dir}/${name}_no_cmvn ${libri_out_dir}/${name}/feats_no_cmvn
 
     utils/fix_data_dir.sh ${libri_out_dir}/${name}_no_cmvn
   done
