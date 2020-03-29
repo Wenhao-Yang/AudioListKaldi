@@ -45,7 +45,7 @@ mfccdir=${libri_out_dir}/mfcc
 fbankdir=${libri_out_dir}/fbank
 vaddir=${libri_out_dir}/vad
 
-stage=3
+stage=5
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -98,5 +98,5 @@ fi
 
 if [ $stage -le 5 ]; then
   echo "================================Generate trials=================================="
-  local/make_trials.py ${dev} ${test}
+  local/make_trials.py ${libri_out_dir}/${dev} ${libri_out_dir}/${test}
 fi
