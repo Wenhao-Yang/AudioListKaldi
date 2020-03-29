@@ -27,7 +27,7 @@ set -e
 #tdnn_dir=exp/tdnn
 #musan_root=/export/corpora/JHU/musan
 libri_root=/data/librispeech/LibriSpeech
-libri_out_dir=data/libri_fb64
+libri_out_dir=data/libri
 fbank_config=conf/fbank_64.conf
 
 dev=dev-clean
