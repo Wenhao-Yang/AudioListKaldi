@@ -53,7 +53,7 @@ if [ $stage -le 0 ]; then
     utils/utt2spk_to_spk2utt.pl ${libri_out_dir}/${name}/utt2spk >${libri_out_dir}/${name}/spk2utt
     utils/validate_data_dir.sh --no-text --no-feats ${libri_out_dir}/${name}
 
-    echo "`wc -l ${libri_root}/${name}/spk2utt` speakers in set ${names}"
+    echo "`wc -l ${libri_out_dir}/${name}/spk2utt` speakers in set" ${names}
   done
 
 fi
@@ -64,6 +64,9 @@ if [ $stage -le 1 ]; then
   for name in ${dev} ${test} ; do
     steps/make_fbank.sh --write-utt2num-frames true --fbank_config ${fbank_config} --nj 12 --cmd "$train_cmd" \
     ${libri_out_dir}/${name} exp/make_fbank $fbankdir
+    utils/fix_data_dir.sh ${libri_out_dir}/${name}
+
+    sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${libri_out_dir}/${name} exp/make_vad $vaddir
     utils/fix_data_dir.sh ${libri_out_dir}/${name}
   done
 fi
