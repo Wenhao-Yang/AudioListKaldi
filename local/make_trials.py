@@ -14,8 +14,10 @@ import os
 import sys
 import numpy as np
 
+print(os.getcwd())
 data_roots = sys.argv[1:]
 assert len(data_roots)>0
+print(data_roots)
 
 num_repeat = 100
 
