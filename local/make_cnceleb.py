@@ -5,7 +5,7 @@
 @Author: yangwenhao
 @Contact: 874681044@qq.com
 @Software: PyCharm
-@File: cn-celeb.py
+@File: make_cnceleb.py
 @Time: 2020/2/11 12:03 PM
 @Overview:
 
@@ -32,6 +32,8 @@ parser.add_argument('--output-dir', type=str, default='data/CN-Celeb',
 args = parser.parse_args()
 
 data_dir = '/'.join((args.dataset_dir, 'data'))
+
+data_dir = os.path.abspath(data_dir)
 data_dir_path = pathlib.Path(data_dir)
 out_dir = args.output_dir
 out_dir_path = pathlib.Path(out_dir)
@@ -48,6 +50,7 @@ try:
     cn_lst = np.load(cn_npy)
     if len(cn_lst)!=130108:
         raise Exception
+    print('Load wav lst from %s' % cn_npy)
 except:
     cn_lst = []
     for spk in spks_dir:
@@ -59,7 +62,9 @@ except:
             utt_dic['path'] = str(utt)
             utt_dic['spk'] = spk.name
             cn_lst.append(utt_dic)
+    cn_npy = np.array(cn_npy)
     np.save(cn_npy, cn_lst)
+    print('Saving wav lst from %s' % cn_npy)
 
 
 wav_scp = 'wav.scp'
@@ -92,6 +97,9 @@ with open(args.output_dir + '/dev/wav.scp', 'w') as f1, \
     f1.writelines(wav_scp)
     f2.writelines(utt2spk)
 
+print('\nFor dev:\n\twav.scp and utt2spk write to %s/dev .' % args.output_dir)
+print('\tThere are %d in dev' % len(wav_scp))
+
 enroll_lst = args.dataset_dir + '/eval/lists/enroll.lst'
 enroll_lst_f = open(enroll_lst, 'r')
 
@@ -120,7 +128,8 @@ with open(args.output_dir + '/enroll/wav.scp', 'w') as f1, \
      open(args.output_dir + '/enroll/utt2spk', 'w') as f2:
     f1.writelines(wav_scp)
     f2.writelines(utt2spk)
-
+print('\nFor Enroll:\n\twav.scp and utt2spk write to %s/enroll .' % args.output_dir)
+print('\tThere are %d in enroll' % len(wav_scp))
 
 # eval set
 test_lst = args.dataset_dir + '/eval/lists/test.lst'
@@ -153,6 +162,8 @@ with open(args.output_dir + '/test/wav.scp', 'w') as f1, \
     f1.writelines(wav_scp)
     f2.writelines(utt2spk)
 
+print('\nFor test:\n\twav.scp and utt2spk write to %s/test .' % args.output_dir)
+print('\tThere are %d in test' % len(wav_scp))
 
 trials_uid = []
 trials_lst = args.dataset_dir + '/eval/lists/trials.lst'
@@ -171,7 +182,8 @@ for idx, utt_pair in enumerate(trials):
 with open(args.output_dir + '/test/trials', 'w') as f:
     f.writelines(trials_uid)
 
-
+print('Saving trials in %s' % (args.output_dir+'/test/trials'))
+print('Preparing Completed!')
 
 
 
