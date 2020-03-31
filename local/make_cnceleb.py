@@ -8,7 +8,6 @@
 @File: make_cnceleb.py
 @Time: 2020/2/11 12:03 PM
 @Overview:
-
 wav.scp
 spk2utt
 
@@ -47,19 +46,20 @@ if __name__ == '__main__':
     spks_dir = [x for x in data_dir_path.iterdir() if x.is_dir()]
     spks_name = [x.name for x in spks_dir]
 
-    cn_npy = str(out_dir_path)+'/cn.npy'
+    cn_npy = str(out_dir_path) + '/cn.npy'
 
     try:
+
         if not os.path.exists(cn_npy):
             raise Exception
 
         cn_lst = np.load(cn_npy)
-        if len(cn_lst)!=130108:
+        if len(cn_lst) != 130108:
             raise Exception
 
         print('Load wav lst from %s' % cn_npy)
 
-    except:
+    except Exception as e:
         cn_lst = []
         for spk in spks_dir:
             # [.../data/id00000/singing-01-002.wav, ...]
@@ -75,7 +75,6 @@ if __name__ == '__main__':
         cn_npy = np.array(cn_npy)
         np.save(cn_npy, cn_lst)
         print('Saving wav lst from %s' % cn_npy)
-
 
     wav_scp = 'wav.scp'
     utt2spk = 'spk2utt'
@@ -103,7 +102,7 @@ if __name__ == '__main__':
     utt2spk.sort()
 
     with open(args.output_dir + '/dev/wav.scp', 'w') as f1, \
-         open(args.output_dir + '/dev/utt2spk', 'w') as f2:
+            open(args.output_dir + '/dev/utt2spk', 'w') as f2:
         f1.writelines(wav_scp)
         f2.writelines(utt2spk)
 
@@ -126,7 +125,7 @@ if __name__ == '__main__':
         spk_id = uid.rstrip('-enroll')
         path = args.dataset_dir + '/eval/' + path
 
-        wav_scp.append(uid + ' '+ path)
+        wav_scp.append(uid + ' ' + path)
         # f2.write(spk_id + ' ' + uid + '\n')
         spk_id = spk_id + '\n'
         utt2spk.append(uid + ' ' + spk_id)
@@ -135,7 +134,7 @@ if __name__ == '__main__':
     utt2spk.sort()
 
     with open(args.output_dir + '/enroll/wav.scp', 'w') as f1, \
-         open(args.output_dir + '/enroll/utt2spk', 'w') as f2:
+            open(args.output_dir + '/enroll/utt2spk', 'w') as f2:
         f1.writelines(wav_scp)
         f2.writelines(utt2spk)
     print('\nFor Enroll:\n\twav.scp and utt2spk write to %s/enroll .' % args.output_dir)
@@ -155,11 +154,11 @@ if __name__ == '__main__':
     test = test_lst_f.readlines()
     for idx, utt_path in enumerate(test):
         path = utt_path.rstrip('.wav').split('/')  # test/id00999-singing-02-006.wav
-        uid = '-'.join(path).rstrip('.wav\n')    # test-id00999-singing-02-006.wav
+        uid = '-'.join(path).rstrip('.wav\n')  # test-id00999-singing-02-006.wav
 
         spk_id = uid.split('-')[1]
         path = args.dataset_dir + '/eval/' + utt_path
-        wav_scp.append(uid + ' '+ path)
+        wav_scp.append(uid + ' ' + path)
         # f2.write(spk_id + ' ' + uid + '\n')
         spk_id = spk_id + '\n'
         utt2spk.append(uid + ' ' + spk_id)
@@ -168,7 +167,7 @@ if __name__ == '__main__':
     utt2spk.sort()
 
     with open(args.output_dir + '/test/wav.scp', 'w') as f1, \
-         open(args.output_dir + '/test/utt2spk', 'w') as f2:
+            open(args.output_dir + '/test/utt2spk', 'w') as f2:
         f1.writelines(wav_scp)
         f2.writelines(utt2spk)
 
@@ -181,7 +180,6 @@ if __name__ == '__main__':
 
     trials = trials_lst_f.readlines()
     for idx, utt_pair in enumerate(trials):
-
         enroll_uid, test_path, target = utt_pair.split(' ')  # id00800-enroll test/id00800-singing-01-005.wav 1
 
         path = test_path.rstrip('.wav').split('/')  # test/id00999-singing-02-006.wav
@@ -192,19 +190,5 @@ if __name__ == '__main__':
     with open(args.output_dir + '/test/trials', 'w') as f:
         f.writelines(trials_uid)
 
-    print('Saving trials in %s' % (args.output_dir+'/test/trials'))
+    print('Saving trials in %s' % (args.output_dir + '/test/trials'))
     print('Preparing Completed!')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
