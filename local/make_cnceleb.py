@@ -31,163 +31,165 @@ parser.add_argument('--output-dir', type=str, default='data/CN-Celeb',
 
 args = parser.parse_args()
 
-data_dir = '/'.join((args.dataset_dir, 'data'))
+if __name__ == '__main__':
 
-data_dir = os.path.abspath(data_dir)
-data_dir_path = pathlib.Path(data_dir)
-out_dir = args.output_dir
-out_dir_path = pathlib.Path(out_dir)
+    data_dir = '/'.join((args.dataset_dir, 'data'))
 
-assert data_dir_path.exists()
-if not out_dir_path.exists():
-    os.makedirs(str(out_dir_path))
+    data_dir = os.path.abspath(data_dir)
+    data_dir_path = pathlib.Path(data_dir)
+    out_dir = args.output_dir
+    out_dir_path = pathlib.Path(out_dir)
 
-spks_dir = [x for x in data_dir_path.iterdir() if x.is_dir()]
-spks_name = [x.name for x in spks_dir]
+    assert data_dir_path.exists()
+    if not out_dir_path.exists():
+        os.makedirs(str(out_dir_path))
 
-cn_npy = str(out_dir_path)+'/cn.npy'
-try:
-    if not os.path.exists(cn_npy):
-        raise FileExistsError
+    spks_dir = [x for x in data_dir_path.iterdir() if x.is_dir()]
+    spks_name = [x.name for x in spks_dir]
 
-    cn_lst = np.load(cn_npy)
-    if len(cn_lst)!=130108:
-        raise ValueError
+    cn_npy = str(out_dir_path)+'/cn.npy'
+    try:
+        if not os.path.exists(cn_npy):
+            raise FileExistsError
 
-    print('Load wav lst from %s' % cn_npy)
-except (FileNotFoundError, ValueError) as e:
-    cn_lst = []
-    for spk in spks_dir:
-        utts = [x for x in spk.iterdir() if x.is_file() and x.suffix == '.wav']  # [.../data/id00000/singing-01-002.wav, ...]
-        for utt in utts:
-            utt_dic = {}
-            uid = spk.name + '-' + utt.name.rstrip('.wav')
-            utt_dic['uid'] = uid
-            utt_dic['path'] = str(utt)
-            utt_dic['spk'] = spk.name
-            cn_lst.append(utt_dic)
-    cn_npy = np.array(cn_npy)
-    np.save(cn_npy, cn_lst)
-    print('Saving wav lst from %s' % cn_npy)
+        cn_lst = np.load(cn_npy)
+        if len(cn_lst)!=130108:
+            raise ValueError
+
+        print('Load wav lst from %s' % cn_npy)
+    except (FileNotFoundError, ValueError) as e:
+        cn_lst = []
+        for spk in spks_dir:
+            utts = [x for x in spk.iterdir() if x.is_file() and x.suffix == '.wav']  # [.../data/id00000/singing-01-002.wav, ...]
+            for utt in utts:
+                utt_dic = {}
+                uid = spk.name + '-' + utt.name.rstrip('.wav')
+                utt_dic['uid'] = uid
+                utt_dic['path'] = str(utt)
+                utt_dic['spk'] = spk.name
+                cn_lst.append(utt_dic)
+        cn_npy = np.array(cn_npy)
+        np.save(cn_npy, cn_lst)
+        print('Saving wav lst from %s' % cn_npy)
 
 
-wav_scp = 'wav.scp'
-utt2spk = 'spk2utt'
-# dev set
+    wav_scp = 'wav.scp'
+    utt2spk = 'spk2utt'
+    # dev set
 
-dev_lst = args.dataset_dir + '/dev/dev.lst'
-dev_lst_f = open(dev_lst, 'r')
+    dev_lst = args.dataset_dir + '/dev/dev.lst'
+    dev_lst_f = open(dev_lst, 'r')
 
-dev_dir_path = pathlib.Path(args.output_dir + '/dev')
-if not dev_dir_path.exists():
-    os.makedirs(str(dev_dir_path))
+    dev_dir_path = pathlib.Path(args.output_dir + '/dev')
+    if not dev_dir_path.exists():
+        os.makedirs(str(dev_dir_path))
 
-wav_scp = []
-utt2spk = []
+    wav_scp = []
+    utt2spk = []
 
-for spk in dev_lst_f.readlines():
-    spk_name = spk.rstrip('\n')
-    for utt in cn_lst:
-        if utt['spk'] == spk_name:
-            wav_scp.append(utt['uid'] + ' ' + utt['path'] + '\n')
-            # f2.write(' ' + utt['uid'])
-            # spk_name = spk_name + '\n' if idx < (len(enroll) - 1) else spk_id
-            utt2spk.append(utt['uid'] + ' ' + spk_name + '\n')
-wav_scp.sort()
-utt2spk.sort()
+    for spk in dev_lst_f.readlines():
+        spk_name = spk.rstrip('\n')
+        for utt in cn_lst:
+            if utt['spk'] == spk_name:
+                wav_scp.append(utt['uid'] + ' ' + utt['path'] + '\n')
+                # f2.write(' ' + utt['uid'])
+                # spk_name = spk_name + '\n' if idx < (len(enroll) - 1) else spk_id
+                utt2spk.append(utt['uid'] + ' ' + spk_name + '\n')
+    wav_scp.sort()
+    utt2spk.sort()
 
-with open(args.output_dir + '/dev/wav.scp', 'w') as f1, \
-     open(args.output_dir + '/dev/utt2spk', 'w') as f2:
-    f1.writelines(wav_scp)
-    f2.writelines(utt2spk)
+    with open(args.output_dir + '/dev/wav.scp', 'w') as f1, \
+         open(args.output_dir + '/dev/utt2spk', 'w') as f2:
+        f1.writelines(wav_scp)
+        f2.writelines(utt2spk)
 
-print('\nFor dev:\n\twav.scp and utt2spk write to %s/dev .' % args.output_dir)
-print('\tThere are %d in dev' % len(wav_scp))
+    print('\nFor dev:\n\twav.scp and utt2spk write to %s/dev .' % args.output_dir)
+    print('\tThere are %d in dev' % len(wav_scp))
 
-enroll_lst = args.dataset_dir + '/eval/lists/enroll.lst'
-enroll_lst_f = open(enroll_lst, 'r')
+    enroll_lst = args.dataset_dir + '/eval/lists/enroll.lst'
+    enroll_lst_f = open(enroll_lst, 'r')
 
-enroll_dir_path = pathlib.Path(args.output_dir + '/enroll')
-if not enroll_dir_path.exists():
-    os.makedirs(str(enroll_dir_path))
+    enroll_dir_path = pathlib.Path(args.output_dir + '/enroll')
+    if not enroll_dir_path.exists():
+        os.makedirs(str(enroll_dir_path))
 
-wav_scp = []
-utt2spk = []
+    wav_scp = []
+    utt2spk = []
 
-enroll = enroll_lst_f.readlines()
-for idx, utt_pair in enumerate(enroll):
-    uid, path = utt_pair.split(' ')  # id00998-enroll enroll/id00998-enroll.wav
-    spk_id = uid.rstrip('-enroll')
-    path = args.dataset_dir + '/eval/' + path
+    enroll = enroll_lst_f.readlines()
+    for idx, utt_pair in enumerate(enroll):
+        uid, path = utt_pair.split(' ')  # id00998-enroll enroll/id00998-enroll.wav
+        spk_id = uid.rstrip('-enroll')
+        path = args.dataset_dir + '/eval/' + path
 
-    wav_scp.append(uid + ' '+ path)
-    # f2.write(spk_id + ' ' + uid + '\n')
-    spk_id = spk_id + '\n'
-    utt2spk.append(uid + ' ' + spk_id)
+        wav_scp.append(uid + ' '+ path)
+        # f2.write(spk_id + ' ' + uid + '\n')
+        spk_id = spk_id + '\n'
+        utt2spk.append(uid + ' ' + spk_id)
 
-wav_scp.sort()
-utt2spk.sort()
+    wav_scp.sort()
+    utt2spk.sort()
 
-with open(args.output_dir + '/enroll/wav.scp', 'w') as f1, \
-     open(args.output_dir + '/enroll/utt2spk', 'w') as f2:
-    f1.writelines(wav_scp)
-    f2.writelines(utt2spk)
-print('\nFor Enroll:\n\twav.scp and utt2spk write to %s/enroll .' % args.output_dir)
-print('\tThere are %d in enroll' % len(wav_scp))
+    with open(args.output_dir + '/enroll/wav.scp', 'w') as f1, \
+         open(args.output_dir + '/enroll/utt2spk', 'w') as f2:
+        f1.writelines(wav_scp)
+        f2.writelines(utt2spk)
+    print('\nFor Enroll:\n\twav.scp and utt2spk write to %s/enroll .' % args.output_dir)
+    print('\tThere are %d in enroll' % len(wav_scp))
 
-# eval set
-test_lst = args.dataset_dir + '/eval/lists/test.lst'
-test_lst_f = open(test_lst, 'r')
+    # eval set
+    test_lst = args.dataset_dir + '/eval/lists/test.lst'
+    test_lst_f = open(test_lst, 'r')
 
-test_dir_path = pathlib.Path(args.output_dir + '/test')
-if not test_dir_path.exists():
-    os.makedirs(str(test_dir_path))
+    test_dir_path = pathlib.Path(args.output_dir + '/test')
+    if not test_dir_path.exists():
+        os.makedirs(str(test_dir_path))
 
-wav_scp = []
-utt2spk = []
+    wav_scp = []
+    utt2spk = []
 
-test = test_lst_f.readlines()
-for idx, utt_path in enumerate(test):
-    path = utt_path.rstrip('.wav').split('/')  # test/id00999-singing-02-006.wav
-    uid = '-'.join(path).rstrip('.wav\n')    # test-id00999-singing-02-006.wav
+    test = test_lst_f.readlines()
+    for idx, utt_path in enumerate(test):
+        path = utt_path.rstrip('.wav').split('/')  # test/id00999-singing-02-006.wav
+        uid = '-'.join(path).rstrip('.wav\n')    # test-id00999-singing-02-006.wav
 
-    spk_id = uid.split('-')[1]
-    path = args.dataset_dir + '/eval/' + utt_path
-    wav_scp.append(uid + ' '+ path)
-    # f2.write(spk_id + ' ' + uid + '\n')
-    spk_id = spk_id + '\n'
-    utt2spk.append(uid + ' ' + spk_id)
+        spk_id = uid.split('-')[1]
+        path = args.dataset_dir + '/eval/' + utt_path
+        wav_scp.append(uid + ' '+ path)
+        # f2.write(spk_id + ' ' + uid + '\n')
+        spk_id = spk_id + '\n'
+        utt2spk.append(uid + ' ' + spk_id)
 
-wav_scp.sort()
-utt2spk.sort()
+    wav_scp.sort()
+    utt2spk.sort()
 
-with open(args.output_dir + '/test/wav.scp', 'w') as f1, \
-     open(args.output_dir + '/test/utt2spk', 'w') as f2:
-    f1.writelines(wav_scp)
-    f2.writelines(utt2spk)
+    with open(args.output_dir + '/test/wav.scp', 'w') as f1, \
+         open(args.output_dir + '/test/utt2spk', 'w') as f2:
+        f1.writelines(wav_scp)
+        f2.writelines(utt2spk)
 
-print('\nFor test:\n\twav.scp and utt2spk write to %s/test .' % args.output_dir)
-print('\tThere are %d in test' % len(wav_scp))
+    print('\nFor test:\n\twav.scp and utt2spk write to %s/test .' % args.output_dir)
+    print('\tThere are %d in test' % len(wav_scp))
 
-trials_uid = []
-trials_lst = args.dataset_dir + '/eval/lists/trials.lst'
-trials_lst_f = open(trials_lst, 'r')
+    trials_uid = []
+    trials_lst = args.dataset_dir + '/eval/lists/trials.lst'
+    trials_lst_f = open(trials_lst, 'r')
 
-trials = trials_lst_f.readlines()
-for idx, utt_pair in enumerate(trials):
+    trials = trials_lst_f.readlines()
+    for idx, utt_pair in enumerate(trials):
 
-    enroll_uid, test_path, target = utt_pair.split(' ')  # id00800-enroll test/id00800-singing-01-005.wav 1
+        enroll_uid, test_path, target = utt_pair.split(' ')  # id00800-enroll test/id00800-singing-01-005.wav 1
 
-    path = test_path.rstrip('.wav').split('/')  # test/id00999-singing-02-006.wav
-    test_uid = '-'.join(path)  # test-id00999-singing-02-006.wav
+        path = test_path.rstrip('.wav').split('/')  # test/id00999-singing-02-006.wav
+        test_uid = '-'.join(path)  # test-id00999-singing-02-006.wav
 
-    trials_uid.append(enroll_uid + ' ' + test_uid + ' ' + target)
+        trials_uid.append(enroll_uid + ' ' + test_uid + ' ' + target)
 
-with open(args.output_dir + '/test/trials', 'w') as f:
-    f.writelines(trials_uid)
+    with open(args.output_dir + '/test/trials', 'w') as f:
+        f.writelines(trials_uid)
 
-print('Saving trials in %s' % (args.output_dir+'/test/trials'))
-print('Preparing Completed!')
+    print('Saving trials in %s' % (args.output_dir+'/test/trials'))
+    print('Preparing Completed!')
 
 
 
