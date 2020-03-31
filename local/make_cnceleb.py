@@ -48,6 +48,7 @@ if __name__ == '__main__':
     spks_name = [x.name for x in spks_dir]
 
     cn_npy = str(out_dir_path)+'/cn.npy'
+
     try:
         if not os.path.exists(cn_npy):
             raise FileExistsError
@@ -57,7 +58,7 @@ if __name__ == '__main__':
             raise ValueError
 
         print('Load wav lst from %s' % cn_npy)
-    except Exception as e:
+    except:
         cn_lst = []
         for spk in spks_dir:
             utts = [x for x in spk.iterdir() if x.is_file() and x.suffix == '.wav']  # [.../data/id00000/singing-01-002.wav, ...]
