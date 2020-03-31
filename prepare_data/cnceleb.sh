@@ -38,7 +38,7 @@ if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
   # This script creates data/voxceleb1_test and data/voxceleb1_train.
   # Our evaluation set is the test portion of VoxCeleb1.
-  local/make_cnceleb.sh --dataset-dir ${cnceleb_root} --output-dir ${cnceleb_out_dir}
+  local/make_cnceleb.py --dataset-dir ${cnceleb_root} --output-dir ${cnceleb_out_dir}
   for name in dev enroll test ; do
     utils/utt2spk_to_spk2utt.pl ${cnceleb_out_dir}/${name}/utt2spk >${cnceleb_out_dir}/${name}/spk2utt
     utils/validate_data_dir.sh --no-text --no-feats ${cnceleb_out_dir}/${name}
