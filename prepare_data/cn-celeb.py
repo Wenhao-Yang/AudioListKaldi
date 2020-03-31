@@ -24,7 +24,7 @@ parser = argparse.ArgumentParser(description='Prepare scp file for cn-celeb')
 # Model options
 
 # options for vox1
-parser.add_argument('--dataset-dir', type=str, default='../dataset/CN-Celeb',
+parser.add_argument('--dataset-dir', type=str, default='../../dataset/CN-Celeb',
                     help='path to dataset')
 parser.add_argument('--output-dir', type=str, default='data/CN-Celeb',
                     help='path to dataset')
