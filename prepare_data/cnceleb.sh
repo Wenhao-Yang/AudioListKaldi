@@ -32,7 +32,7 @@ mfccdir=${cnceleb_out_dir}/mfcc
 fbankdir=${cnceleb_out_dir}/fbank
 vaddir=${cnceleb_out_dir}/vad
 
-stage=3
+stage=0
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
