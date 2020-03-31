@@ -47,6 +47,9 @@ spks_name = [x.name for x in spks_dir]
 
 cn_npy = str(out_dir_path)+'/cn.npy'
 try:
+    if not os.path.exists(cn_npy):
+        raise FileExistsError
+
     cn_lst = np.load(cn_npy)
     if len(cn_lst)!=130108:
         raise ValueError
