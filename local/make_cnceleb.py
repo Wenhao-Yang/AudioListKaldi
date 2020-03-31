@@ -74,7 +74,7 @@ if __name__ == '__main__':
 
         cn_lst = np.array(cn_lst)
         np.save(cn_npy, cn_lst)
-        print('Saving wav lst from %s' % cn_npy)
+        print('Saving wav lst to %s' % cn_npy)
 
     wav_scp = 'wav.scp'
     utt2spk = 'spk2utt'
