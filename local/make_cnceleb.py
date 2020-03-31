@@ -49,9 +49,10 @@ cn_npy = str(out_dir_path)+'/cn.npy'
 try:
     cn_lst = np.load(cn_npy)
     if len(cn_lst)!=130108:
-        raise Exception
+        raise ValueError
+
     print('Load wav lst from %s' % cn_npy)
-except:
+except (FileNotFoundError, ValueError) as e:
     cn_lst = []
     for spk in spks_dir:
         utts = [x for x in spk.iterdir() if x.is_file() and x.suffix == '.wav']  # [.../data/id00000/singing-01-002.wav, ...]
