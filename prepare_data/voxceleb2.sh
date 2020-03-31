@@ -27,20 +27,19 @@ vox2_root=/export/corpora/VoxCeleb2
 #tdnn_dir=exp/tdnn
 
 #musan_root=/export/corpora/JHU/musan
-vox1_out_dir=data/Vox1_fb64
-vox2_out_dir=data/Vox1_fb64
+vox2_out_dir=data/Vox2_fb64
 fbank_config=conf/fbank_64.conf
 
-vox1_test_dir=${vox1_out_dir}/test
-vox1_train_dir=${vox1_out_dir}/dev
+vox2_test_dir=${vox2_out_dir}/test
+vox2_train_dir=${vox2_out_dir}/dev
 vox1_trials=${vox1_test_dir}/trials
 
-vox1_vad_train_dir=${vox1_train_dir}_no_sil
-vox1_vad_test_dir=${vox1_test_dir}_no_sil
+vox2_vad_train_dir=${vox2_train_dir}_no_sil
+vox2_vad_test_dir=${vox2_test_dir}_no_sil
 
-mfccdir=${vox1_out_dir}/mfcc
-fbankdir=${vox1_out_dir}/fbank
-vaddir=${vox1_out_dir}/vad
+mfccdir=${vox2_out_dir}/mfcc
+fbankdir=${vox2_out_dir}/fbank
+vaddir=${vox2_out_dir}/vad
 
 stage=0
 
@@ -50,18 +49,19 @@ if [ $stage -le 0 ]; then
   # Our evaluation set is the test portion of VoxCeleb1.
   local/make_voxceleb2.pl ${vox2_root} dev ${vox2_out_dir}/dev
 
-  utils/utt2spk_to_spk2utt.pl ${vox1_train_dir}/utt2spk >${vox1_train_dir}/spk2utt
-  utils/validate_data_dir.sh --no-text --no-feats $vox1_train_dir
+  utils/utt2spk_to_spk2utt.pl ${vox2_train_dir}/utt2spk >${vox2_train_dir}/spk2utt
+  utils/validate_data_dir.sh --no-text --no-feats $vox2_train_dir
 
-  utils/utt2spk_to_spk2utt.pl ${vox1_test_dir}/utt2spk >${vox1_test_dir}/spk2utt
-  utils/validate_data_dir.sh --no-text --no-feats $vox1_test_dir
+  utils/utt2spk_to_spk2utt.pl ${vox2_test_dir}/utt2spk >${vox2_test_dir}/spk2utt
+  utils/validate_data_dir.sh --no-text --no-feats $vox2_test_dir
 
 fi
 
+stage=4
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
-  for name in ${vox1_train_dir} ${vox1_test_dir}; do
+  for name in ${vox2_train_dir} ${vox2_test_dir}; do
     steps/make_fbank.sh --write-utt2num-frames true --fbank_config ${fbank_config} --nj 12 --cmd "$train_cmd" \
         ${name} exp/make_fbank $fbankdir
     utils/fix_data_dir.sh ${name}
