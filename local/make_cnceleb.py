@@ -51,17 +51,19 @@ if __name__ == '__main__':
 
     try:
         if not os.path.exists(cn_npy):
-            raise FileExistsError
+            raise Exception
 
         cn_lst = np.load(cn_npy)
         if len(cn_lst)!=130108:
-            raise ValueError
+            raise Exception
 
         print('Load wav lst from %s' % cn_npy)
+
     except:
         cn_lst = []
         for spk in spks_dir:
-            utts = [x for x in spk.iterdir() if x.is_file() and x.suffix == '.wav']  # [.../data/id00000/singing-01-002.wav, ...]
+            # [.../data/id00000/singing-01-002.wav, ...]
+            utts = [x for x in spk.iterdir() if x.is_file() and x.suffix == '.wav']
             for utt in utts:
                 utt_dic = {}
                 uid = spk.name + '-' + utt.name.rstrip('.wav')
@@ -69,6 +71,7 @@ if __name__ == '__main__':
                 utt_dic['path'] = str(utt)
                 utt_dic['spk'] = spk.name
                 cn_lst.append(utt_dic)
+
         cn_npy = np.array(cn_npy)
         np.save(cn_npy, cn_lst)
         print('Saving wav lst from %s' % cn_npy)
