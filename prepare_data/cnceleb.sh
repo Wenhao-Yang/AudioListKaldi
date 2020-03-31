@@ -32,7 +32,7 @@ mfccdir=${cnceleb_out_dir}/mfcc
 fbankdir=${cnceleb_out_dir}/fbank
 vaddir=${cnceleb_out_dir}/vad
 
-stage=0
+stage=4
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -81,3 +81,12 @@ if [ $stage -le 3 ]; then
   done
 fi
 
+if [ $stage -le 4 ]; then
+  echo "===============================Select VAD========================================"
+  # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
+  # wasteful, as it roughly doubles the amount of training data on disk.  After
+  # creating training examples, this can be removed.
+  for name in dev enroll test ; do
+    utils/fix_data_dir.sh ${cnceleb_out_dir}/${name}_cmvn
+  done
+fi
