@@ -51,15 +51,15 @@ if __name__ == '__main__':
     try:
 
         if not os.path.exists(cn_npy):
-            raise Exception
+            raise FileExistsError
 
         cn_lst = np.load(cn_npy)
         if len(cn_lst) != 130108:
-            raise Exception
+            raise ValueError
 
         print('Load wav lst from %s' % cn_npy)
 
-    except Exception as e:
+    except (FileExistsError, ValueError) as e:
         cn_lst = []
         for spk in spks_dir:
             # [.../data/id00000/singing-01-002.wav, ...]
@@ -72,7 +72,7 @@ if __name__ == '__main__':
                 utt_dic['spk'] = spk.name
                 cn_lst.append(utt_dic)
 
-        cn_npy = np.array(cn_npy)
+        cn_lst = np.array(cn_lst)
         np.save(cn_npy, cn_lst)
         print('Saving wav lst from %s' % cn_npy)
 
