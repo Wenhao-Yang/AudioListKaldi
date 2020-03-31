@@ -82,11 +82,12 @@ if [ $stage -le 3 ]; then
 fi
 
 if [ $stage -le 4 ]; then
-  echo "===============================Select VAD========================================"
+  echo "===============================Fix Dir========================================"
   # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
-  for name in dev enroll test ; do
-    utils/fix_data_dir.sh ${cnceleb_out_dir}/${name}_cmvn
-  done
+  mv ${cnceleb_out_dir}/test_cmvn ${cnceleb_out_dir}/test_cmvn.back
+  utils/combine_data.sh ${cnceleb_out_dir}/test_cmvn ${cnceleb_out_dir}/enroll_cmvn ${cnceleb_out_dir}/test_cmvn.back
+
+  utils/fix_data_dir.sh ${cnceleb_out_dir}/test_cmvn
 fi
