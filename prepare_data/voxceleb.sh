@@ -31,7 +31,7 @@ rirs_root=/home/yangwenhao/local/dataset/rirs/RIRS_NOISES
 #tdnn_dir=exp/tdnn
 
 #musan_root=/export/corpora/JHU/musan
-vox1_out_dir=data/Vox1_fb64
+vox1_out_dir=data/Vox1_spect
 musan_out_dir=data/musan
 
 fbank_config=conf/fbank_64.conf
@@ -48,7 +48,7 @@ mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=3
+stage=0
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -64,7 +64,7 @@ if [ $stage -le 0 ]; then
   utils/validate_data_dir.sh --no-text --no-feats $vox1_test_dir
 
 fi
-
+stage=10
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
