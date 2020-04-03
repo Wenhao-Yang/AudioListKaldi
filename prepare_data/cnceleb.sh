@@ -90,4 +90,5 @@ if [ $stage -le 4 ]; then
   utils/combine_data.sh ${cnceleb_out_dir}/test_cmvn ${cnceleb_out_dir}/enroll_cmvn ${cnceleb_out_dir}/test_cmvn.back
 
   utils/fix_data_dir.sh ${cnceleb_out_dir}/test_cmvn
+#  local/make_trials.py ${cnceleb_out_dir}/test_cmvn
 fi

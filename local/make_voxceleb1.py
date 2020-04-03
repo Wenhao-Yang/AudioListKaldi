@@ -24,6 +24,7 @@ import pathlib
 data_root = sys.argv[1]
 train_dir = sys.argv[2]
 test_dir = sys.argv[3]
+
 for i in train_dir, test_dir:
     check_path = pathlib.Path(i)
     if not check_path.parent.exists():
