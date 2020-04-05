@@ -60,8 +60,8 @@ def main():
 
                 uid = '-'.join(('dev',
                                 os.path.splitext(flac_rela.name)[0],
-                                str(int(float(start))),
-                                str(int(float(end)))
+                                '%04d' % int(float(start)),
+                                '%04d' % int(float(end))
                                 )
                                )
 
