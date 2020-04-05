@@ -44,7 +44,7 @@ def main():
 
                 flac_rela = pathlib.Path(flac_path)
 
-                uid = '-'.join(('dev', os.path.splitext(flac_rela.name)[0]))
+                uid = '-'.join((s, os.path.splitext(flac_rela.name)[0]))
                 if spk_id in spk2uid.keys():
                     pdb.set_trace()
 
@@ -89,6 +89,24 @@ def main():
         with open(spk2utt, 'w') as f:
             for s in spks:
                 f.write(s + ' ' + spk2uid[s] + '\n')
+
+        set_keys_dir = os.path.join(set_dir, 'keys')
+        trials = os.path.join(set_output, 'trials')
+        with open(os.path.join(set_keys_dir, 'core-core.lst'), 'r') as cc, \
+            open(trials, 'w') as trials_f:
+            pairs = cc.readlines()
+            for p in pairs:
+                # 12013 audio/mihtz.flac imp
+                ppp = p.split()
+                pair_a_spk = ppp[0]
+                pair_a = spk2uid[pair_a_spk]
+                flac_rela = pathlib.Path(ppp[1])
+
+                pair_b = '-'.join((s, os.path.splitext(flac_rela.name)[0]))
+                if ppp[3]=='tgt':
+                    trials_f.write(pair_a + ' ' + pair_b + ' ' + 'target\n')
+                else:
+                    trials_f.write(pair_a + ' ' + pair_b + ' ' + 'nontarget\n')
 
         # wav_scp = os.path.join(set_output, 'wav.scp')
         # uid2wav = {}
