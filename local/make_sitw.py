@@ -43,7 +43,8 @@ def main():
                 spk_id, flac_path = l.split()
 
                 flac_rela = pathlib.Path(flac_path)
-                uid = '-'.join(('dev', flac_rela.name.rstrip('.flac')))
+
+                uid = '-'.join(('dev', os.path.splitext(flac_rela.name)[0]))
                 if spk_id in spk2uid.keys():
                     pdb.set_trace()
 
@@ -58,7 +59,7 @@ def main():
                 flac_rela = pathlib.Path(flac_path)
 
                 uid = '-'.join(('dev',
-                                flac_rela.name.rstrip('.flac'),
+                                os.path.splitext(flac_rela.name)[0],
                                 str(int(float(start))),
                                 str(int(float(end)))
                                 )
