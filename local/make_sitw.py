@@ -13,6 +13,7 @@ import argparse
 import pathlib
 import os
 import pdb
+import numpy as np
 
 parser = argparse.ArgumentParser(description='Prepare scp file for sitw')
 # Model options
@@ -35,13 +36,13 @@ def main():
         set_lst_dir = os.path.join(set_dir, 'lists')
 
         spk2uid = {}
+        # uid2spk = {}
         wav2scp = {}
         with open(os.path.join(str(set_lst_dir), 'enroll-core.lst'), 'r') as ec:
             enroll_core = ec.readlines()
             for l in enroll_core:
                 # 12013 audio/unotx.flac
                 spk_id, flac_path = l.split()
-
                 flac_rela = pathlib.Path(flac_path)
 
                 uid = '-'.join((s, os.path.splitext(flac_rela.name)[0]))
@@ -49,6 +50,7 @@ def main():
                     pdb.set_trace()
 
                 spk2uid[spk_id] = uid
+                # uid2spk[uid] = spk_id
                 wav2scp[uid] = os.path.join(set_audio_dir, flac_path)
 
         with open(os.path.join(str(set_lst_dir), 'enroll-assist.lst'), 'r') as ea:
@@ -75,23 +77,11 @@ def main():
         if not os.path.exists(set_output):
             os.makedirs(set_output)
 
-        wav_scp = os.path.join(set_output, 'wav.scp')
-        uids = list(wav2scp.keys())
-        uids.sort()
-        with open(wav_scp, 'w') as f:
-            for u in uids:
-                f.write(u+' '+wav2scp[u]+'\n')
-
-
-        spk2utt = os.path.join(set_output, 'spk2utt')
-        spks = list(spk2uid.keys())
-        spks.sort()
-        with open(spk2utt, 'w') as f:
-            for spk in spks:
-                f.write(spk + ' ' + spk2uid[spk] + '\n')
-
         set_keys_dir = os.path.join(set_dir, 'keys')
         trials = os.path.join(set_output, 'trials')
+        all_test_wav = []
+        all_test_spk = []
+
         with open(os.path.join(set_keys_dir, 'core-core.lst'), 'r') as cc, \
             open(trials, 'w') as trials_f:
             pairs = cc.readlines()
@@ -99,6 +89,7 @@ def main():
                 # 12013 audio/mihtz.flac imp
                 ppp = p.split()
                 pair_a_spk = ppp[0]
+                all_test_spk.append(pair_a_spk)
                 pair_a = spk2uid[pair_a_spk]
                 flac_rela = pathlib.Path(ppp[1])
 
@@ -107,7 +98,22 @@ def main():
                     trials_f.write(pair_a + ' ' + pair_b + ' ' + 'target\n')
                 else:
                     trials_f.write(pair_a + ' ' + pair_b + ' ' + 'nontarget\n')
+                all_test_wav.append(pair_a)
+                all_test_wav.append(pair_b)
 
+        uids = np.unique(all_test_wav)
+        uids.sort()
+        wav_scp = os.path.join(set_output, 'wav.scp')
+        with open(wav_scp, 'w') as f:
+            for u in uids:
+                f.write(u + ' ' + wav2scp[u] + '\n')
+
+        spks = np.unique(all_test_spk)
+        spks.sort()
+        spk2utt = os.path.join(set_output, 'spk2utt')
+        with open(spk2utt, 'w') as f:
+            for spk in spks:
+                f.write(spk + ' ' + spk2uid[spk] + '\n')
         # wav_scp = os.path.join(set_output, 'wav.scp')
         # uid2wav = {}
         #
