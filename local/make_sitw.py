@@ -32,7 +32,7 @@ def main():
     for s in 'dev', 'eval':
 
         set_dir = os.path.join(data_root, s)
-        set_audio_dir = os.path.join(set_dir, 'audio')
+        # set_audio_dir = os.path.join(set_dir, 'audio')
         set_lst_dir = os.path.join(set_dir, 'lists')
 
         spk2uid = {}
@@ -51,7 +51,7 @@ def main():
 
                 spk2uid[spk_id] = uid
                 # uid2spk[uid] = spk_id
-                wav2scp[uid] = os.path.join(set_audio_dir, flac_path)
+                wav2scp[uid] = os.path.join(set_dir, flac_path)
 
         with open(os.path.join(str(set_lst_dir), 'enroll-assist.lst'), 'r') as ea:
             enroll_assi = ea.readlines()
@@ -69,7 +69,7 @@ def main():
                                )
 
                 spk2uid[spk_id] = uid
-                full_flac_path = os.path.join(set_audio_dir, flac_path)
+                full_flac_path = os.path.join(set_dir, flac_path)
                 duration = float(end) - float(start)
                 soxed_path = 'sox %s -t flac - trim %s %.3f |' % (full_flac_path, start, duration)
                 wav2scp[uid] = soxed_path
