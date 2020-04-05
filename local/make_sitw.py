@@ -87,7 +87,7 @@ def main():
         spks.sort()
         with open(spk2utt, 'w') as f:
             for s in spks:
-                f.write(s + ' ' + spk2utt[s] + '\n')
+                f.write(s + ' ' + spk2uid[s] + '\n')
 
         # wav_scp = os.path.join(set_output, 'wav.scp')
         # uid2wav = {}
