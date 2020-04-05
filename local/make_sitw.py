@@ -59,7 +59,8 @@ def main():
                 # 45205 audio/ggjnl.flac 88.000 97.990
                 spk_id, flac_path, start, end = l.split()
                 flac_rela = pathlib.Path(flac_path)
-
+                if spk_id in spk2uid.keys():
+                    pdb.set_trace()
                 uid = '-'.join(('dev',
                                 os.path.splitext(flac_rela.name)[0],
                                 '%04d' % int(float(start)),
