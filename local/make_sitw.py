@@ -103,7 +103,7 @@ def main():
                 flac_rela = pathlib.Path(ppp[1])
 
                 pair_b = '-'.join((s, os.path.splitext(flac_rela.name)[0]))
-                if ppp[3]=='tgt':
+                if ppp[2]=='tgt':
                     trials_f.write(pair_a + ' ' + pair_b + ' ' + 'target\n')
                 else:
                     trials_f.write(pair_a + ' ' + pair_b + ' ' + 'nontarget\n')
