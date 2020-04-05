@@ -87,8 +87,8 @@ def main():
         spks = list(spk2uid.keys())
         spks.sort()
         with open(spk2utt, 'w') as f:
-            for s in spks:
-                f.write(s + ' ' + spk2uid[s] + '\n')
+            for spk in spks:
+                f.write(spk + ' ' + spk2uid[spk] + '\n')
 
         set_keys_dir = os.path.join(set_dir, 'keys')
         trials = os.path.join(set_output, 'trials')
