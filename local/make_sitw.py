@@ -51,7 +51,7 @@ def main():
                 wav2scp[uid] = os.path.join(set_audio_dir, flac_path)
 
         with open(os.path.join(str(set_lst_dir), 'enroll-assist.lst'), 'r') as ea:
-            enroll_assi = ec.readlines()
+            enroll_assi = ea.readlines()
             for l in enroll_assi:
                 # 45205 audio/ggjnl.flac 88.000 97.990
                 spk_id, flac_path, start, end = l.split()
