@@ -33,7 +33,7 @@ vaddir=${timit_out_dir}/vad
 stage=0
 
 if [ $stage -le 0 ]; then
-  echo "===================================Data preparing=================================="
+  echo "===================================Script preparing=================================="
   # This script creates data/voxceleb1_test and data/voxceleb1_train.
   # Our evaluation set is the test portion of VoxCeleb1.
   local/make_timit.py --dataset-dir ${timit_root} --output-dir ${timit_out_dir}
