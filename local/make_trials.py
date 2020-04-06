@@ -48,6 +48,8 @@ for data_dir in data_roots:
     with open(trials, 'w') as f:
         spks = list(spk2utt_dict.keys())
         pairs = 0
+        positive_pairs = 0
+
         for spk_idx in range(len(spks)):
             spk = spks[spk_idx]
             other_spks = spks.copy()
@@ -61,6 +63,7 @@ for data_dir in data_roots:
                         this_line = ' '.join((spk2utt_dict[spk][i], spk2utt_dict[spk][j], 'target\n'))
                         f.write(this_line)
                         pairs+=1
+                        positive_pairs += 1
 
             for i in range(num_repeat):
                 this_uid = np.random.choice(spk2utt_dict[spk])
@@ -71,4 +74,5 @@ for data_dir in data_roots:
                 f.write(this_line)
                 pairs += 1
 
-        print('Generate %d pairs for set: %s' % (pairs, data_dir))
+        print('Generate %d pairs for set: %s, in which %d of them are positive pairs.' % (
+        pairs, data_dir, positive_pairs))
