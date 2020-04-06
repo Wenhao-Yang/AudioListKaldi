@@ -80,6 +80,7 @@ def main():
         with open(spk2uid, 'w') as su:
             for spk in spks:
                 su.write(spk)
+                spk2uid_dict[spk].sort()
                 for uid in spk2uid_dict[spk]:
                     su.write(' ' + uid)
                 su.write('\n')
