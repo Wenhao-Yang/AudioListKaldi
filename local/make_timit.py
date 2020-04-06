@@ -82,7 +82,7 @@ def main():
                 su.write(spk)
                 for uid in spk2uid_dict[spk]:
                     su.write(' ' + uid)
-                ws.write('\n')
+                su.write('\n')
 
 
 if __name__ == '__main__':
