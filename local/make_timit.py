@@ -55,7 +55,7 @@ def main():
             # /data/timit/train/dr1/fcjf0/sa1.wav
             wav_path = str(l)
             spk_id = l.parent.name
-            uid = '-'.join(spk_id, os.path.splitext(l.name)[0])  # os.path.splitext(flac_rela.name)[0]
+            uid = '-'.join((spk_id, os.path.splitext(l.name)[0]))  # os.path.splitext(flac_rela.name)[0]
 
             if spk_id in spk2uid_dict.keys():
                 spk2uid_dict[spk_id].append(uid)
