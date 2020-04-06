@@ -38,7 +38,8 @@ if [ $stage -le 0 ]; then
   # Our evaluation set is the test portion of VoxCeleb1.
   local/make_timit.py --dataset-dir ${timit_root} --output-dir ${timit_out_dir}
   for name in ${train} ${test} ; do
-    utils/fix_data_dir.sh --no-text --no-feats ${name}
+    utils/validate_data_dir.sh --no-text --no-feats ${name}
+    utils/fix_data_dir.sh ${name}
   done
 fi
 
