@@ -153,7 +153,7 @@ if [ $stage -le 12 ]; then
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
   for name in dev test ; do
-    local/nnet3/xvector/prepare_feats_for_egs.sh --nj 12 --cmd "$train_cmd" Vox1_pyfb/${name}_fb40 Vox1_pyfb/${name}_fb40_no_sil  Vox1_pyfb/${name}_fb40_no_sil/feats_no_sil
-    utils/fix_data_dir.sh Vox1_pyfb/${name}_fb40_no_sil
+    local/nnet3/xvector/prepare_feats_for_egs.sh --nj 12 --cmd "$train_cmd" data/Vox1_pyfb/${name}_fb40 data/Vox1_pyfb/${name}_fb40_no_sil  data/Vox1_pyfb/${name}_fb40_no_sil/feats_no_sil
+    utils/fix_data_dir.sh data/Vox1_pyfb/${name}_fb40_no_sil
   done
 fi
