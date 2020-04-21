@@ -15,6 +15,7 @@ cmvns=true
 norm_vars=true
 center=true
 compress=true
+cmn_window=300
 
 echo "$0 $@"  # Print the command line for logging
 
@@ -66,17 +67,15 @@ sdata_in=$data_in/split$nj;
 utils/split_data.sh $data_in $nj || exit 1;
 
 # Apply sliding-window cepstral mean (and optionally variance)
-if [ $cmvn ]; then
+if [ $cmvns ]; then
     $cmd JOB=1:$nj $dir/log/create_xvector_feats_${name}.JOB.log \
-      apply-cmvn --norm-vars=true \
+      apply-cmvn-sliding --norm-vars=false --center=true --cmn-window=$cmn_window \
       scp:${sdata_in}/JOB/feats.scp ark:- \| \
-      select-voiced-frames ark:- scp,s,cs:${sdata_in}/JOB/vad.scp ark:- \| \
       copy-feats --compress=$compress $write_num_frames_opt ark:- \
       ark,scp:$featdir/xvector_feats_${name}.JOB.ark,$featdir/xvector_feats_${name}.JOB.scp || exit 1;
 else
     $cmd JOB=1:$nj $dir/log/create_xvector_feats_${name}.JOB.log \
-      select-voiced-frames scp:${sdata_in}/JOB/feats.scp scp,s,cs:${sdata_in}/JOB/vad.scp ark:- \| \
-      copy-feats --compress=$compress $write_num_frames_opt ark:- \
+      copy-feats --compress=$compress $write_num_frames_opt scp:${sdata_in}/JOB/feats.scp \
       ark,scp:$featdir/xvector_feats_${name}.JOB.ark,$featdir/xvector_feats_${name}.JOB.scp || exit 1;
 fi
 
