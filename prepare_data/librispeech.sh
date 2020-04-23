@@ -45,7 +45,7 @@ mfccdir=${libri_out_dir}/mfcc
 fbankdir=${libri_out_dir}/fbank
 vaddir=${libri_out_dir}/vad
 
-stage=5
+stage=15
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -89,7 +89,7 @@ if [ $stage -le 3 ]; then
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
   for name in ${dev} ${test}; do
-    local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns true --nj 8 --cmd "$train_cmd" ${libri_out_dir}/${name} ${libri_out_dir}/${name}_no_sil ${libri_out_dir}/${name}/feats_no_sil
+    local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 8 --cmd "$train_cmd" ${libri_out_dir}/${name} ${libri_out_dir}/${name}_no_sil ${libri_out_dir}/${name}/feats_no_sil
 
     utils/fix_data_dir.sh ${libri_out_dir}/${name}_no_sil
   done
@@ -99,4 +99,32 @@ fi
 if [ $stage -le 5 ]; then
   echo "================================Generate trials=================================="
   local/make_trials.py ${libri_out_dir}/${dev} ${libri_out_dir}/${test}
+fi
+
+if [ $stage -le 15 ]; then
+  echo "=====================================Remove Silence========================================"
+  # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
+  # wasteful, as it roughly doubles the amount of training data on disk.  After
+  # creating training examples, this can be removed.
+  for name in ${dev} ${test}; do
+    local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 12 --cmd "$train_cmd" \
+      data/libri/spect/${name}_noc \
+      data/libri/spect/${name}_wcmvn \
+      data/libri/spect/${name}_wcmvn/feats_no_sil
+    utils/fix_data_dir.sh data/libri/spect/${name}_wcmvn
+
+    local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 12 --cmd "$train_cmd" \
+      data/libri/pyfb/${name}_fb24 \
+      data/libri/pyfb/${name}_fb24_wcmvn \
+      data/libri/pyfb/${name}_fb24_wcmvn/feats_no_sil
+    utils/fix_data_dir.sh data/libri/pyfb/${name}_fb24_wcmvn
+
+#    local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 12 --cmd "$train_cmd" \
+#      data/libri/spect/${name}_noc \
+#      data/libri/spect/${name}_wcmvn \
+#      data/libri/spect/${name}_wcmvn/feats_no_sil
+#    utils/fix_data_dir.sh data/libri/spect/${name}_wcmvn
+
+  done
+
 fi
