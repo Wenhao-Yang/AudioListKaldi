@@ -111,12 +111,16 @@ if [ $stage -le 15 ]; then
       data/libri/spect/${name}_noc \
       data/libri/spect/${name}_wcmvn \
       data/libri/spect/${name}_wcmvn/feats_no_sil
+
+    cp data/libri/spect/${name}_noc/trials data/libri/spect/${name}_wcmvn/
     utils/fix_data_dir.sh data/libri/spect/${name}_wcmvn
 
     local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 12 --cmd "$train_cmd" \
       data/libri/pyfb/${name}_fb24 \
       data/libri/pyfb/${name}_fb24_wcmvn \
       data/libri/pyfb/${name}_fb24_wcmvn/feats_no_sil
+
+    cp data/libri/pyfb/${name}_fb24/trials data/libri/pyfb/${name}_fb24_wcmvn/
     utils/fix_data_dir.sh data/libri/pyfb/${name}_fb24_wcmvn
 
 #    local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 12 --cmd "$train_cmd" \
