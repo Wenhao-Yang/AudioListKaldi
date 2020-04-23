@@ -156,7 +156,17 @@ if [ $stage -le 12 ]; then
   for name in dev test ; do
 #    local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" data/Vox1_pyfb/${name}_fb40 data/Vox1_pyfb/${name}_fb40_no_sil  data/Vox1_pyfb/${name}_fb40_no_sil/feats_no_sil
 #    utils/fix_data_dir.sh data/Vox1_pyfb/${name}_fb40_no_sil
-  local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" data/Vox1_spect/${name}_noc data/Vox1_spect/${name}_wcmvn  data/Vox1_spect/${name}_wcmvn/feats_no_sil
-    utils/fix_data_dir.sh data/Vox1_spect/${name}_wcmvn
+# Vox1_pyfb/dev_dfb24
+    local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" \
+      data/Vox1_spect/${name}_257 \
+      data/Vox1_spect/${name}_257_wcmvn  \
+      data/Vox1_spect/${name}_257_wcmvn/feats_no_sil
+    utils/fix_data_dir.sh data/Vox1_spect/${name}_257_wcmvn
+
+    local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" \
+      data/Vox1_pyfb/${name}_dfb24 \
+      data/Vox1_pyfb/${name}_dfb24_wcmvn  \
+      data/Vox1_pyfb/${name}_dfb24_wcmvn/feats_no_sil
+    utils/fix_data_dir.sh data/Vox1_spect/${name}_dfb24_wcmvn
   done
 fi
