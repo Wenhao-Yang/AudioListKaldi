@@ -153,7 +153,7 @@ if [ $stage -le 12 ]; then
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
   #  data/Vox1_spect/test_noc
-  for name in dev test ; do
+  for name in test ; do
 #    local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" data/Vox1_pyfb/${name}_fb40 data/Vox1_pyfb/${name}_fb40_no_sil  data/Vox1_pyfb/${name}_fb40_no_sil/feats_no_sil
 #    utils/fix_data_dir.sh data/Vox1_pyfb/${name}_fb40_no_sil
 # Vox1_pyfb/dev_dfb24
@@ -167,6 +167,6 @@ if [ $stage -le 12 ]; then
       data/Vox1_pyfb/${name}_dfb24 \
       data/Vox1_pyfb/${name}_dfb24_wcmvn  \
       data/Vox1_pyfb/${name}_dfb24_wcmvn/feats_no_sil
-    utils/fix_data_dir.sh data/Vox1_spect/${name}_dfb24_wcmvn
+    utils/fix_data_dir.sh data/Vox1_pyfb/${name}_dfb24_wcmvn
   done
 fi
