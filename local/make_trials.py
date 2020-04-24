@@ -10,17 +10,26 @@
 @Overview:
 """
 
-import numpy as np
 import os
+import pdb
 import sys
 
+import numpy as np
+
+pdb.set_trace()
+if sys.argv[1].isdigit():
+    num_repeat = int(sys.argv[1])
+    data_roots = sys.argv[2:]
+else:
+    num_repeat = 800
+    data_roots = sys.argv[1:]
+
 print('Current path is ' + os.getcwd())
-data_roots = sys.argv[1:]
+print('Num of repeats: %d ' % num_repeat)
 
 assert len(data_roots)>0
 print("Dirs are: \n" + '; '.join(data_roots))
 
-num_repeat = 800
 
 for data_dir in data_roots:
     spk2utt = data_dir+'/spk2utt'
