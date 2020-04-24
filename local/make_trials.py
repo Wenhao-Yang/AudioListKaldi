@@ -10,9 +10,9 @@
 @Overview:
 """
 
+import numpy as np
 import os
 import sys
-import numpy as np
 
 print('Current path is ' + os.getcwd())
 data_roots = sys.argv[1:]
@@ -20,7 +20,7 @@ data_roots = sys.argv[1:]
 assert len(data_roots)>0
 print("Dirs are: \n" + '; '.join(data_roots))
 
-num_repeat = 1000
+num_repeat = 800
 
 for data_dir in data_roots:
     spk2utt = data_dir+'/spk2utt'
