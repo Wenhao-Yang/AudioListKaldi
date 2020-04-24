@@ -113,7 +113,7 @@ if [ $stage -le 10 ]; then
       data/timit/pyfb/${name}_fb24_wcmvn \
       data/timit/pyfb/${name}_fb24_wcmvn/feats_no_sil
 
-    cp data/timit/pyfb/${name}_noc/trials data/timit/pyfb/${name}_fb24_wcmvn
+    cp data/timit/spect/${name}_noc/trials data/timit/pyfb/${name}_fb24_wcmvn
     utils/fix_data_dir.sh data/timit/pyfb/${name}_fb24_wcmvn
   done
 
