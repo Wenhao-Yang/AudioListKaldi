@@ -11,22 +11,19 @@
 """
 
 import os
-import pdb
+import random
 import sys
 
 import numpy as np
 
-pdb.set_trace()
 if sys.argv[1].isdigit():
-    num_repeat = int(sys.argv[1])
+    num_pair = int(sys.argv[1])
     data_roots = sys.argv[2:]
 else:
-    num_repeat = 800
+    num_pair = 50000
     data_roots = sys.argv[1:]
 
 print('Current path is ' + os.getcwd())
-print('Num of repeats: %d ' % num_repeat)
-
 assert len(data_roots)>0
 print("Dirs are: \n" + '; '.join(data_roots))
 
@@ -55,7 +52,10 @@ for data_dir in data_roots:
 
     trials = data_dir+'/trials'
     with open(trials, 'w') as f:
+        trials = []
         spks = list(spk2utt_dict.keys())
+        num_repeat = len(spks) * 2
+        print('Num of repeats: %d ' % num_repeat)
         pairs = 0
         positive_pairs = 0
 
@@ -70,9 +70,9 @@ for data_dir in data_roots:
                 for j in range(num_utt):
                     if i<j:
                         this_line = ' '.join((spk2utt_dict[spk][i], spk2utt_dict[spk][j], 'target\n'))
-                        f.write(this_line)
+                        # f.write(this_line)
+                        trials.append((this_line, 1))
                         pairs+=1
-                        positive_pairs += 1
 
             for i in range(num_repeat):
                 this_uid = np.random.choice(spk2utt_dict[spk])
@@ -80,8 +80,15 @@ for data_dir in data_roots:
                 other_uid = np.random.choice(spk2utt_dict[other_spk])
 
                 this_line = ' '.join((this_uid, other_uid, 'nontarget\n'))
-                f.write(this_line)
+                # f.write(this_line)
+                trials.append((this_line, 1))
                 pairs += 1
 
+        random.shuffle(trials)
+
+        for t, l in trials[num_pair]:
+            positive_pairs += l
+            f.write(t)
+
         print('Generate %d pairs for set: %s, in which %d of them are positive pairs.' % (
-        pairs, data_dir, positive_pairs))
+            num_pair, data_dir, positive_pairs))
