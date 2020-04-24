@@ -30,7 +30,7 @@ mfccdir=${timit_out_dir}/mfcc
 fbankdir=${timit_out_dir}/fbank
 vaddir=${timit_out_dir}/vad
 
-stage=0
+stage=10
 
 if [ $stage -le 0 ]; then
   echo "===================================Script preparing=================================="
@@ -74,4 +74,44 @@ fi
 if [ $stage -le 5 ]; then
   echo "================================Generate trials=================================="
   local/make_trials.py ${test}
+fi
+
+stage=10
+if [ $stage -le 10 ]; then
+  echo "=====================================Remove Silence========================================"
+  # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
+  # wasteful, as it roughly doubles the amount of training data on disk.  After
+  # creating training examples, this can be removed.
+#  /home/yangwenhao/local/project/lstm_speaker_verification/data/timit/spect/
+
+  local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns true --nj 12 --cmd "$train_cmd" \
+    data/timit/spect/train_noc \
+    data/timit/spect/dev_wcmvn \
+    data/timit/spect/dev_wcmvn/feats_no_sil
+
+  utils/fix_data_dir.sh data/timit/spect/dev_wcmvn
+
+  local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns true --nj 12 --cmd "$train_cmd" \
+    data/timit/pyfb/train_fb24 \
+    data/timit/pyfb/dev_fb24_wcmvn \
+    data/timit/pyfb/dev_fb24_wcmvn/feats_no_sil
+
+  utils/fix_data_dir.sh data/timit/pyfb/dev_wcmvn
+
+  for name in test ; do
+    local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns true --nj 12 --cmd "$train_cmd" \
+      data/timit/spect/${name}_noc \
+      data/timit/spect/${name}_wcmvn \
+      data/timit/spect/${name}_wcmvn/feats_no_sil
+
+    utils/fix_data_dir.sh data/timit/spect/${name}_wcmvn
+
+    local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns true --nj 12 --cmd "$train_cmd" \
+      data/timit/pyfb/${name}_fb24 \
+      data/timit/pyfb/${name}_fb24_wcmvn \
+      data/timit/pyfb/${name}_fb24_wcmvn/feats_no_sil
+
+    utils/fix_data_dir.sh data/timit/spect/${name}_wcmvn
+  done
+
 fi
