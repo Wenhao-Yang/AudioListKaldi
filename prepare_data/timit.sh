@@ -96,7 +96,7 @@ if [ $stage -le 10 ]; then
     data/timit/pyfb/dev_fb24_wcmvn \
     data/timit/pyfb/dev_fb24_wcmvn/feats_no_sil
 
-  utils/fix_data_dir.sh data/timit/pyfb/dev_wcmvn
+  utils/fix_data_dir.sh data/timit/pyfb/dev_fb24_wcmvn
 
   for name in test ; do
     local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns true --nj 12 --cmd "$train_cmd" \
@@ -112,8 +112,8 @@ if [ $stage -le 10 ]; then
       data/timit/pyfb/${name}_fb24_wcmvn \
       data/timit/pyfb/${name}_fb24_wcmvn/feats_no_sil
 
-    cp data/timit/pyfb/${name}_noc/trials data/timit/pyfb/${name}_wcmvn
-    utils/fix_data_dir.sh data/timit/spect/${name}_wcmvn
+    cp data/timit/pyfb/${name}_noc/trials data/timit/pyfb/${name}_fb24_wcmvn
+    utils/fix_data_dir.sh data/timit/pyfb/${name}_fb24_wcmvn
   done
 
 fi
