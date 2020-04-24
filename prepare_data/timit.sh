@@ -43,7 +43,7 @@ if [ $stage -le 0 ]; then
   done
 fi
 
-stage=5
+#stage=5
 
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
