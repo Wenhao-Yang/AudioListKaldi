@@ -54,7 +54,7 @@ for data_dir in data_roots:
     with open(trials, 'w') as f:
         trials = []
         spks = list(spk2utt_dict.keys())
-        num_repeat = int(len(spks) * 3)
+        num_repeat = int(len(spks) * 10)
         print('Num of repeats: %d ' % num_repeat)
         pairs = 0
         positive_pairs = 0
@@ -81,7 +81,7 @@ for data_dir in data_roots:
 
                 this_line = ' '.join((this_uid, other_uid, 'nontarget\n'))
                 # f.write(this_line)
-                trials.append((this_line, 1))
+                trials.append((this_line, 0))
                 pairs += 1
 
         random.shuffle(trials)
