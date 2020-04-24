@@ -86,7 +86,7 @@ for data_dir in data_roots:
 
         random.shuffle(trials)
 
-        for t, l in trials[num_pair]:
+        for t, l in trials[:num_pair]:
             positive_pairs += l
             f.write(t)
 
