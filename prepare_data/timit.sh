@@ -83,7 +83,7 @@ if [ $stage -le 10 ]; then
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
 #  /home/yangwenhao/local/project/lstm_speaker_verification/data/timit/spect/
-  local/make_trials.py data/timit/spect/test_noc/trials
+  local/make_trials.py data/timit/spect/test_noc
 
   local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns true --nj 12 --cmd "$train_cmd" \
     data/timit/spect/train_noc \
