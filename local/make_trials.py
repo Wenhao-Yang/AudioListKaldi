@@ -20,7 +20,7 @@ if sys.argv[1].isdigit():
     num_pair = int(sys.argv[1])
     data_roots = sys.argv[2:]
 else:
-    num_pair = 100000
+    num_pair = -1
     data_roots = sys.argv[1:]
 
 print('Current path is ' + os.getcwd())
