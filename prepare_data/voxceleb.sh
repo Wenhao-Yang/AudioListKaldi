@@ -168,10 +168,16 @@ if [ $stage -le 12 ]; then
 #      data/Vox1_pyfb/${name}_dfb24_wcmvn  \
 #      data/Vox1_pyfb/${name}_dfb24_wcmvn/feats_no_sil
 #    utils/fix_data_dir.sh data/Vox1_pyfb/${name}_dfb24_wcmvn
-    local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" \
-      data/Vox1_pyfb/${name}_fb40 \
-      data/Vox1_pyfb/${name}_fb40_wcmvn  \
-      data/Vox1_pyfb/${name}_fb40_wcmvn/feats_no_sil
-    utils/fix_data_dir.sh data/Vox1_pyfb/${name}_fb40_wcmvn
+#    local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" \
+#      data/Vox1_pyfb/${name}_fb40 \
+#      data/Vox1_pyfb/${name}_fb40_wcmvn  \
+#      data/Vox1_pyfb/${name}_fb40_wcmvn/feats_no_sil
+#    utils/fix_data_dir.sh data/Vox1_pyfb/${name}_fb40_wcmvn
+
+     local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" \
+      data/Vox1_pyfb64/${name}_noc \
+      data/Vox1_pyfb/${name}_fb64_wcmvn  \
+      data/Vox1_pyfb/${name}_fb64_wcmvn/feats_no_sil
+    utils/fix_data_dir.sh data/Vox1_pyfb/${name}_fb64_wcmvn
   done
 fi
