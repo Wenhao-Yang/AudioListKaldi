@@ -51,12 +51,16 @@ for data_dir in data_roots:
             utt2spk_dict[utt] = lst[1]
 
     trials = data_dir+'/trials'
+
     with open(trials, 'w') as f:
         trials = []
+        utts = list(utt2spk_dict.keys())
         spks = list(spk2utt_dict.keys())
+
         num_repeat = int((len(spks) - 1) * 5)
-        if num_repeat*len(spks)>30*num_pair:
-            num_repeat = int(30*num_pair/len(spks))
+        if utts*num_repeat*len(spks)>30*num_pair:
+            num_repeat = int(5*num_pair/len(spks))
+
         print('Num of repeats: %d ' % num_repeat)
         pairs = 0
         positive_pairs = 0
