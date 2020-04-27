@@ -79,10 +79,9 @@ for data_dir in data_roots:
                     if i<j:
                         this_line = ' '.join((spk2utt_dict[spk][i], spk2utt_dict[spk][j], 'target\n'))
                         # f.write(this_line)
-                        if len(positive_pairs)<0.3*num_pair:
-                            positive_pairs.append((this_line, 1))
-                        else:
-                            break
+                        # if len(positive_pairs)<0.3*num_pair:
+                        positive_pairs.append((this_line, 1))
+
 
             for i in range(num_repeat):
                 this_uid = np.random.choice(spk2utt_dict[spk])
@@ -99,6 +98,8 @@ for data_dir in data_roots:
                 # pairs += 1
 
         random.shuffle(negative_pairs)
+        if len(positive_pairs)>0.3*num_pair:
+            positive_pairs=positive_pairs[:int(0.3*num_pair)]
 
         num_positive = len(positive_pairs)
         for t, l in negative_pairs:
