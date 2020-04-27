@@ -63,7 +63,8 @@ for data_dir in data_roots:
 
         print('Num of repeats: %d ' % num_repeat)
         pairs = 0
-        positive_pairs = 0
+        positive_pairs = []
+        negative_pairs = []
 
         for spk_idx in range(len(spks)):
             spk = spks[spk_idx]
@@ -77,8 +78,10 @@ for data_dir in data_roots:
                     if i<j:
                         this_line = ' '.join((spk2utt_dict[spk][i], spk2utt_dict[spk][j], 'target\n'))
                         # f.write(this_line)
-                        trials.append((this_line, 1))
-                        pairs+=1
+                        if len(positive_pairs)<0.3*num_pair:
+                            positive_pairs.append((this_line, 1))
+                        else:
+                            break
 
             for i in range(num_repeat):
                 this_uid = np.random.choice(spk2utt_dict[spk])
@@ -87,14 +90,22 @@ for data_dir in data_roots:
 
                 this_line = ' '.join((this_uid, other_uid, 'nontarget\n'))
                 # f.write(this_line)
-                trials.append((this_line, 0))
-                pairs += 1
+                if len(positive_pairs) < 10 * num_pair:
+                    negative_pairs.append((this_line, 0))
+                else:
+                    break
+                # trials.append((this_line, 0))
+                # pairs += 1
 
-        random.shuffle(trials)
+        random.shuffle(negative_pairs)
 
-        for t, l in trials[:num_pair]:
-            positive_pairs += l
+        num_positive = len(positive_pairs)
+        for t, l in negative_pairs:
+            if len(positive_pairs)<num_pair:
+                positive_pairs.append((t, l))
+
+        for t, l in positive_pairs:
             f.write(t)
 
         print('Generate %d pairs for set: %s, in which %d of them are positive pairs.' % (
-            num_pair, data_dir, positive_pairs))
+            num_pair, data_dir, num_positive))
