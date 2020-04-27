@@ -65,6 +65,7 @@ for data_dir in data_roots:
         pairs = 0
         positive_pairs = []
         negative_pairs = []
+        random.shuffle(spks)
 
         for spk_idx in range(len(spks)):
             spk = spks[spk_idx]
