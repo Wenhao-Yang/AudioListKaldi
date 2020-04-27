@@ -54,7 +54,7 @@ for data_dir in data_roots:
 
     with open(trials, 'w') as f:
         trials = []
-        utts = list(utt2spk_dict.keys())
+        utts = len(list(utt2spk_dict.keys()))
         spks = list(spk2utt_dict.keys())
 
         num_repeat = int((len(spks) - 1) * 5)
