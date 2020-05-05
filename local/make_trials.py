@@ -99,7 +99,7 @@ for data_dir in data_roots:
 
         random.shuffle(negative_pairs)
         if len(positive_pairs)>0.3*num_pair:
-            positive_pairs=positive_pairs[:int(0.3*num_pair)]
+            positive_pairs=positive_pairs[:int(0.5*num_pair)]
 
         num_positive = len(positive_pairs)
         for t, l in negative_pairs:
