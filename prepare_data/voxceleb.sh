@@ -48,7 +48,7 @@ mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=12
+stage=20
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -64,7 +64,7 @@ if [ $stage -le 0 ]; then
   utils/validate_data_dir.sh --no-text --no-feats $vox1_test_dir
 
 fi
-stage=10
+#stage=10
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
@@ -132,7 +132,7 @@ if [ $stage -le 3 ]; then
 
 fi
 
-stage=12
+#stage=12
 if [ $stage -le 4 ]; then
   echo "=====================================CMVN========================================"
   # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
@@ -180,4 +180,21 @@ if [ $stage -le 12 ]; then
       data/Vox1_pyfb/${name}_fb64_wcmvn/feats_no_sil
     utils/fix_data_dir.sh data/Vox1_pyfb/${name}_fb64_wcmvn
   done
+fi
+
+stage=20
+if [ $stage -le 20 ]; then
+  echo "=====================================CMVN========================================"
+  # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
+  # wasteful, as it roughly doubles the amount of training data on disk.  After
+  # creating training examples, this can be removed.
+
+  local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" \
+    data/Vox1_spect/dev_257 data/Vox1_spect/dev_257_kaldi data/Vox1_spect/spectrogram/dev_257_kaldi
+  utils/fix_data_dir.sh data/Vox1_spect/dev_257_kaldi
+
+  local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" \
+    data/Vox1_spect/test_257 data/Vox1_spect/test_257_kaldi data/Vox1_spect/spectrogram/test_257_kaldi
+  utils/fix_data_dir.sh data/Vox1_spect/dev_257_kaldi
+
 fi
