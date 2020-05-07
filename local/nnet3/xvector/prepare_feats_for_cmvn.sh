@@ -11,7 +11,7 @@
 nj=40
 cmd="run.pl"
 stage=0
-cmvns=true
+cmvns=false
 norm_vars=true
 center=true
 compress=true

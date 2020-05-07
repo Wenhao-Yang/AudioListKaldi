@@ -189,11 +189,11 @@ if [ $stage -le 20 ]; then
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
 
-  local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" --cmvns false \
+  local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" --cmvns  \
     data/Vox1_spect/dev_257 data/Vox1_spect/dev_257_kaldi data/Vox1_spect/spectrogram/dev_257_kaldi
   utils/fix_data_dir.sh data/Vox1_spect/dev_257_kaldi
 
-  local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" --cmvns false \
+  local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" --cmvns  \
     data/Vox1_spect/test_257 data/Vox1_spect/test_257_kaldi data/Vox1_spect/spectrogram/test_257_kaldi
   utils/fix_data_dir.sh data/Vox1_spect/dev_257_kaldi
 
