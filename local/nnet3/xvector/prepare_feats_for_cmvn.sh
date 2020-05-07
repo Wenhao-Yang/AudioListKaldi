@@ -11,7 +11,7 @@
 nj=40
 cmd="run.pl"
 stage=0
-cmvns=false
+cmvns=true
 norm_vars=true
 center=true
 compress=true
@@ -76,6 +76,7 @@ if [ $cmvns ]; then
       copy-feats --compress=$compress $write_num_frames_opt ark:- \
       ark,scp:$featdir/feats_${name}.JOB.ark,$featdir/xvector_feats_${name}.JOB.scp || exit 1;
 else
+    echo "No window cmvn"
     $cmd JOB=1:$nj $dir/log/create_xvector_feats_${name}.JOB.log \
       copy-feats --compress=$compress $write_num_frames_opt scp:${sdata_in}/JOB/feats.scp \
       ark,scp:$featdir/feats_${name}.JOB.ark,$featdir/xvector_feats_${name}.JOB.scp || exit 1;
