@@ -77,13 +77,13 @@ if [ $cmvns = "true" ]; then
       copy-feats --compress=$compress $write_num_frames_opt ark:- \
       ark,scp:$featdir/feats_${name}.JOB.ark,$featdir/xvector_feats_${name}.JOB.scp || exit 1;
 elif [ $cmvn = 'true' ]; then
-    echo "cmvn $cmvns"
+    echo "cmvn $cmvn"
     $cmd JOB=1:$nj $dir/log/create_xvector_feats_${name}.JOB.log \
       apply-cmvn --norm-vars=true scp:${sdata_in}/JOB/feats.scp ark:- \| \
       copy-feats --compress=$compress $write_num_frames_opt ark:- \
       ark,scp:$featdir/feats_${name}.JOB.ark,$featdir/xvector_feats_${name}.JOB.scp || exit 1;
 else
-    echo "No window cmvn"
+    echo "No cmvn"
     $cmd JOB=1:$nj $dir/log/create_xvector_feats_${name}.JOB.log \
       copy-feats --compress=$compress $write_num_frames_opt scp:${sdata_in}/JOB/feats.scp \
       ark,scp:$featdir/feats_${name}.JOB.ark,$featdir/xvector_feats_${name}.JOB.scp || exit 1;
