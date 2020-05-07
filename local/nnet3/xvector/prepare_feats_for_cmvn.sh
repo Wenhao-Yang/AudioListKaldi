@@ -68,7 +68,7 @@ sdata_in=$data_in/split$nj;
 utils/split_data.sh $data_in $nj || exit 1;
 
 # Apply sliding-window cepstral mean (and optionally variance)
-if [ $cmvns="true" ]; then
+if [ $cmvns = "true" ]; then
     echo "Window cmvn $cmvns"
     $cmd JOB=1:$nj $dir/log/create_xvector_feats_${name}.JOB.log \
       apply-cmvn-sliding --norm-vars=false --center=true --cmn-window=$cmn_window \
