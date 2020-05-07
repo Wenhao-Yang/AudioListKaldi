@@ -39,7 +39,6 @@ name=`basename $data_in`
 
 #for f in $data_in/feats.scp $data_in/vad.scp ; do
 for f in $data_in/feats.scp  ; do
-
   [ ! -f $f ] && echo "$0: No such file $f" && exit 1;
 done
 
@@ -47,11 +46,6 @@ done
 mkdir -p $dir/log
 mkdir -p $data_out
 featdir=$(utils/make_absolute.sh $dir)
-
-if [[ $(hostname -f) == *.clsp.jhu.edu ]] && [ ! -d $featdir/storage ]; then
-  utils/create_split_dir.pl \
-    /export/b{14,15,16,17}/$USER/kaldi-data/egs/voxceleb2/v2/xvector-$(date +'%m_%d_%H_%M')/xvector_feats/storage $featdir/storage
-fi
 
 for n in $(seq $nj); do
   # the next command does nothing unless $featdir/storage/ exists, see
@@ -61,6 +55,9 @@ done
 
 cp $data_in/utt2spk $data_out/utt2spk
 cp $data_in/spk2utt $data_out/spk2utt
+if [ -f $data_in/trials ]; then
+    cp $data_in/trials $data_out/trials
+fi
 #cp $data_in/wav.scp $data_out/wav.scp
 
 write_num_frames_opt="--write-num-frames=ark,t:$featdir/log/utt2num_frames.JOB"
@@ -70,6 +67,7 @@ utils/split_data.sh $data_in $nj || exit 1;
 
 # Apply sliding-window cepstral mean (and optionally variance)
 if [ $cmvns ]; then
+    echo "Window cmvn"
     $cmd JOB=1:$nj $dir/log/create_xvector_feats_${name}.JOB.log \
       apply-cmvn-sliding --norm-vars=false --center=true --cmn-window=$cmn_window \
       scp:${sdata_in}/JOB/feats.scp ark:- \| \
