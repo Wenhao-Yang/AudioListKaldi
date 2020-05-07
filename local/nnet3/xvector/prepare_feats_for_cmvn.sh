@@ -21,7 +21,7 @@ echo "$0 $@"  # Print the command line for logging
 
 if [ -f path.sh ]; then . ./path.sh; fi
 ./utils/parse_options.sh || exit 1;
-if [ $# != 4 ]; then
+if [ $# != 9 ]; then
   echo $#
   echo "Usage: $0 <in-data-dir> <out-data-dir> <feat-dir>"
   echo "e.g.: $0 data/train data/train_no_sil exp/make_xvector_features"
