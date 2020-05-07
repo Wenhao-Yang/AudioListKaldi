@@ -11,7 +11,8 @@
 nj=40
 cmd="run.pl"
 stage=0
-cmvns=
+cmvns=false
+cmvn=false
 norm_vars=true
 center=true
 compress=true
@@ -73,6 +74,12 @@ if [ $cmvns = "true" ]; then
     $cmd JOB=1:$nj $dir/log/create_xvector_feats_${name}.JOB.log \
       apply-cmvn-sliding --norm-vars=false --center=true --cmn-window=$cmn_window \
       scp:${sdata_in}/JOB/feats.scp ark:- \| \
+      copy-feats --compress=$compress $write_num_frames_opt ark:- \
+      ark,scp:$featdir/feats_${name}.JOB.ark,$featdir/xvector_feats_${name}.JOB.scp || exit 1;
+elif [ $cmvn = 'true' ]; then
+    echo "cmvn $cmvns"
+    $cmd JOB=1:$nj $dir/log/create_xvector_feats_${name}.JOB.log \
+      apply-cmvn --norm-vars=true scp:${sdata_in}/JOB/feats.scp ark:- \| \
       copy-feats --compress=$compress $write_num_frames_opt ark:- \
       ark,scp:$featdir/feats_${name}.JOB.ark,$featdir/xvector_feats_${name}.JOB.scp || exit 1;
 else
