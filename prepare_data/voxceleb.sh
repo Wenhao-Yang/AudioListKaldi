@@ -190,12 +190,12 @@ if [ $stage -le 20 ]; then
   # creating training examples, this can be removed.
 
   local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" \
-    data/Vox1_pyfb64/dev_noc data/Vox1_pyfb64/dev data/Vox1_pyfb64/dev/feats_no_sil
-  utils/fix_data_dir.sh data/Vox1_pyfb64/dev
+    data/Vox1_pyfb64/dev_noc data/Vox1_pyfb/dev_fb64 data/Vox1_pyfb/dev_fb64/feats_no_sil
+  utils/fix_data_dir.sh data/Vox1_pyfb/dev_fb64
 
   local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" \
-    data/Vox1_pyfb64/test_noc data/Vox1_pyfb64/test data/Vox1_pyfb64/test/feats_no_sil
-  utils/fix_data_dir.sh data/Vox1_pyfb64/test
+    data/Vox1_pyfb64/test_noc data/Vox1_pyfb/test_fb64 data/Vox1_pyfb/test_fb64/feats_no_sil
+  utils/fix_data_dir.sh data/Vox1_pyfb/test_fb64
 
 
 fi
