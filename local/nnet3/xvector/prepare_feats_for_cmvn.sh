@@ -79,7 +79,7 @@ if [ $cmvns = "true" ]; then
 elif [ $cmvn = 'true' ]; then
     echo "cmvn $cmvn"
     $cmd JOB=1:$nj $dir/log/create_xvector_feats_${name}.JOB.log \
-      apply-cmvn --norm-vars=true scp:${sdata_in}/JOB/feats.scp ark:- \| \
+      apply-cmvn --norm-means=true --norm-vars=true scp:${sdata_in}/JOB/feats.scp ark:- \| \
       copy-feats --compress=$compress $write_num_frames_opt ark:- \
       ark,scp:$featdir/feats_${name}.JOB.ark,$featdir/xvector_feats_${name}.JOB.scp || exit 1;
 else

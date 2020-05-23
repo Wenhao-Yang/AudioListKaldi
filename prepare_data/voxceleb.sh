@@ -48,7 +48,7 @@ mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=20
+stage=30
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -182,7 +182,7 @@ if [ $stage -le 12 ]; then
   done
 fi
 
-stage=20
+#stage=20
 if [ $stage -le 20 ]; then
   echo "=====================================CMVN========================================"
   # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
@@ -196,5 +196,24 @@ if [ $stage -le 20 ]; then
   local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" --cmvn true \
     data/Vox1_pyfb/test_fb64 data/Vox1_pyfb/test_fb64_cmvn data/Vox1_pyfb/test_fb64_cmvn/feats_no_sil
   utils/fix_data_dir.sh data/Vox1_pyfb/test_fb64_cmvn
+
+fi
+
+stage=30
+if [ $stage -le 30 ]; then
+  echo "=====================================CMVN========================================"
+  # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
+  # wasteful, as it roughly doubles the amount of training data on disk.  After
+  # creating training examples, this can be removed.
+
+  local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" \
+    data/Vox1_spect/dev_babble data/Vox1_spect/dev_babble_kaldi \
+    data/Vox1_spect/spectrogram/dev_babble_kaldi
+
+  utils/fix_data_dir.sh data/Vox1_spect/dev_babble_kaldi
+
+#  local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd"  \
+#    data/Vox1_pyfb/test_fb64 data/Vox1_pyfb/test_fb64_cmvn data/Vox1_pyfb/test_fb64_cmvn/feats_no_sil
+#  utils/fix_data_dir.sh data/Vox1_pyfb/test_fb64_cmvn
 
 fi
