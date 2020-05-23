@@ -207,10 +207,10 @@ if [ $stage -le 30 ]; then
   # creating training examples, this can be removed.
 
   local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd" \
-    data/Vox1_spect/dev_babble data/Vox1_spect/dev_babble_kaldi \
-    data/Vox1_spect/spectrogram/dev_babble_kaldi
+    data/Vox1_spect/dev_reverb data/Vox1_spect/dev_reverb_kaldi \
+    data/Vox1_spect/spectrogram/dev_reverb_kaldi
 
-  utils/fix_data_dir.sh data/Vox1_spect/dev_babble_kaldi
+  utils/fix_data_dir.sh data/Vox1_spect/dev_reverb_kaldi
 
 #  local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 16 --cmd "$train_cmd"  \
 #    data/Vox1_pyfb/test_fb64 data/Vox1_pyfb/test_fb64_cmvn data/Vox1_pyfb/test_fb64_cmvn/feats_no_sil
