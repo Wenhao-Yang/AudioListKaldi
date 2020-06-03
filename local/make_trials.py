@@ -104,6 +104,8 @@ for data_dir in data_roots:
         # pdb.set_trace()
 
         random.shuffle(negative_pairs)
+        random.shuffle(positive_pairs)
+
         if len(positive_pairs)>0.3*num_pair:
             positive_pairs=positive_pairs[:int(0.5*num_pair)]
 
