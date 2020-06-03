@@ -27,7 +27,7 @@ set -e
 #tdnn_dir=exp/tdnn
 #musan_root=/export/corpora/JHU/musan
 
-out_dir=data/aishell2
+out_dir=data/aishell2/spect
 fbank_config=conf/fbank_64.conf
 
 # sitw_dev_enroll  sitw_dev_test  sitw_eval_enroll  sitw_eval_test
