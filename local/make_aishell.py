@@ -86,7 +86,7 @@ if __name__ == '__main__':
     if not all_dir_path.exists():
         os.makedirs(str(all_dir_path))
 
-    for id2path in all_lst.readlines():
+    for id2path in all_lst_f.readlines():
         # IC0001W0002	wav/C0001/IC0001W0002.wav
         uid, wav_path = id2path.split()
         spk_id = wav_path.split('/')[1]
@@ -103,8 +103,6 @@ if __name__ == '__main__':
         f1.writelines(wav_scp)
         f2.writelines(utt2spk)
 
-    wav_scp = 'wav.scp'
-    utt2spk = 'spk2utt'
     # dev set
 
     test_spks = []
