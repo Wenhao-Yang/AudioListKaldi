@@ -97,6 +97,9 @@ for data_dir in data_roots:
                 # trials.append((this_line, 0))
                 # pairs += 1
 
+            positive_pairs = np.unique(positive_pairs)
+            negative_pairs = np.unique(negative_pairs)
+
         random.shuffle(negative_pairs)
         if len(positive_pairs)>0.3*num_pair:
             positive_pairs=positive_pairs[:int(0.5*num_pair)]
