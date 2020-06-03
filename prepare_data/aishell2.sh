@@ -38,7 +38,7 @@ mfccdir=${out_dir}/mfcc
 fbankdir=${out_dir}/fbank
 vaddir=${out_dir}/vad
 
-stage=0
+stage=5
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -48,6 +48,17 @@ if [ $stage -le 0 ]; then
   for name in all dev test ; do
     utils/utt2spk_to_spk2utt.pl ${out_dir}/${name}/utt2spk >${out_dir}/${name}/spk2utt
     utils/validate_data_dir.sh --no-text --no-feats ${out_dir}/${name}
+  done
+fi
+
+if [ $stage -le 5 ]; then
+  echo "=====================================Copy Compress========================================"
+  # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
+  # wasteful, as it roughly doubles the amount of training data on disk.  After
+  # creating training examples, this can be removed.
+  for name in test ; do
+    local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 12 --cmd "$train_cmd" ${out_dir}/${name} ${out_dir}/${name}_comp ${out_dir}/${name}_comp/feats
+    utils/fix_data_dir.sh ${out_dir}/${name}_comp
   done
 fi
 
