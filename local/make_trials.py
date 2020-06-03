@@ -98,8 +98,8 @@ for data_dir in data_roots:
                 # trials.append((this_line, 0))
                 # pairs += 1
 
-        positive_pairs = np.unique(positive_pairs)
-        negative_pairs = np.unique(negative_pairs)
+        positive_pairs = np.unique(positive_pairs).tolist()
+        negative_pairs = np.unique(negative_pairs).tolist()
         #     break
         # pdb.set_trace()
 
@@ -110,7 +110,7 @@ for data_dir in data_roots:
         num_positive = len(positive_pairs)
         for l in negative_pairs:
             if len(positive_pairs)<num_pair:
-                positive_pairs.append(l)
+                positive_pairs.co(l)
 
         for l in positive_pairs:
             f.write(l)
