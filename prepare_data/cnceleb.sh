@@ -20,31 +20,32 @@ export LC_ALL=C
 set -e
 
 # The trials file is downloaded by local/make_voxceleb1.pl.
-cnceleb_root=/work20/yangwenhao/dataset/CN-Celeb
-cnceleb_out_dir=data/cnceleb_fb64
+cnceleb_root=/data/CN-Celeb
+out_dir=data/cnceleb
 fbank_config=conf/fbank_64.conf
 
 # cnceleb_dev_enroll  cnceleb_dev_test  cnceleb_eval_enroll  cnceleb_eval_test
 # cnceleb_test_dir=${cnceleb_out_dir}/test
 # cnceleb_vad_dev_dir=${cnceleb_dev_dir}_no_sil
 
-mfccdir=${cnceleb_out_dir}/mfcc
-fbankdir=${cnceleb_out_dir}/fbank
-vaddir=${cnceleb_out_dir}/vad
+mfccdir=${out_dir}/mfcc
+fbankdir=${out_dir}/fbank
+vaddir=${out_dir}/vad
 
-stage=4
+stage=0
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
   # This script creates data/voxceleb1_test and data/voxceleb1_train.
   # Our evaluation set is the test portion of VoxCeleb1.
-  local/make_cnceleb.py --dataset-dir ${cnceleb_root} --output-dir ${cnceleb_out_dir}
+  local/make_cnceleb.py --dataset-dir ${cnceleb_root} --output-dir ${out_dir}
   for name in dev enroll test ; do
-    utils/utt2spk_to_spk2utt.pl ${cnceleb_out_dir}/${name}/utt2spk >${cnceleb_out_dir}/${name}/spk2utt
-    utils/validate_data_dir.sh --no-text --no-feats ${cnceleb_out_dir}/${name}
+    utils/utt2spk_to_spk2utt.pl ${out_dir}/${name}/utt2spk >${out_dir}/${name}/spk2utt
+    utils/validate_data_dir.sh --no-text --no-feats ${out_dir}/${name}
   done
 fi
 
+stage=100
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
