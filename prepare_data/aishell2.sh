@@ -56,9 +56,9 @@ if [ $stage -le 5 ]; then
   # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
-  for name in test ; do
-    local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 12 --cmd "$train_cmd" ${out_dir}/${name} ${out_dir}/${name}_comp ${out_dir}/${name}_comp/feats
-    utils/fix_data_dir.sh ${out_dir}/${name}_comp
+  for name in dev ; do
+    local/nnet3/xvector/prepare_feats_for_cmvn.sh --nj 32 --cmd "$train_cmd" ${out_dir}/${name} ${out_dir}/${name}_com ${out_dir}/spectrogram/${name}/
+    utils/fix_data_dir.sh ${out_dir}/${name}_com
   done
 fi
 
