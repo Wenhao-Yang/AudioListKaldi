@@ -50,7 +50,7 @@ if __name__ == '__main__':
     lock = manager.Lock()
     task_queue = manager.Queue()
     error_queue = manager.Queue()
-    nj=16
+    nj=32
 
     uid2feat = []
 
