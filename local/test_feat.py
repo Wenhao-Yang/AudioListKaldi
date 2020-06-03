@@ -56,7 +56,7 @@ if __name__ == '__main__':
 
     with open(feat_scp, 'r') as f:
         for l in f.readlines():
-            uid2feat.append(l)
+            uid2feat.append(l.split()[-1])
 
     for u in uid2feat:
         task_queue.put(u)
