@@ -40,6 +40,13 @@ vaddir=${out_dir}/vad
 
 stage=5
 
+waited=0
+while [ `ps 113458 | wc -l` -eq 2 ]; do
+  sleep 60
+  waited=$(expr $waited + 1)
+  echo -en "\033[1;4;31m Having waited for ${waited} minutes!\033[0m\r"
+done
+
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
   # This script creates data/voxceleb1_test and data/voxceleb1_train.
