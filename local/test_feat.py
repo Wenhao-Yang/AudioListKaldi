@@ -10,33 +10,24 @@
 @Overview:
 """
 import argparse
-import multiprocessing
 import os
 import time
 from multiprocessing import Pool, Manager
-from multiprocessing import Queue, Process
-
 import kaldi_io
-from tqdm import tqdm
+
 
 parser = argparse.ArgumentParser(description='Make trials for vox1')
 # Data options
-parser.add_argument('--data-path', type=str,
-                    default='data/aishell2/spect/dev',
+parser.add_argument('--data-path', type=str, default='data/aishell2/spect/dev',
                     help='path to dataset')
-
 args = parser.parse_args()
 
 feat_scp = args.data_path + '/feats.scp'
-spk2utt = args.data_path + '/spk2utt'
-utt2spk = args.data_path + '/utt2spk'
 
 if not os.path.exists(feat_scp):
     raise FileExistsError(feat_scp)
 
 def valid_load(t_queue, e_queue, cpid, lock):
-    lock.acquire()  # 加上锁
-
     while True:
         lock.acquire()  # 加上锁
         if not t_queue.empty():
@@ -48,8 +39,7 @@ def valid_load(t_queue, e_queue, cpid, lock):
             except Exception:
                 e_queue.put(utt)
             print('\rProcess [%6s] There are [%6s] utterances' \
-                  ' left, with [%6s] errors.' % (str(os.getpid()), str(t_queue.qsize()), str(e_queue.qsize())),
-              end='')
+                  ' left, with [%6s] errors.' % (str(os.getpid()), str(t_queue.qsize()), str(e_queue.qsize())), end='')
         else:
             lock.release()  # 释放锁
             # print('\n>> Process {}:  queue empty!'.format(os.getpid()))
