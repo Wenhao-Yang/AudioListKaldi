@@ -90,7 +90,7 @@ if __name__ == '__main__':
         # IC0001W0002	wav/C0001/IC0001W0002.wav
         uid, wav_path = id2path.split()
         spk_id = wav_path.split('/')[1]
-        wav_path = args.data_dir + wav_path
+        wav_path = data_dir + wav_path
 
         wav_scp.append(uid + ' ' + wav_path + '\n')
         utt2spk.append(uid + ' ' + spk_id + '\n')
