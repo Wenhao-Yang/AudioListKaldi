@@ -108,12 +108,12 @@ for data_dir in data_roots:
             positive_pairs=positive_pairs[:int(0.5*num_pair)]
 
         num_positive = len(positive_pairs)
-        for t, l in negative_pairs:
+        for l in negative_pairs:
             if len(positive_pairs)<num_pair:
-                positive_pairs.append((t, l))
+                positive_pairs.append(l)
 
-        for t, l in positive_pairs:
-            f.write(t)
+        for l in positive_pairs:
+            f.write(l)
 
         print('Generate %d pairs for set: %s, in which %d of them are positive pairs.' % (
             num_pair, data_dir, num_positive))
