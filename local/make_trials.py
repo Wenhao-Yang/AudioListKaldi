@@ -111,8 +111,9 @@ for data_dir in data_roots:
 
         num_positive = len(positive_pairs)
         for l in negative_pairs:
-            if len(positive_pairs)<num_pair:
-                positive_pairs.append(l)
+            positive_pairs.append(l)
+            if len(positive_pairs)>=num_pair:
+                break
 
         for l in positive_pairs:
             f.write(l)
