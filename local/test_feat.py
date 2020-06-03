@@ -10,7 +10,12 @@
 @Overview:
 """
 import argparse
+import multiprocessing
 import os
+import time
+from multiprocessing import Pool, Manager
+from multiprocessing import Queue, Process
+
 import kaldi_io
 from tqdm import tqdm
 
@@ -29,18 +34,59 @@ utt2spk = args.data_path + '/utt2spk'
 if not os.path.exists(feat_scp):
     raise FileExistsError(feat_scp)
 
-error_num = 0
-correct_num = 0
-with open(feat_scp, 'r') as f:
-    pbar = tqdm(enumerate(f.readlines()))
-    for idx, line in pbar:
-        uid, feat_offset = line.split()
-        try:
-            kaldi_io.read_mat(feat_offset)
-            correct_num += 1
-        except:
-            error_num+=1
-            print(feat_offset)
+def valid_load(t_queue, e_queue, cpid, lock):
+    lock.acquire()  # 加上锁
 
-print('==>There are {} utterances in {} Dataset and {} errors.'.format(correct_num, args.data_path, error_num))
+    while True:
+        lock.acquire()  # 加上锁
+        if not t_queue.empty():
+            utt = t_queue.get()
+            lock.release()  # 释放锁
+            try:
+                kaldi_io.read_mat(utt)
+                lock.release()
+            except Exception:
+                e_queue.put(utt)
+            print('\rProcess [%6s] There are [%6s] utterances' \
+                  ' left, with [%6s] errors.' % (str(os.getpid()), str(t_queue.qsize()), str(e_queue.qsize())),
+              end='')
+        else:
+            lock.release()  # 释放锁
+            # print('\n>> Process {}:  queue empty!'.format(os.getpid()))
+            break
+    pass
+
+if __name__ == '__main__':
+    manager = Manager()
+    lock = manager.Lock()
+    task_queue = manager.Queue()
+    error_queue = manager.Queue()
+    nj=16
+
+    uid2feat = []
+
+    with open(feat_scp, 'r') as f:
+        for l in f.readlines():
+            uid2feat.append(l)
+
+    for u in uid2feat:
+        task_queue.put(u)
+    print('Plan to valid feats for %d utterances in %s with %d jobs.\n' % (task_queue.qsize(), str(time.asctime()), nj))
+
+    pool = Pool(processes=nj)  # 创建nj个进程
+    for i in range(0, nj):
+        pool.apply_async(valid_load, args=(task_queue, error_queue, i, lock))
+
+    pool.close()  # 关闭进程池，表示不能在往进程池中添加进程
+    pool.join()  # 等待进程池中的所有进程执行完毕，必须在close()之后调用
+
+    if error_queue.qsize() > 0:
+        print('\n>> valid Completed with errors in: ')
+        while not error_queue.empty():
+            print(error_queue.get() + ' ', end='')
+        print('')
+    else:
+        print('\n>> valid Completed without errors.!')
+
+
 
