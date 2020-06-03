@@ -35,7 +35,6 @@ def valid_load(t_queue, e_queue, cpid, lock):
             lock.release()  # 释放锁
             try:
                 kaldi_io.read_mat(utt)
-                lock.release()
             except Exception:
                 e_queue.put(utt)
             print('\rProcess [%6s] There are [%6s] utterances' \
