@@ -81,7 +81,7 @@ for data_dir in data_roots:
                         this_line = ' '.join((spk2utt_dict[spk][i], spk2utt_dict[spk][j], 'target\n'))
                         # f.write(this_line)
                         # if len(positive_pairs)<0.3*num_pair:
-                        positive_pairs.append((this_line, 1))
+                        positive_pairs.append(this_line)
 
 
             for i in range(num_repeat):
@@ -92,7 +92,7 @@ for data_dir in data_roots:
                 this_line = ' '.join((this_uid, other_uid, 'nontarget\n'))
                 # f.write(this_line)
                 if len(positive_pairs) < 10 * num_pair:
-                    negative_pairs.append((this_line, 0))
+                    negative_pairs.append(this_line)
                 else:
                     break
                 # trials.append((this_line, 0))
