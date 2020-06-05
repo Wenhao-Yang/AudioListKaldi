@@ -74,17 +74,19 @@ for data_dir in data_roots:
             other_spks.pop(spk_idx)
 
             num_utt= len(spk2utt_dict[spk])
-
+            spk_posi = 0
             for i in range(num_utt):
                 for j in range(num_utt):
                     if i<j:
+                        if spk_posi>=int(0.7*num_pair/len(spks)):
+                            break
                         this_line = ' '.join((spk2utt_dict[spk][i], spk2utt_dict[spk][j], 'target\n'))
                         # f.write(this_line)
                         # if len(positive_pairs)<0.3*num_pair:
                         positive_pairs.append(this_line)
+                        spk_posi+=1
 
-
-            for i in range(num_repeat):
+            for i in range(int(0.75*num_pair/len(spks))):
                 this_uid = np.random.choice(spk2utt_dict[spk])
                 other_spk = np.random.choice(other_spks)
                 other_uid = np.random.choice(spk2utt_dict[other_spk])
