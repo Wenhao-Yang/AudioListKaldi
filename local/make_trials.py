@@ -58,11 +58,11 @@ for data_dir in data_roots:
         utts = len(list(utt2spk_dict.keys()))
         spks = list(spk2utt_dict.keys())
 
-        num_repeat = int((len(spks) - 1) * 5)
-        if utts*num_repeat*len(spks)>30*num_pair:
-            num_repeat = int(10*num_pair/len(spks))
+        # num_repeat = int((len(spks) - 1) * 5)
+        # if utts*num_repeat*len(spks)>30*num_pair:
+        #     num_repeat = int(10*num_pair/len(spks))
 
-        print('Num of repeats: %d ' % num_repeat)
+        print('Num of repeats: %d ' % (num_pair/len(spks)))
         pairs = 0
         positive_pairs = []
         negative_pairs = []
