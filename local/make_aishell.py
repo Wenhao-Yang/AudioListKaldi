@@ -23,7 +23,7 @@ parser = argparse.ArgumentParser(description='Prepare scp file for cn-celeb')
 # Model options
 
 # options for
-parser.add_argument('--dataset-dir', type=str, default='/data/AISHELL-2/iOS',
+parser.add_argument('--dataset-dir', type=str, default='/home/yangwenhao/storage/dataset/AISHELL-2/iOS',
                     help='path to dataset')
 parser.add_argument('--output-dir', type=str, default='data/aishell2',
                     help='path to dataset')
