@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser(description='Prepare scp file for timit')
 # Model options
 
 # options for vox1
-parser.add_argument('--dataset-dir', type=str, default='/data/timit',
+parser.add_argument('--dataset-dir', type=str, default='/home/yangwenhao/storage/dataset/timit',
                     help='path to dataset')
 parser.add_argument('--output-dir', type=str, default='data/timit',
                     help='path to dataset')
