@@ -15,21 +15,21 @@ produce files:
     utt2spk: produced by *.sh script
     wav.scp: uttid filepath
 """
-
+import argparse
 import os
 import csv
 import sys
 import pathlib
 
-data_root = sys.argv[1]
-train_dir = sys.argv[2]
-test_dir = sys.argv[3]
+parser = argparse.ArgumentParser(description='Prepare scp file for cn-celeb')
+# Model options
 
-for i in train_dir, test_dir:
-    check_path = pathlib.Path(i)
-    if not check_path.parent.exists():
-        print('Making dir: %s' % i)
-        os.makedirs(str(check_path.parent))
+# options for
+parser.add_argument('--dataset-dir', type=str, default='/home/yangwenhao/storage/dataset/voxceleb1',
+                    help='path to dataset')
+parser.add_argument('--output-dir', type=str, default='data/vox1',
+                    help='path to dataset')
+args = parser.parse_args()
 
 def prep_id_idname(meta_path):
     id_idname = {}
@@ -135,7 +135,18 @@ def read_vox1_structure(directory, train_dir, test_dir):
     else:
         print('test set skipped!')
 
-read_vox1_structure(data_root, train_dir, test_dir)
+if __name__ == '__main__':
+    data_root = args.dataset_dir
+    train_dir = os.path.join(args.output_dir, 'dev')
+    test_dir = os.path.join(args.output_dir, 'test')
+
+    for i in train_dir, test_dir:
+        check_path = pathlib.Path(i)
+        if not check_path.parent.exists():
+            print('Making dir: %s' % i)
+            os.makedirs(str(check_path.parent))
+            
+    read_vox1_structure(data_root, train_dir, test_dir)
 #
 #
 # train_set_path = '/home/yangwenhao/projects/data/mydataset/voxceleb/voxceleb1_wav/vox1_dev_wav/'
