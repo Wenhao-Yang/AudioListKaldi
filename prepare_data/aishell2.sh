@@ -11,7 +11,7 @@
 
 export train_cmd="run.pl --mem 16G"
 
-export KALDI_ROOT=/work20/yangwenhao/project/kaldi
+export KALDI_ROOT=/home/yangwenhao/local/project/kaldi
 export PATH=$PWD/utils/:$KALDI_ROOT/tools/openfst/bin:$KALDI_ROOT/tools/sph2pipe_v2.5:$PWD:$PATH
 [ ! -f $KALDI_ROOT/tools/config/common_path.sh ] && echo >&2 "The standard file $KALDI_ROOT/tools/config/common_path.sh is not present -> Exit!" && exit 1
 . $KALDI_ROOT/tools/config/common_path.sh
@@ -38,7 +38,7 @@ mfccdir=${out_dir}/mfcc
 fbankdir=${out_dir}/fbank
 vaddir=${out_dir}/vad
 
-stage=5
+stage=0
 
 waited=0
 while [ `ps 113458 | wc -l` -eq 2 ]; do
