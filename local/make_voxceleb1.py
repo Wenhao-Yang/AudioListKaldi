@@ -80,7 +80,7 @@ def read_vox1_structure(directory, train_dir, test_dir):
     if not os.path.exists(train_dir):
         os.makedirs(train_dir)
 
-    all_wav_path = list(data_root.glob('*/*/*/*/*.wav'))
+    all_wav_path = list(data_root.glob('*/*/*/*/*/*.wav'))
     print(len(all_wav_path))
     dev_wav_path = []
 
