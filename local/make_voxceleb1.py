@@ -81,8 +81,9 @@ def read_vox1_structure(directory, train_dir, test_dir):
         os.makedirs(train_dir)
 
     all_wav_path = list(data_root.glob('*/*/*/*/*.wav'))
-
+    print(len(all_wav_path))
     dev_wav_path = []
+
     test_wav_path = []
     for wav in all_wav_path:
         if wav.parents[3].name=='vox1_test_wav':
@@ -99,7 +100,7 @@ def read_vox1_structure(directory, train_dir, test_dir):
         uid = '-'.join((spkid, utt, uid))
         wav_scp.append(uid + ' ' + str(wav) + '\n')
         utt2spk.append(uid + ' ' + str(spkid) + '\n')
-    assert len(wav_scp)==148642
+    assert len(wav_scp)==148642, print(len(wav_scp))
     wav_scp.sort()
     utt2spk.sort()
     with open(os.path.join(train_dir, 'wav.scp'), 'w') as f1, \
