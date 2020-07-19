@@ -20,13 +20,13 @@ if (! -e $out_dir) {
 # http://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test.txt
 if (! -e "$vox1_root/veri_test.txt") {
   # print "$out_dir\n";
-  # system("wget -O $vox1_root/veri_test.txt http://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test.txt");
-    system("cp /work20/yangwenhao/dataset/voxceleb1/veri_test.txt $vox1_root/veri_test.txt")
+  system("wget -O $vox1_root/veri_test.txt http://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test.txt");
+  #   system("cp /work20/yangwenhao/dataset/voxceleb1/veri_test.txt $vox1_root/veri_test.txt")
 }
 
 if (! -e "$vox1_root/vox1_meta.csv") {
-  # system("wget -O $vox1_root/vox1_meta.csv http://www.openslr.org/resources/49/vox1_meta.csv");
-    system("cp /work20/yangwenhao/dataset/voxceleb1/vox1_meta.csv $vox1_root/vox1_meta.csv")
+  system("wget -O $vox1_root/vox1_meta.csv http://www.openslr.org/resources/49/vox1_meta.csv");
+    # system("cp /work20/yangwenhao/dataset/voxceleb1/vox1_meta.csv $vox1_root/vox1_meta.csv")
 }
 
 

@@ -11,7 +11,7 @@
 
 export train_cmd="run.pl --mem 16G"
 
-export KALDI_ROOT=/work20/yangwenhao/project/kaldi
+export KALDI_ROOT=/home/yangwenhao/local/project/kaldi
 export PATH=$PWD/utils/:$KALDI_ROOT/tools/openfst/bin:$KALDI_ROOT/tools/sph2pipe_v2.5:$PWD:$PATH
 [ ! -f $KALDI_ROOT/tools/config/common_path.sh ] && echo >&2 "The standard file $KALDI_ROOT/tools/config/common_path.sh is not present -> Exit!" && exit 1
 . $KALDI_ROOT/tools/config/common_path.sh
@@ -20,8 +20,8 @@ export LC_ALL=C
 set -e
 
 # The trials file is downloaded by local/make_voxceleb1.pl.
-vox1_root=/work20/yangwenhao/dataset/voxceleb1
-vox2_root=/export/corpora/VoxCeleb2
+vox1_root=/home/storage/yangwenhao/dataset/voxceleb1
+vox2_root=/home/storage/yangwenhao/dataset/voxceleb2
 
 # The trials file is downloaded by local/make_voxceleb1.pl.
 musan_root=/home/yangwenhao/local/dataset/musan/musan
@@ -31,7 +31,7 @@ rirs_root=/home/yangwenhao/local/dataset/rirs/RIRS_NOISES
 #tdnn_dir=exp/tdnn
 
 #musan_root=/export/corpora/JHU/musan
-vox1_out_dir=data/Vox1_spect
+vox1_out_dir=data/vox1
 musan_out_dir=data/musan
 
 fbank_config=conf/fbank_64.conf
@@ -48,23 +48,24 @@ mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=30
+stage=0
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
   # This script creates data/voxceleb1_test and data/voxceleb1_train.
   # Our evaluation set is the test portion of VoxCeleb1.
   local/make_voxceleb1_trials.pl ${vox1_root} ${vox1_out_dir}
-  local/make_voxceleb1.py ${vox1_root} ${vox1_train_dir} ${vox1_test_dir}
+  local/make_voxceleb1.py --dataset-dir ${vox1_root} --output-dir ${vox1_out_dir}
 
-  utils/utt2spk_to_spk2utt.pl ${vox1_train_dir}/utt2spk >${vox1_train_dir}/spk2utt
+  utils/fix_data_dir.sh {vox1_train_dir}
   utils/validate_data_dir.sh --no-text --no-feats $vox1_train_dir
 
-  utils/utt2spk_to_spk2utt.pl ${vox1_test_dir}/utt2spk >${vox1_test_dir}/spk2utt
+  utils/fix_data_dir.pl ${vox1_test_dir}
   utils/validate_data_dir.sh --no-text --no-feats $vox1_test_dir
 
 fi
-#stage=10
+
+stage=100
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
