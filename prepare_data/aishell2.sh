@@ -27,12 +27,14 @@ set -e
 #tdnn_dir=exp/tdnn
 #musan_root=/export/corpora/JHU/musan
 
-out_dir=data/aishell2/spect
+data_dir=/home/storage/yangwenhao/dataset/AISHELL-2/iOS
+out_dir=data/aishell2
 fbank_config=conf/fbank_64.conf
 
 # sitw_dev_enroll  sitw_dev_test  sitw_eval_enroll  sitw_eval_test
-# sitw_test_dir=${sitw_out_dir}/test
-# sitw_vad_dev_dir=${sitw_dev_dir}_no_sil
+dev_dir=${out_dir}/dev
+test_dir=${out_dir}/test
+# vad_dev_dir=${sitw_dev_dir}_no_sil
 
 mfccdir=${out_dir}/mfcc
 fbankdir=${out_dir}/fbank
@@ -51,13 +53,16 @@ if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
   # This script creates data/voxceleb1_test and data/voxceleb1_train.
   # Our evaluation set is the test portion of VoxCeleb1.
-#  local/make_aishell.sh
+  python local/make_aishell.py --dataset-dir ${data_dir} --output-dir ${out_dir}
+
+  utils/combine_data.sh data/test
   for name in all dev test ; do
-    utils/utt2spk_to_spk2utt.pl ${out_dir}/${name}/utt2spk >${out_dir}/${name}/spk2utt
+    utils/fix_data_dir.sh ${out_dir}/${name}
     utils/validate_data_dir.sh --no-text --no-feats ${out_dir}/${name}
   done
 fi
 
+stage=100
 if [ $stage -le 5 ]; then
   echo "=====================================Copy Compress========================================"
   # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
@@ -69,7 +74,7 @@ if [ $stage -le 5 ]; then
   done
 fi
 
-stage=100
+
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"

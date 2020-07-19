@@ -11,7 +11,7 @@
 
 export train_cmd="run.pl --mem 16G"
 
-export KALDI_ROOT=/work20/yangwenhao/project/kaldi
+export KALDI_ROOT=/home/yangwenhao/local/project/kaldi
 export PATH=$PWD/utils/:$KALDI_ROOT/tools/openfst/bin:$KALDI_ROOT/tools/sph2pipe_v2.5:$PWD:$PATH
 [ ! -f $KALDI_ROOT/tools/config/common_path.sh ] && echo >&2 "The standard file $KALDI_ROOT/tools/config/common_path.sh is not present -> Exit!" && exit 1
 . $KALDI_ROOT/tools/config/common_path.sh
@@ -20,8 +20,11 @@ export LC_ALL=C
 set -e
 
 # The trials file is downloaded by local/make_voxceleb1.pl.
-cnceleb_root=/data/CN-Celeb
+cnceleb_root=/home/storage/yangwenhao/dataset/CN-Celeb
 out_dir=data/cnceleb
+
+dev_dir=${out_dir}/dev
+test_dir=${out_dir}/test
 fbank_config=conf/fbank_64.conf
 
 # cnceleb_dev_enroll  cnceleb_dev_test  cnceleb_eval_enroll  cnceleb_eval_test
@@ -39,8 +42,10 @@ if [ $stage -le 0 ]; then
   # This script creates data/voxceleb1_test and data/voxceleb1_train.
   # Our evaluation set is the test portion of VoxCeleb1.
   local/make_cnceleb.py --dataset-dir ${cnceleb_root} --output-dir ${out_dir}
-  for name in dev enroll test ; do
-    utils/utt2spk_to_spk2utt.pl ${out_dir}/${name}/utt2spk >${out_dir}/${name}/spk2utt
+  utils/combine_data.sh ${test_dir} ${out_dir}/enroll ${out_dir}/eval
+
+  for name in dev test ; do
+    utils/fix_data_dir.sh ${out_dir}/${name}
     utils/validate_data_dir.sh --no-text --no-feats ${out_dir}/${name}
   done
 fi

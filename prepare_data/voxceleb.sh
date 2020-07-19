@@ -36,8 +36,8 @@ musan_out_dir=data/musan
 
 fbank_config=conf/fbank_64.conf
 
-vox1_test_dir=${vox1_out_dir}/test
 vox1_train_dir=${vox1_out_dir}/dev
+vox1_test_dir=${vox1_out_dir}/test
 vox1_trials=${vox1_test_dir}/trials
 
 vox1_vad_train_dir=${vox1_train_dir}_no_sil
@@ -54,8 +54,8 @@ if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
   # This script creates data/voxceleb1_test and data/voxceleb1_train.
   # Our evaluation set is the test portion of VoxCeleb1.
-#  local/make_voxceleb1_trials.pl ${vox1_root} ${vox1_out_dir}
-#  local/make_voxceleb1.py --dataset-dir ${vox1_root} --output-dir ${vox1_out_dir}
+  local/make_voxceleb1_trials.pl ${vox1_root} ${vox1_out_dir}
+  local/make_voxceleb1.py --dataset-dir ${vox1_root} --output-dir ${vox1_out_dir}
 
   utils/fix_data_dir.sh ${vox1_train_dir}
   utils/validate_data_dir.sh --no-text --no-feats $vox1_train_dir

@@ -166,12 +166,12 @@ if __name__ == '__main__':
     wav_scp.sort()
     utt2spk.sort()
 
-    with open(args.output_dir + '/test/wav.scp', 'w') as f1, \
-            open(args.output_dir + '/test/utt2spk', 'w') as f2:
+    with open(args.output_dir + '/eval/wav.scp', 'w') as f1, \
+            open(args.output_dir + '/eval/utt2spk', 'w') as f2:
         f1.writelines(wav_scp)
         f2.writelines(utt2spk)
 
-    print('\nFor test:\n\twav.scp and utt2spk write to %s/test .' % args.output_dir)
+    print('\nFor eval:\n\twav.scp and utt2spk write to %s/test .' % args.output_dir)
     print('\tThere are %d in test' % len(wav_scp))
 
     trials_uid = []
@@ -187,8 +187,8 @@ if __name__ == '__main__':
 
         trials_uid.append(enroll_uid + ' ' + test_uid + ' ' + target)
 
-    with open(args.output_dir + '/test/trials', 'w') as f:
+    with open(args.output_dir + '/eval/trials', 'w') as f:
         f.writelines(trials_uid)
 
-    print('Saving trials in %s' % (args.output_dir + '/test/trials'))
+    print('Saving trials in %s' % (args.output_dir + '/eval/trials'))
     print('Preparing Completed!')
