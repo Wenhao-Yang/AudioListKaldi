@@ -144,7 +144,7 @@ if __name__ == '__main__':
     test_lst = args.dataset_dir + '/eval/lists/test.lst'
     test_lst_f = open(test_lst, 'r')
 
-    test_dir_path = pathlib.Path(args.output_dir + '/test')
+    test_dir_path = pathlib.Path(args.output_dir + '/eval')
     if not test_dir_path.exists():
         os.makedirs(str(test_dir_path))
 
