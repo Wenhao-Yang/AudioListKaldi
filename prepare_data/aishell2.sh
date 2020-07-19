@@ -55,7 +55,6 @@ if [ $stage -le 0 ]; then
   # Our evaluation set is the test portion of VoxCeleb1.
   python local/make_aishell.py --dataset-dir ${data_dir} --output-dir ${out_dir}
 
-  utils/combine_data.sh data/test
   for name in all dev test ; do
     utils/fix_data_dir.sh ${out_dir}/${name}
     utils/validate_data_dir.sh --no-text --no-feats ${out_dir}/${name}
