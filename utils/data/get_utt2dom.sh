@@ -19,6 +19,7 @@ fi
 
 if [ -f $data/utt2dom ]; then
   rm $data/utt2dom
+fi
 
 touch $data/utt2dom
 
@@ -34,4 +35,4 @@ fi
 
 echo "$0: completed $data/utt2dom"
 
-exit 0
+exit 0;
