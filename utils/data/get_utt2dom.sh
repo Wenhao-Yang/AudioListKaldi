@@ -29,8 +29,11 @@ if [ -f $data/wav.scp ]; then
     while read line; do
           arr=(${line})
           uid_arr=(${arr[0]//\-/ })
+          dom=${uid_arr[1]}
 
-          echo ${arr[0]} ${uid_arr[1]} >> $data/utt2dom
+          [ $dom = "moives" ] && dom="movie"
+
+          echo ${arr[0]} $dom >> $data/utt2dom
     done
 
 fi
