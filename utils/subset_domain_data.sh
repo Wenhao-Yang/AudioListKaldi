@@ -25,7 +25,7 @@ if [ -f $data_dir/utt2dom ]; then
     num_utt=`cat $data_dir/utt2dom | grep $d | wc -l `
     c=`echo $(echo "$num_utt*$num_utt_per"|bc) | awk '{print int($0)}'`
 
-    echo `cat $data_dir/utt2dom | grep $d | shuf | head -$c | awk '{print $1}'` # >> $data_dir/utt.tmp
+    cat $data_dir/utt2dom | grep $d | shuf | head -$c | awk '{print $1}' >> $data_dir/utt.tmp
 
   done
 
