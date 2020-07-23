@@ -19,10 +19,10 @@ fi
 mkdir -p $out_dir || exit 1
 #[ ! -e $out_dir ] && rm $data/utt.tmp
 
-touch $data/utt2dom
+touch "$data/utt2dom"
 
 [ -f $data/utt2dom ] && rm $data/utt.tmp
-touch $data/utt.tmp
+touch "$data/utt.tmp"
 
 if [ -f $data/utt2dom ]; then
 
