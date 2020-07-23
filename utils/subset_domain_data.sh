@@ -37,7 +37,7 @@ if [ -f $data_dir/utt2dom ]; then
   done
 
   utils/subset_data_dir.sh --utt-list $data_dir/utt.tmp $data_dir $out_dir
-  rm $data_dir/utt.tmp
+#  rm $data_dir/utt.tmp
 
 fi
 
