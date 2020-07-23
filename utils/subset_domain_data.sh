@@ -11,17 +11,10 @@ num_utt_per=$1
 data_dir=$2
 out_dir=$3
 
-
-if [ -f $data_dir/utt2dom ]; then
-  rm $data_dir/utt2dom
-fi
-
 mkdir -p $out_dir || exit 1
 #[ ! -e $out_dir ] && rm $data/utt.tmp
 
-touch "$data_dir/utt2dom"
-
-[ -f $data_dir/utt2dom ] && rm $data_dir/utt.tmp
+[ -f $data_dir/utt.tmp ] && rm $data_dir/utt.tmp
 touch "$data_dir/utt.tmp"
 
 if [ -f $data_dir/utt2dom ]; then
@@ -37,6 +30,7 @@ if [ -f $data_dir/utt2dom ]; then
   done
 
   utils/subset_data_dir.sh --utt-list $data_dir/utt.tmp $data_dir $out_dir
+
 #  rm $data_dir/utt.tmp
 
 fi
