@@ -21,7 +21,7 @@ if [ -f $data_dir/utt2dom ]; then
 
   echo "$0: getting domains of utterances from utt2dom files"
   domains=`cat $data_dir/utt2dom | sort -k 2 | awk '{print $2}' | uniq`
-  for d in domains ; do
+  for d in $domains ; do
     num_utt=`cat $data_dir/utt2dom | grep $d | wc -l `
     c=`echo $(echo "$num_utt*$num_utt_per"|bc) | awk '{print int($0)}'`
 
