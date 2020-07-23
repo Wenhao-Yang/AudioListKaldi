@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# != 2 ]; then
+if [ $# != 3 ]; then
   echo "Usage: $0 [options] <num-utt-per> <data-dir> <out-dir>"
   echo "e.g.:"
   echo " $0 1000 data/train"
