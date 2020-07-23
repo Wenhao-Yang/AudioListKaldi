@@ -27,8 +27,10 @@ if [ -f $data/wav.scp ]; then
   echo "$0: getting chnnels of utterances from wav.scp files"
   cat $data/wav.scp | \
     while read line; do
-          arr=(${line//\-/ })
-          echo $line ${arr[1]} >> $data/utt2dom
+          arr=(${line})
+          uid_arr=(${arr[0]//\-/ })
+
+          echo ${arr[0]} ${uid_arr[1]} >> $data/utt2dom
     done
 
 fi
