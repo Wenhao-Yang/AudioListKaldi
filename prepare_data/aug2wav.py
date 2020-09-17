@@ -120,7 +120,7 @@ if __name__ == "__main__":
                 wav_w_path = pathlib.Path(l_lst[-2])
                 uid = l_lst[0]
                 comm = ' '.join(l_lst[1:-1])
-                new_wf.write(l_lst[0] + '-' + args.suffix + ' ' +l_lst[-2]+'\n')
+                new_wf.write(l_lst[0] + ' ' +l_lst[-2]+'\n')
 
                 if not wav_w_path.exists():
                     all_convert.append([uid, comm])
