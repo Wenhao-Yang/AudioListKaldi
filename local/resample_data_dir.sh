@@ -46,7 +46,7 @@ cat $data_dir/wav.scp | \
 wait
 #cat $data_dir/wav.scp | awk '{print $1 " sox " $2 " -r " "'$sample_rate'" " -p |"}' > $out_dir/wav.scp
 
-cat $data_dir/wav.scp | sed -e '/^$/d' > $data_dir/wav.scp
+wc -l  $data_dir/wav.scp
 for f in utt2spk spk2utt utt2dur reco2dur utt2num_frames trials; do
   if [ -f $data_dir/$f ]; then
     cp $data_dir/$f $out_dir
