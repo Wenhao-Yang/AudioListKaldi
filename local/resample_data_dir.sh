@@ -33,7 +33,7 @@ cat $data_dir/wav.scp | \
   #        echo $orig_path $new_path
 
           [ ! -d ${new_path%/*} ] && mkdir -p ${new_path%/*}
-          sox -V 2 ${orig_path} -r $sample_rate ${new_path} &
+          sox -V[2] ${orig_path} -r $sample_rate ${new_path} &
           echo -e "${l[-2]} ${new_path}\n" >> $out_dir/wav.scp
 
           nj=`expr $nj + 1`
