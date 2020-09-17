@@ -142,6 +142,16 @@ def augment_wav(utt, wav, dur, fg_snr_opts, bg_snr_opts, fg_noise_utts, \
 
     # If the wav is just a file
     if wav.strip()[-1] != "|":
+        if len(snrs) == 1:
+            if snrs[0] == -15:
+                noises_str = '--normalize-output=false ' + noise
+            elif snrs[0] == -20 :
+                noises_str = '--normalize-output=false --volume=0.8 ' + noise
+            elif snrs[0] == -25 :
+                noises_str = '--normalize-output=false --volume=0.5 ' + noise
+            elif snrs[0] == -30 :
+                noises_str = '--normalize-output=false --volume=0.2 ' + noise
+
         new_wav = "wav-reverberate --shift-output=true " + noises_str + " " \
             + start_times_str + " " + snrs_str + " " + wav + " - |"
     # Else if the wav is in a pipe
