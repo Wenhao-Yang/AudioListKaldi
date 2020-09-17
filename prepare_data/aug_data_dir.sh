@@ -29,7 +29,7 @@ if [ $stage -le 6 ]; then
   dataset=vox1
   for name in dev ; do
     [ ! -f data/${dataset}/${name}_8k/reco2dur ] && utils/data/get_reco2dur.sh data/${dataset}/${name}_8k
-    steps/data/augment_data_dir.py --utt-suffix "radio" --bg-snrs " -15:-20:-25:-30" --num-bg-noises "1" --bg-noise-dir "data/radio/noise_8k" data/vox1/${name}_8k data/vox1/${name}_8k_radio
+    steps/data/augment_data_dir.py --utt-suffix "radio" --bg-snrs " -15:-20:-25:-30" --num-bg-noises "1" --bg-noise-dir "data/radio/noise_8k" data/vox1/${name}_8k_wav data/vox1/${name}_8k_radio
 
     prepare_data/aug2wav.py --dataset-dir /home/storage/yangwenhao/dataset/voxceleb_8k --outset-dir /home/storage/yangwenhao/dataset/voxceleb_8k_radio_%s --data-dir data/vox1 --set-name ${name}_8k_radio
   done
