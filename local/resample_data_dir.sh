@@ -54,4 +54,5 @@ for f in utt2spk spk2utt utt2dur reco2dur utt2num_frames trials; do
 done
 
 utils/fix_data_dir.sh $out_dir
+wc -l  $data_dir/wav.scp
 echo "resample_data_dir.sh: files are created in $out_dir"
