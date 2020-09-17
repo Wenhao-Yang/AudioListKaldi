@@ -21,7 +21,7 @@ if [ $stage -le 5 ]; then
     prepare_data/aug2wav.py --dataset-dir /home/storage/yangwenhao/dataset/voxceleb1 \
                             --outset-dir /home/storage/yangwenhao/dataset/voxceleb1_%s \
                             --data-dir data/vox1 \
-                            --set-name ${name} \
+                            --set-name ${name}_8k \
                             --suffix 8k
   done
 fi
