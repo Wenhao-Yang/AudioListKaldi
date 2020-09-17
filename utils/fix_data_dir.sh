@@ -136,7 +136,7 @@ function filter_speakers {
 function filter_utts {
   cat $data/utt2spk | awk '{print $1}' > $tmpdir/utts
 
-  echo `wc -l $tmpdir/utts`
+#  echo `wc -l $tmpdir/utts`
 
   ! cat $data/utt2spk | sort | cmp - $data/utt2spk && \
     echo "utt2spk is not in sorted order (fix this yourself)" && exit 1;

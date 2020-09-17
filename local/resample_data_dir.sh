@@ -33,7 +33,7 @@ cat $data_dir/wav.scp | \
   #        echo $orig_path $new_path
 
           [ ! -d ${new_path%/*} ] && mkdir -p ${new_path%/*}
-          sox ${orig_path} -r $sample_rate ${new_path} &
+          sox -V 2 ${orig_path} -r $sample_rate ${new_path} &
           echo -e "${l[-2]} ${new_path}\n" >> $out_dir/wav.scp
 
           nj=`expr $nj + 1`
@@ -54,6 +54,6 @@ for f in utt2spk spk2utt utt2dur reco2dur utt2num_frames trials; do
   fi
 done
 
-./utils/fix_data_dir.sh $out_dir
-grep -v "^$"  $out_dir/wav.scp > $out_dir/wav.scp
+utils/fix_data_dir.sh $out_dir
+#grep -v "^$"  $out_dir/wav.scp > $out_dir/wav.scp
 echo "resample_data_dir.sh: files are created in $out_dir"
