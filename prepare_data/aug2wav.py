@@ -44,6 +44,7 @@ def SaveFromCommands(lock, proid, task_q, error_q):
             comm = task_queue.get()
             lock.release()  # 释放锁
             try:
+                print(comm[1])
                 pcode = RunCommand(comm[1])
                 if pcode is not 0:
                     raise Exception(comm[0])
