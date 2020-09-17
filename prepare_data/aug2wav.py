@@ -86,13 +86,14 @@ if __name__ == "__main__":
     all_convert = []
     # sets = ['babble', 'music', 'noise', 'reverb', 'radio']
     sets = args.set_name.split(',')
-    print('Out data dir is %s' % args.outset_dir % args.suffix)
+    print('Out data dir is %s' % (args.outset_dir % args.suffix))
 
     for s in sets:
         wav_scp_path = os.path.join(data_dir, s, 'wav.scp')
 
         if not os.path.exists(wav_scp_path):
             continue
+
         new_wav_scp_path = os.path.join(data_dir, s + '_wav', 'wav.scp')
         if not os.path.exists(os.path.join(data_dir, s + '_wav')):
             os.makedirs(os.path.join(data_dir, s + '_wav'))
@@ -112,7 +113,7 @@ if __name__ == "__main__":
                 if 'reverb' in s or '8k' in s :
                     # print(l_lst)
                     l_lst[-2] = l_lst[2].replace(args.dataset_dir,
-                                                 args.outset_dir % args.suffix)
+                                                 (args.outset_dir % args.suffix))
                     if '8k' in s:
                         l_lst.pop(-3)
                 else:

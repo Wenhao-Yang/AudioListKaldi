@@ -22,7 +22,7 @@ if [ $stage -le 5 ]; then
                             --outset-dir /home/storage/yangwenhao/dataset/voxceleb1_%s \
                             --data-dir data/vox1 \
                             --set-name ${name}_8k \
-                            --suffix wav
+                            --suffix 8k
   done
 fi
 
