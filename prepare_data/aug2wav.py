@@ -110,6 +110,8 @@ if __name__ == "__main__":
                 if 'reverb' in s or '8k' in s :
                     l_lst[-2] = l_lst[2].replace(args.dataset_dir,
                                                  args.outset_dir % args.suffix)
+                    if '8k' in s:
+                        l_lst.pop(-3)
                 else:
                     # dataset_Dri ='/work20/yangwenhao/dataset/voxceleb1'
                     # outset_dir = '/work20/yangwenhao/dataset/voxceleb1_%s'
