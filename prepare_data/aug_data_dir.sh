@@ -18,6 +18,7 @@ fi
 if [ $stage -le 5 ]; then
   for name in dev test ;do
     local/resample_data_dir.sh voxceleb1_wav 8000 data/vox1/${name} data/vox1/${name}_8k
+
   done
 fi
 
