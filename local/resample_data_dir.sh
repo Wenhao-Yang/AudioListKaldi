@@ -44,9 +44,10 @@ cat $data_dir/wav.scp | \
 
     done
 wait
+
 #cat $data_dir/wav.scp | awk '{print $1 " sox " $2 " -r " "'$sample_rate'" " -p |"}' > $out_dir/wav.scp
 
-wc -l  $out_dir/wav.scp
+#wc -l  $out_dir/wav.scp
 for f in utt2spk spk2utt utt2dur reco2dur utt2num_frames trials; do
   if [ -f $data_dir/$f ]; then
     cp $data_dir/$f $out_dir
@@ -54,5 +55,5 @@ for f in utt2spk spk2utt utt2dur reco2dur utt2num_frames trials; do
 done
 
 utils/fix_data_dir.sh $out_dir
-wc -l  $out_dir/wav.scp
+grep -v "^$"  $out_dir/wav.scp > $out_dir/wav.scp
 echo "resample_data_dir.sh: files are created in $out_dir"
