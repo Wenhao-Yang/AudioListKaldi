@@ -25,22 +25,23 @@ nj=0
 
 cat $data_dir/wav.scp | \
     while read line; do
-        echo $line
         l=($line)
+        if [ ${#l[@]} = 2 ]; then
+          # echo ${#l[@]}
+          orig_path=`echo ${l[-1]}` #/home/cca01/work2019/yangwenhao/mydataset/wav_test/noise/CHN01/D01-U000000.wav
+          new_path=${orig_path/"$org_data"/"$out_data"}
+  #        echo $orig_path $new_path
 
-        # echo ${#l[@]}
-        orig_path=`echo ${l[-1]}` #/home/cca01/work2019/yangwenhao/mydataset/wav_test/noise/CHN01/D01-U000000.wav
-        new_path=${orig_path/"$org_data"/"$out_data"}
-#        echo $orig_path $new_path
+          [ ! -d ${new_path%/*} ] && mkdir -p ${new_path%/*}
+          sox ${orig_path} -r $sample_rate ${new_path} &
+          echo -e "${l[-2]} ${new_path}\n" >> $out_dir/wav.scp
 
-        [ ! -d ${new_path%/*} ] && mkdir -p ${new_path%/*}
-        sox ${orig_path} -r $sample_rate ${new_path} &
-        echo -e "${l[-2]} ${new_path}\n" >> $out_dir/wav.scp
-
-        nj=`expr $nj + 1`
-        if [ $(( $nj % 10 ))} = 0 ]; then
-          wait
+          nj=`expr $nj + 1`
+          if [ $(( $nj % 10 ))} = 0 ]; then
+            wait
+          fi
         fi
+
     done
 wait
 #cat $data_dir/wav.scp | awk '{print $1 " sox " $2 " -r " "'$sample_rate'" " -p |"}' > $out_dir/wav.scp
