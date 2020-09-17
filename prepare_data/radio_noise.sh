@@ -3,7 +3,7 @@
 stage=0
 
 if [ $stage -le 0 ]; then
-  python local/make_radio.py --dataset-dir home/yangwenhao/storage/dataset/wav_test \
+  python local/make_radio.py --dataset-dir /home/storage/yangwenhao/dataset/wav_test \
     --output-dir data/radio/noise
 fi
 
