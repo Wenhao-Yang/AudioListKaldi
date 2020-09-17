@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-stage=0
+stage=1
 
 if [ $stage -le 0 ]; then
   python local/make_radio.py --dataset-dir /home/storage/yangwenhao/dataset/wav_test \
