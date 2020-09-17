@@ -16,15 +16,16 @@ if [ $stage -le 0 ]; then
 fi
 
 if [ $stage -le 5 ]; then
-  for name in dev test ;do
+  for name in test ;do
     local/resample_data_scp.sh 8000 data/vox1/${name} data/vox1/${name}_8k
     prepare_data/aug2wav.py --dataset-dir /home/storage/yangwenhao/dataset/voxceleb1 \
                             --outset-dir /home/storage/yangwenhao/dataset/voxceleb1_%s \
                             --data-dir data/vox1 \
-                            --set-name ${name}_8k \
+                            --set-name ${name} \
                             --suffix 8k
   done
 fi
+
 if [ $stage -le 6 ]; then
   dataset=vox1
   for name in dev ; do
