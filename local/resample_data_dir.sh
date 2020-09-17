@@ -56,6 +56,6 @@ done
 
 utils/fix_data_dir.sh $out_dir
 mv $out_dir/wav.scp $out_dir/wav.scp.bcp
-grep -v "^$"  $out_dir/wav.scpbcp > $out_dir/wav.scp && rm $out_dir/wav.scp.bcp
+grep -v "^$"  $out_dir/wav.scp.bcp > $out_dir/wav.scp && rm $out_dir/wav.scp.bcp
 
 echo "resample_data_dir.sh: files are created in $out_dir"
