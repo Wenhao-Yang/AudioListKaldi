@@ -25,6 +25,7 @@ nj=0
 
 cat $data_dir/wav.scp | \
     while read line; do
+        echo $line
         l=($line)
 
         # echo ${#l[@]}
