@@ -28,7 +28,7 @@ cat $data_dir/wav.scp | \
         l=($line)
         if [ ${#l[@]} = 2 ]; then
           # echo ${#l[@]}
-          orig_path=`echo ${l[-1]}` #/home/cca01/work2019/yangwenhao/mydataset/wav_test/noise/CHN01/D01-U000000.wav
+          orig_path=${l[-1]} #/home/cca01/work2019/yangwenhao/mydataset/wav_test/noise/CHN01/D01-U000000.wav
           new_path=${orig_path/"$org_data"/"$out_data"}
   #        echo $orig_path $new_path
 
