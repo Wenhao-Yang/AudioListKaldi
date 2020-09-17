@@ -30,7 +30,7 @@ cat $data_dir/wav.scp | \
         # echo ${#l[@]}
         orig_path=`echo ${l[-1]}` #/home/cca01/work2019/yangwenhao/mydataset/wav_test/noise/CHN01/D01-U000000.wav
         new_path=${orig_path/"$org_data"/"$out_data"}
-        echo $orig_path $new_path
+#        echo $orig_path $new_path
 
         [ ! -d ${new_path%/*} ] && mkdir -p ${new_path%/*}
         sox ${orig_path} -r $sample_rate ${new_path} &
@@ -44,6 +44,7 @@ cat $data_dir/wav.scp | \
 wait
 #cat $data_dir/wav.scp | awk '{print $1 " sox " $2 " -r " "'$sample_rate'" " -p |"}' > $out_dir/wav.scp
 
+cat $data_dir/wav.scp | sed -e '/^$/d' > $data_dir/wav.scp
 for f in utt2spk spk2utt utt2dur reco2dur utt2num_frames trials; do
   if [ -f $data_dir/$f ]; then
     cp $data_dir/$f $out_dir
