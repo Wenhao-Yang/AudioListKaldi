@@ -93,9 +93,9 @@ if __name__ == "__main__":
 
         if not os.path.exists(wav_scp_path):
             continue
-        new_wav_scp_path = os.path.join(data_dir, s + '_' + args.suffix, 'wav.scp')
-        if not os.path.exists(os.path.join(data_dir, s + '_' + args.suffix)):
-            os.makedirs(os.path.join(data_dir, s + '_' + args.suffix))
+        new_wav_scp_path = os.path.join(data_dir, s + '_wav', 'wav.scp')
+        if not os.path.exists(os.path.join(data_dir, s + '_wav')):
+            os.makedirs(os.path.join(data_dir, s + '_wav'))
 
         new_wf = open(new_wav_scp_path, 'w')
         with open(wav_scp_path, 'r') as wf:
@@ -132,7 +132,7 @@ if __name__ == "__main__":
         new_wf.close()
         for scr_f in ['utt2spk', 'spk2utt', 'trials']:
             if os.path.exists(os.path.join(data_dir, s, scr_f)):
-                shutil.copy(os.path.join(data_dir, s, scr_f), os.path.join(data_dir, s + '_' + args.suffix, scr_f))
+                shutil.copy(os.path.join(data_dir, s, scr_f), os.path.join(data_dir, s + '_wav', scr_f))
 
                 # RunCommand(comm)
 
