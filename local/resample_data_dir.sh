@@ -37,7 +37,7 @@ cat $data_dir/wav.scp | \
           echo -e "${l[-2]} ${new_path}\n" >> $out_dir/wav.scp
 
           nj=`expr $nj + 1`
-          if [ $(( $nj % 10 ))} = 0 ]; then
+          if [ $(( $nj % 18 ))} = 0 ]; then
             wait
           fi
         fi
