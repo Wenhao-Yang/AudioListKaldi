@@ -106,7 +106,7 @@ if __name__ == "__main__":
 
                 # id10001-7w0IBEWc9Qw-00003-music wav-reverberate --shift-output=true --additive-signals='wav-reverberate --duration=16.26 "/home/yangwenhao/local/dataset/musan/musan/music/fma-western-art/music-fma-wa-0023.wav" - |' --start-times='0' --snrs='10' /work20/yangwenhao/dataset/voxceleb1/vox1_dev_wav/wav/id10001/7w0IBEWc9Qw/00003.wav - |
                 l_lst = l.split(' ')
-                if 'reverb' in s :
+                if 'reverb' in s or '8k' in s :
                     l_lst[-2] = l_lst[2].replace(args.dataset_dir,
                                                  args.outset_dir % args.suffix)
                 else:
