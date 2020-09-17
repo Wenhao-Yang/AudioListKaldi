@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-stage=0
+stage=5
 
 if [ $stage -le 0 ]; then
   dataset=aishell2
@@ -16,6 +16,13 @@ if [ $stage -le 0 ]; then
 fi
 
 if [ $stage -le 5 ]; then
+  for name in dev test ;do
+    local/resample_data_dir.sh voxceleb1_wav 8000 data/vox1/${name} data/vox1/${name}_8k
+  done
+fi
+
+
+if [ $stage -le 6 ]; then
   dataset=vox1
   for name in dev test; do
     [ ! -f data/${dataset}/${name}_8k/reco2dur ] && utils/data/get_reco2dur.sh data/${dataset}/${name}_8k
