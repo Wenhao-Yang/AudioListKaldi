@@ -52,6 +52,7 @@ def main():
         set_dir = pathlib.Path(set_dir)
 
         all_wavs = list(set_dir.glob(r'*/*.wav'))
+        print('There are %d utterances in %s' % (len(all_wavs), s))
 
         for wav in all_wavs:
             w = str(wav)

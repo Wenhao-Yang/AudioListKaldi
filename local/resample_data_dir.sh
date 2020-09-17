@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ $# != 3 ]; then
+if [ $# != 4 ]; then
   echo "Usage: local/resample_data_dir.sh <data-path> <sample_rate> <data-dir> <out-dir>"
   echo "e.g.: local/resample_data_dir.sh data/train"
   echo "This script helps create srp to resample wav in wav.scp"
