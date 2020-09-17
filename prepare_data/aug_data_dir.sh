@@ -17,8 +17,12 @@ fi
 
 if [ $stage -le 5 ]; then
   for name in dev test ;do
-    local/resample_data_dir.sh voxceleb1_wav 8000 data/vox1/${name} data/vox1/${name}_8k
-
+    local/resample_data_scp.sh 8000 data/vox1/${name} data/vox1/${name}_8k
+    prepare_data/aug2wav.py --dataset-dir /home/storage/yangwenhao/dataset/voxceleb1 \
+                            --outset-dir /home/storage/yangwenhao/dataset/voxceleb1 \
+                            --data-dir data/vox1 \
+                            --set-name ${name}_8k \
+                            --suffix 8k
   done
 fi
 
