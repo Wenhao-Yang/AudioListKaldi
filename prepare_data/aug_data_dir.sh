@@ -64,6 +64,6 @@ fi
 if [ $stage -le 10 ]; then
 #  steps/data/make_musan.sh --sampling-rate 16000 /home/storage/yangwenhao/dataset/musan data
   for d in vox1 aishell2 ; do
-    steps/data/augment_data_dir.py --utt-suffix "musan" --bg-snrs "15:12:10" --num-bg-noises "1" --bg-noise-dir "data/musan_8k" data/${d}/dev_8k data/${d}/dev_8k_musan
+    steps/data/augment_data_dir.py --utt-suffix "musan" --bg-snrs "15:12:10" --num-bg-noises "1" --bg-noise-dir "data/musan_8k/musan" data/${d}/dev_8k data/${d}/dev_8k_musan
   done
 fi
