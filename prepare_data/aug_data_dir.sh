@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-stage=5
+stage=10
 
 if [ $stage -le 0 ]; then
   dataset=aishell2
@@ -53,4 +53,14 @@ if [ $stage -le 8 ]; then
   for name in dev test ; do
     utils/combine_data.sh data/army/spect/vox1_${name}_clear_radio data/vox1/spect/${name}_8k_radio_v2 data/vox1/spect/${name}_8k
   done
+fi
+
+#utils/combine_data.sh data/army/spect/dev_v1 data/vox1/spect/dev_8k_radio_v2_2w data/vox1/spect/dev_8k data/vox1/spect/dev_8k_radio_v3 data/aishell2/spect/dev_8k data/aishell2/spect/dev_8k_radio_v3
+if [ $stage -le 9 ]; then
+
+utils/combine_data.sh data/army/spect/test_v1 data/vox1/spect/test_8k data/vox1/spect/test_8k_radio_v3 data/aishell2/spect/test_8k data/aishell2/spect/test_8k_radio_v3
+fi
+
+if [ $stage -le 10 ]; then
+  steps/data/make_musan.sh --sampling-rate 16000 /home/storage/yangwenhao/dataset/musan data
 fi

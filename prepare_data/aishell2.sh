@@ -56,6 +56,8 @@ if [ $stage -le 0 ]; then
   python local/make_aishell.py --dataset-dir ${data_dir} --output-dir ${out_dir}
 python local/make_aishell.py --dataset-dir /home/work2020/yangwenhao/dataset/aishell2_8k_radio_wav_v2/iOS --output-dir data/aishell2/8k_radio_v2
 
+python local/make_aishell.py --dataset-dir /home/storage/yangwenhao/dataset/aishell2_8k/iOS --output-dir data/aishell2/8k --suffix 8k
+
   for name in all dev test ; do
     utils/fix_data_dir.sh ${out_dir}/${name}
     utils/validate_data_dir.sh --no-text --no-feats ${out_dir}/${name}
