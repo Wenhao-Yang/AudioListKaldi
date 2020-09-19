@@ -85,7 +85,7 @@ if __name__ == '__main__':
     all_lst_f = open(all_lst, 'r')
 
     if args.suffix != '':
-        subet_dir = '/all_%s' % args.suffix
+        subet_dir = '/all_%s' % (args.suffix.replace('-', '_'))
     else:
         subet_dir = '/all'
 
@@ -124,7 +124,7 @@ if __name__ == '__main__':
     dev_spks = spks_name
 
     if args.suffix != '':
-        subet_dir = '/dev_%s' % args.suffix
+        subet_dir = '/dev_%s' % (args.suffix.replace('-', '_'))
     else:
         subet_dir = '/dev'
 
@@ -158,7 +158,7 @@ if __name__ == '__main__':
     print('\tThere are %d in dev' % len(wav_scp))
 
     if args.suffix != '':
-        subet_dir = '/test_%s' % args.suffix
+        subet_dir = '/test_%s' % (args.suffix.replace('-', '_'))
     else:
         subet_dir = '/test'
     test_dir_path = pathlib.Path(args.output_dir + subet_dir)
