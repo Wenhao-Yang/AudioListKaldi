@@ -29,6 +29,8 @@ parser.add_argument('--output-dir', type=str, default='data/aishell2',
                     help='path to dataset')
 parser.add_argument('--test-spk', type=int, default=40,
                     help='path to dataset')
+parser.add_argument('--suffix', type=str, default='',
+                        help='number of jobs to make feats (default: 10)')
 args = parser.parse_args()
 
 if __name__ == '__main__':
@@ -82,13 +84,21 @@ if __name__ == '__main__':
     all_lst = args.dataset_dir + '/data/wav.scp'
     all_lst_f = open(all_lst, 'r')
 
-    all_dir_path = pathlib.Path(args.output_dir + '/all')
+    if args.suffix != '':
+        subet_dir = '/all_%s' % args.suffix
+    else:
+        subet_dir = '/all'
+
+    all_dir_path = pathlib.Path(args.output_dir + subet_dir)
     if not all_dir_path.exists():
         os.makedirs(str(all_dir_path))
 
     for id2path in all_lst_f.readlines():
         # IC0001W0002	wav/C0001/IC0001W0002.wav
         uid, wav_path = id2path.split()
+        if args.suffix != '':
+            uid = uid +'-%s' % args.suffix
+
         spk_id = wav_path.split('/')[1]
         wav_path = data_dir + wav_path
 
@@ -98,8 +108,8 @@ if __name__ == '__main__':
     wav_scp.sort()
     utt2spk.sort()
 
-    with open(args.output_dir + '/all/wav.scp', 'w') as f1, \
-         open(args.output_dir + '/all/utt2spk', 'w') as f2:
+    with open(args.output_dir + subet_dir +'/wav.scp', 'w') as f1, \
+         open(args.output_dir + subet_dir + '/utt2spk', 'w') as f2:
         f1.writelines(wav_scp)
         f2.writelines(utt2spk)
 
@@ -113,7 +123,12 @@ if __name__ == '__main__':
 
     dev_spks = spks_name
 
-    dev_dir_path = pathlib.Path(args.output_dir + '/dev')
+    if args.suffix != '':
+        subet_dir = '/dev_%s' % args.suffix
+    else:
+        subet_dir = '/dev'
+
+    dev_dir_path = pathlib.Path(args.output_dir + subet_dir)
     if not dev_dir_path.exists():
         os.makedirs(str(dev_dir_path))
 
@@ -125,6 +140,8 @@ if __name__ == '__main__':
         for utt in this_spk_wav: # '/data/AISHELL-2/iOS/data/wav/C0902/IC0902W0278.wav'
             utt_path = pathlib.Path(utt)
             uid = utt_path.name[:-4]
+            if args.suffix != '':
+                uid = uid + '-%s' % args.suffix
 
             wav_scp.append(uid + ' ' + utt + '\n')
             utt2spk.append(uid + ' ' + spk_id + '\n')
@@ -132,15 +149,19 @@ if __name__ == '__main__':
     wav_scp.sort()
     utt2spk.sort()
 
-    with open(args.output_dir + '/dev/wav.scp', 'w') as f1, \
-            open(args.output_dir + '/dev/utt2spk', 'w') as f2:
+    with open(args.output_dir + subet_dir + '/wav.scp', 'w') as f1, \
+            open(args.output_dir + subet_dir + '/utt2spk', 'w') as f2:
         f1.writelines(wav_scp)
         f2.writelines(utt2spk)
 
     print('\nFor dev:\n\twav.scp and utt2spk write to %s/dev .' % args.output_dir)
     print('\tThere are %d in dev' % len(wav_scp))
 
-    test_dir_path = pathlib.Path(args.output_dir + '/test')
+    if args.suffix != '':
+        subet_dir = '/test_%s' % args.suffix
+    else:
+        subet_dir = '/test'
+    test_dir_path = pathlib.Path(args.output_dir + subet_dir)
     if not test_dir_path.exists():
         os.makedirs(str(test_dir_path))
 
@@ -152,6 +173,8 @@ if __name__ == '__main__':
         for utt in this_spk_wav:  # '/data/AISHELL-2/iOS/data/wav/C0902/IC0902W0278.wav'
             utt_path = pathlib.Path(utt)
             uid = utt_path.name[:-4]
+            if args.suffix != '':
+                uid = uid + '-%s' % args.suffix
 
             wav_scp.append(uid + ' ' + utt + '\n')
             utt2spk.append(uid + ' ' + spk_id + '\n')
@@ -159,8 +182,8 @@ if __name__ == '__main__':
     wav_scp.sort()
     utt2spk.sort()
 
-    with open(args.output_dir + '/test/wav.scp', 'w') as f1, \
-            open(args.output_dir + '/test/utt2spk', 'w') as f2:
+    with open(args.output_dir + subet_dir + '/wav.scp', 'w') as f1, \
+            open(args.output_dir + subet_dir + '/utt2spk', 'w') as f2:
         f1.writelines(wav_scp)
         f2.writelines(utt2spk)
 
