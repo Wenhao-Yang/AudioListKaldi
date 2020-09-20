@@ -83,34 +83,42 @@ if __name__ == '__main__':
     utt2spk = []
 
     all_lst = args.dataset_dir + '/data/wav.scp'
-    all_lst_f = open(all_lst, 'r')
+    if os.path.exists(all_lst):
+        all_lst_f = open(all_lst, 'r')
 
-    if args.suffix != '':
-        subet_dir = '/all_%s' % args.suffix
-    else:
-        subet_dir = '/all'
-
-    all_dir_path = pathlib.Path(args.output_dir + subet_dir)
-    if not all_dir_path.exists():
-        os.makedirs(str(all_dir_path))
-
-    for id2path in all_lst_f.readlines():
-        # IC0001W0002	wav/C0001/IC0001W0002.wav
-        uid, wav_path = id2path.split()
         if args.suffix != '':
-            uid = uid + '-%s' % args.suffix
+            subet_dir = '/all_%s' % args.suffix
+        else:
+            subet_dir = '/all'
 
-        spk_id = wav_path.split('/')[1]
-        wav_path = data_dir + wav_path
+        all_dir_path = pathlib.Path(args.output_dir + subet_dir)
+        if not all_dir_path.exists():
+            os.makedirs(str(all_dir_path))
 
-        if os.path.exists(wav_path):
+        for id2path in all_lst_f.readlines():
+            # IC0001W0002	wav/C0001/IC0001W0002.wav
+            uid, wav_path = id2path.split()
+            if args.suffix != '':
+                uid = uid + '-%s' % args.suffix
 
-            wav_scp.append(uid + ' ' + wav_path + '\n')
-            utt2spk.append(uid + ' ' + spk_id + '\n')
+            spk_id = wav_path.split('/')[1]
+            wav_path = data_dir + wav_path
+
+            if os.path.exists(wav_path):
+
+                wav_scp.append(uid + ' ' + wav_path + '\n')
+                utt2spk.append(uid + ' ' + spk_id + '\n')
+
+    else:
+        for wav in all_wavs:
+            uid = os.path.basename(wav)[:-4]
+            spk_id = os.path.basename(os.path.dirname(uid))
+            if os.path.exists(wav):
+                wav_scp.append(uid + ' ' + wav + '\n')
+                utt2spk.append(uid + ' ' + spk_id + '\n')
 
     wav_scp.sort()
     utt2spk.sort()
-
     with open(args.output_dir + subet_dir + '/wav.scp', 'w') as f1, \
             open(args.output_dir + subet_dir + '/utt2spk', 'w') as f2:
         f1.writelines(wav_scp)
