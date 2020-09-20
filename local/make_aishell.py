@@ -71,8 +71,7 @@ if __name__ == '__main__':
 
         cn_lst = np.load(temp_npy)
         if len(cn_lst) != 1009223:
-            raise ValueError
-
+            print('This dir contains %d utterances!' % len(cn_lst))
         print('Load wav lst from %s' % temp_npy)
 
     except (FileExistsError, ValueError) as e:
@@ -104,8 +103,10 @@ if __name__ == '__main__':
         spk_id = wav_path.split('/')[1]
         wav_path = data_dir + wav_path
 
-        wav_scp.append(uid + ' ' + wav_path + '\n')
-        utt2spk.append(uid + ' ' + spk_id + '\n')
+        if os.path.exists(wav_path):
+
+            wav_scp.append(uid + ' ' + wav_path + '\n')
+            utt2spk.append(uid + ' ' + spk_id + '\n')
 
     wav_scp.sort()
     utt2spk.sort()
