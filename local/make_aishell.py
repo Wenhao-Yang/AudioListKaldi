@@ -165,7 +165,7 @@ if __name__ == '__main__':
         f1.writelines(wav_scp)
         f2.writelines(utt2spk)
 
-    print('\nFor dev:\n\twav.scp and utt2spk write to %s/dev .' % args.output_dir)
+    print('\nFor dev:\n\twav.scp and utt2spk write to %s .' % (args.output_dir + subet_dir))
     print('\tThere are %d in dev' % len(wav_scp))
 
     if args.test_spk > 0:
@@ -200,5 +200,5 @@ if __name__ == '__main__':
             f1.writelines(wav_scp)
             f2.writelines(utt2spk)
 
-        print('\nFor test:\n\twav.scp and utt2spk write to %s/test .' % args.output_dir)
+        print('\nFor test:\n\twav.scp and utt2spk write to %s .' % (args.output_dir + subet_dir))
         print('\tThere are %d in test' % len(wav_scp))
