@@ -63,21 +63,21 @@ if __name__ == '__main__':
 
         all_dataset[spk_id] = wavs
 
-    temp_npy = str(out_dir_path) + '/temp.npy'
-
-    try:
-        if not os.path.exists(temp_npy):
-            raise FileExistsError
-
-        cn_lst = np.load(temp_npy)
-        if len(cn_lst) != 1009223:
-            print('This dir contains %d utterances!' % len(cn_lst))
-        print('Load wav lst from %s' % temp_npy)
-
-    except (FileExistsError, ValueError) as e:
-        cn_lst = np.array(all_wavs)
-        np.save(temp_npy, cn_lst)
-        print('Saving wav lst to %s' % temp_npy)
+    # temp_npy = str(out_dir_path) + '/temp.npy'
+    #
+    # try:
+    #     if not os.path.exists(temp_npy):
+    #         raise FileExistsError
+    #
+    #     cn_lst = np.load(temp_npy)
+    #     if len(cn_lst) != 1009223:
+    #         print('This dir contains %d utterances!' % len(cn_lst))
+    #     print('Load wav lst from %s' % temp_npy)
+    #
+    # except (FileExistsError, ValueError) as e:
+    #     cn_lst = np.array(all_wavs)
+    #     np.save(temp_npy, cn_lst)
+    #     print('Saving wav lst to %s' % temp_npy)
 
     wav_scp = []
     utt2spk = []
