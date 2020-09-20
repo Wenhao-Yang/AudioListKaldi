@@ -83,17 +83,17 @@ if __name__ == '__main__':
     utt2spk = []
 
     all_lst = args.dataset_dir + '/data/wav.scp'
+    if args.suffix != '':
+        subet_dir = '/all_%s' % args.suffix
+    else:
+        subet_dir = '/all'
+    all_dir_path = pathlib.Path(args.output_dir + subet_dir)
+    if not all_dir_path.exists():
+        os.makedirs(str(all_dir_path))
+
+
     if os.path.exists(all_lst):
         all_lst_f = open(all_lst, 'r')
-
-        if args.suffix != '':
-            subet_dir = '/all_%s' % args.suffix
-        else:
-            subet_dir = '/all'
-
-        all_dir_path = pathlib.Path(args.output_dir + subet_dir)
-        if not all_dir_path.exists():
-            os.makedirs(str(all_dir_path))
 
         for id2path in all_lst_f.readlines():
             # IC0001W0002	wav/C0001/IC0001W0002.wav
