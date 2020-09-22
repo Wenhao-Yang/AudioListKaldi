@@ -116,3 +116,14 @@ fi
 if [ $stage -le 3 ]; then
   utils/combine_data.sh ${sitw_out_dir}/${name} ${vox1_train_dir}_reverb ${vox1_train_dir}_noise ${vox1_train_dir}_music ${vox1_train_dir}_babble
 fi
+
+#
+#cp utt2spk utt2spk.bcp && cat utt2spk.bcp | awk '{print $1 "-8k-radio-v3 " $2}' > utt2spk
+#cp utt2num_frames utt2num_frames.bcp && cat utt2num_frames.bcp | awk '{print $1 "-8k-radio-v3 " $2}' > utt2num_frames
+#cp utt2dur utt2dur.bcp && cat utt2dur.bcp | awk '{print $1 "-8k-radio-v3 " $2}' > utt2dur
+#cp feats.scp feats.scp.bcp && cat feats.scp.bcp | awk '{print $1 "-8k-radio-v3 " $2}' > feats.scp
+#cp wav.scp wav.scp.bcp && cat wav.scp.bcp | awk '{print $1 "-8k-radio-v3 " $2}' > wav.scp
+#
+#cp feats.scp feats.scp.bcp && cat feats.scp.bcp | awk '{print $1 "-8k-radio-v3 " $2}' > feats.scp
+#
+#cp trials trials.bcp && cat trials.bcp | awk '{print $1 "-8k-radio-v3 " $2 "-8k-radio-v3 " $3}' > trials

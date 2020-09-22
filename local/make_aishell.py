@@ -135,7 +135,7 @@ if __name__ == '__main__':
     dev_spks = spks_name
 
     if args.suffix != '':
-        subet_dir = '/dev_%s' % args.suffix
+        subet_dir = '/dev_%s' % args.suffix.replace('-', '_')
     else:
         subet_dir = '/dev'
 
@@ -171,7 +171,7 @@ if __name__ == '__main__':
     if args.test_spk > 0:
 
         if args.suffix != '':
-            subet_dir = '/test_%s' % args.suffix
+            subet_dir = '/test_%s' % args.suffix.replace('-', '_')
         else:
             subet_dir = '/test'
         test_dir_path = pathlib.Path(args.output_dir + subet_dir)

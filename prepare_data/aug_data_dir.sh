@@ -67,3 +67,18 @@ if [ $stage -le 10 ]; then
     steps/data/augment_data_dir.py --utt-suffix "musan" --bg-snrs "15:12:10" --num-bg-noises "1" --bg-noise-dir "data/musan_8k/musan" data/${d}/dev_8k data/${d}/dev_8k_musan
   done
 fi
+
+
+#python local/make_aishell.py --dataset-dir /home/yangwenhao/store20/dataset/aishell2_8k/iOS --output-dir data/aishell2/8k --suffix 8k --test-spk 40
+#
+#python local/make_aishell.py --dataset-dir /home/yangwenhao/store20/dataset/aishell2_8k_radio_wav_v2/iOS --output-dir data/aishell2/8k_radio_v2 --suffix 8k-radio-v2 --test-spk 40
+#
+#python local/make_aishell.py --dataset-dir /home/yangwenhao/store20/dataset/aishell2_8k_radio_wav_v3/iOS --output-dir data/aishell2/8k_radio_v3 --suffix 8k-radio-v3 --test-spk 40
+#
+#/home/yangwenhao/store20/dataset/vox1_ai2_musan_wav/aishell2_8k/iOS
+#
+#utils/combine_data.sh data/army/dev_8k data/vox1/spect/dev_8k_radio_v2_1w data/vox1/spect/dev_8k_radio_v3 data/vox1/spect/dev_8k data/aishell2/spect/dev_8k data/aishell2/spect/dev_8k_musan  data/aishell2/spect/dev_8k_radio_v3
+#
+#utils/combine_data.sh data/army/spect/test_8k data/vox1/spect/test_8k_radio_v3 data/vox1/spect/test_8k data/aishell2/spect/test_8k   data/aishell2/spect/test_8k_radio_v3
+#
+#cat data/vox1/spect/test_8k_radio_v3/trials data/vox1/spect/test_8k/trials data/aishell2/spect/test_8k/trials   data/aishell2/spect/test_8k_radio_v3/trials
