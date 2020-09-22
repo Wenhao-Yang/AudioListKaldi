@@ -14,6 +14,6 @@ if [ $stage -le 1 ]; then
 fi
 
 if [ $stage -le 2 ]; then
- local/make_radio_examples.py --dataset-dir /home/work2020/yangwenhao/dataset/radio/radio_examples_8k --output-dir data/radio/example_8k
+ python local/make_radio_examples.py --dataset-dir /home/work2020/yangwenhao/dataset/radio/radio_examples_8k --output-dir data/radio/example_8k
 
 fi
