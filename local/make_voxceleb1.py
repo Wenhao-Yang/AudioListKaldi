@@ -81,7 +81,7 @@ def read_vox1_structure(directory, train_dir, test_dir):
         os.makedirs(train_dir)
 
     all_wav_path = list(data_root.glob('*/*/*/*/*/*.wav'))
-    print(len(all_wav_path))
+    print('The number of wav file is: ', len(all_wav_path))
     dev_wav_path = []
     test_wav_path = []
     print('Dev set: ')
