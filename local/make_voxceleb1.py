@@ -20,7 +20,7 @@ import os
 import csv
 import sys
 import pathlib
-
+from tqdm import tqdm
 parser = argparse.ArgumentParser(description='Prepare scp file for cn-celeb')
 # Model options
 
@@ -83,8 +83,8 @@ def read_vox1_structure(directory, train_dir, test_dir):
     all_wav_path = list(data_root.glob('*/*/*/*/*/*.wav'))
     print(len(all_wav_path))
     dev_wav_path = []
-
     test_wav_path = []
+    print('Dev set: ')
     for wav in all_wav_path:
         if wav.parents[3].name=='vox1_test_wav':
             test_wav_path.append(wav)
@@ -93,7 +93,9 @@ def read_vox1_structure(directory, train_dir, test_dir):
 
     wav_scp = []
     utt2spk = []
-    for wav in dev_wav_path:
+    pbar = tqdm(dev_wav_path)
+
+    for wav in pbar:
         spkid = wav.parents[1].name
         utt = wav.parents[0].name
         uid = wav.name.rstrip('.wav')
@@ -112,7 +114,9 @@ def read_vox1_structure(directory, train_dir, test_dir):
 
     wav_scp = []
     utt2spk = []
-    for wav in test_wav_path:
+    print('Test set: ')
+    pbar = tqdm(test_wav_path)
+    for wav in pbar:
         spkid = wav.parents[1].name
         utt = wav.parents[0].name
         uid = wav.name.rstrip('.wav')
