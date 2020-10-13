@@ -74,7 +74,7 @@ def read_vox1_structure(directory, train_dir, test_dir):
     # /CDShare/voxceleb1/
     data_root = pathlib.Path(directory)
     data_root.cwd()
-    print('>>Data root is %s' % str(data_root))
+    print('>>  Data root is %s' % str(data_root))
 
     # /CDShare/voxceleb1/vox1_test_wav/id10270/5r0dWxy17C8/00019.wav
     if not os.path.exists(train_dir):
@@ -110,7 +110,7 @@ def read_vox1_structure(directory, train_dir, test_dir):
         for i in range(len(utt2spk)):
             f1.write(wav_scp[i])
             f2.write(utt2spk[i])
-    print('train set preparing completed.')
+    print('Train set preparing completed.')
 
     wav_scp = []
     utt2spk = []
@@ -136,9 +136,9 @@ def read_vox1_structure(directory, train_dir, test_dir):
                 f1.write(wav_scp[i])
                 f2.write(utt2spk[i])
 
-        print('test set preparing completed.')
+        print('Test set preparing completed.')
     else:
-        print('test set skipped!')
+        print('Test set skipped!')
 
 if __name__ == '__main__':
     data_root = args.dataset_dir
