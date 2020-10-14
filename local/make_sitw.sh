@@ -7,7 +7,7 @@
 # multiple trials files, in the test directories, but we usually only use the
 # core-core.lst list.
 
-in_dir=/work20/yangwenhao/dataset/sitw
+in_dir=/home/yangwenhao/storage/dataset/sitw
 out_dir=data/sitw
 
 # Prepare the enrollment data
