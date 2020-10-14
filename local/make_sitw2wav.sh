@@ -10,6 +10,8 @@
 in_dir=/home/yangwenhao/storage/dataset/sitw
 wav_dir=/home/yangwenhao/storage/dataset/sitw_wav
 out_dir=data/sitw
+nj=12
+
 date
 echo "==>Prepare the enrollment data"
 for mode in dev eval; do
@@ -41,7 +43,7 @@ for mode in dev eval; do
       echo "${spkr_id}_${wav_id} ${spkr_id}" >> $SPKFILE
       echo "${spkr_id}_${wav_id} $enroll $mode" >> $MODFILE
       } &
-      if [ $((j % 12)) -eq 0 ]; then
+      if [ $((j % ${nj})) -eq 0 ]; then
         wait
       fi
     done
