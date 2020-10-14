@@ -7,9 +7,9 @@
 # multiple trials files, in the test directories, but we usually only use the
 # core-core.lst list.
 
-in_dir=/work20/yangwenhao/dataset/sitw
-wav_dir=/work20/yangwenhao/dataset/sitw_wav
-out_dir=data/sitw_wav
+in_dir=/home/yangwenhao/storage/dataset/sitw
+wav_dir=/home/yangwenhao/storage/dataset/sitw_wav
+out_dir=data/sitw
 date
 echo "==>Prepare the enrollment data"
 for mode in dev eval; do
