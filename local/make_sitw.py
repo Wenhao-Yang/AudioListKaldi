@@ -134,11 +134,5 @@ def main():
         #     for u in uids:
         #         f.write(u+' '+uid2wav[u]+'\n')
 
-
-
-
-
-
-
 if __name__ == '__main__':
     main()
