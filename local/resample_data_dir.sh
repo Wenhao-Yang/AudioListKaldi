@@ -23,7 +23,7 @@ echo "New wavs will be writen to ${out_data}"
 
 nj=0
 #[ ! -f $out_dir/wav.scp ] && touch $out_dir/wav.scp
-all_job=12
+all_job=6
 
 cat $data_dir/wav.scp | \
     while read line; do
