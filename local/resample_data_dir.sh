@@ -32,7 +32,7 @@ cat $data_dir/wav.scp | \
           # /home/storage/yangwenhao/dataset/voxceleb2/dev/aac/id00012/21Uxsk56VDQ/00010.wav
           orig_path=${l[-1]} #/home/cca01/work2019/yangwenhao/mydataset/wav_test/noise/CHN01/D01-U000000.wav
           new_path=${orig_path/"$org_data"/"$out_data"}
-  #        echo $orig_path $new_path
+          echo $orig_path $new_path
 
           [ ! -d ${new_path%/*} ] && mkdir -p ${new_path%/*}
           sox -V1 ${orig_path} -r $sample_rate ${new_path} &
