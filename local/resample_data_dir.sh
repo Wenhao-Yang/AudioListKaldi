@@ -14,6 +14,7 @@ out_dir=$4
 
 suffix=`expr ${sample_rate} / 1000`k
 out_data=${org_data}_${suffix}
+echo "New wavs will be writen to ${out_data}"
 
 [ ! -d $data_dir ] && echo "$0: no such directory $data_dir" && exit 1;
 [ ! -d $out_dir ] && mkdir $out_dir
@@ -28,6 +29,7 @@ cat $data_dir/wav.scp | \
         l=($line)
         if [ ${#l[@]} = 2 ]; then
           # echo ${#l[@]}
+          # /home/storage/yangwenhao/dataset/voxceleb2/dev/aac/id00012/21Uxsk56VDQ/00010.wav
           orig_path=${l[-1]} #/home/cca01/work2019/yangwenhao/mydataset/wav_test/noise/CHN01/D01-U000000.wav
           new_path=${orig_path/"$org_data"/"$out_data"}
   #        echo $orig_path $new_path
