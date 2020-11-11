@@ -84,7 +84,7 @@ fi
 #cat data/vox1/spect/test_8k_radio_v3/trials data/vox1/spect/test_8k/trials data/aishell2/spect/test_8k/trials   data/aishell2/spect/test_8k_radio_v3/trials
 
 if [ $stage -le 15 ]; then
-  local/resample_data_scp.sh 8000 data/vox2/dev_7h data/vox1/dev_8k_7h
+  local/resample_data_scp.sh 8000 data/vox2/dev_7h data/vox2/dev_8k_7h
   prepare_data/aug2wav.py --dataset-dir /home/storage/yangwenhao/dataset/voxceleb2 \
                           --outset-dir /home/storage/yangwenhao/dataset/voxceleb2_%s \
                           --data-dir data/vox2 \
