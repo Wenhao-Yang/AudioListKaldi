@@ -70,11 +70,9 @@ if __name__ == "__main__":
     parser.add_argument('--data-dir', type=str,
                         default='/home/yangwenhao/local/project/lstm_speaker_verification/data',
                         help='number of jobs to make feats (default: 10)')
-    parser.add_argument('--suffix', type=str,
-                        default='wav',
+    parser.add_argument('--suffix', type=str, default='wav',
                         help='number of jobs to make feats (default: 10)')
-    parser.add_argument('--set-name', type=str,
-                        default='dev.4',
+    parser.add_argument('--set-name', type=str, default='dev.4',
                         help='number of jobs to make feats (default: 10)')
     args = parser.parse_args()
 

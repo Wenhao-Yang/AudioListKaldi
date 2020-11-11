@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-stage=10
+stage=15
 
 if [ $stage -le 0 ]; then
   dataset=aishell2
@@ -82,3 +82,13 @@ fi
 #utils/combine_data.sh data/army/spect/test_8k data/vox1/spect/test_8k_radio_v3 data/vox1/spect/test_8k data/aishell2/spect/test_8k   data/aishell2/spect/test_8k_radio_v3
 #
 #cat data/vox1/spect/test_8k_radio_v3/trials data/vox1/spect/test_8k/trials data/aishell2/spect/test_8k/trials   data/aishell2/spect/test_8k_radio_v3/trials
+
+if [ $stage -le 15 ]; then
+  local/resample_data_scp.sh 8000 data/vox2/dev_7h data/vox1/dev_8k_7h
+  prepare_data/aug2wav.py --dataset-dir /home/storage/yangwenhao/dataset/voxceleb2 \
+                          --outset-dir /home/storage/yangwenhao/dataset/voxceleb2_8k \
+                          --data-dir data/vox2 \
+                          --set-name dev_8k_v4 \
+                          --suffix 8k \
+                          --nj 12
+fi
