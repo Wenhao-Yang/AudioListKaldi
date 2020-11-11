@@ -37,7 +37,7 @@ fi
 #
 #fi
 
-stage=10
+#stage=10
 if [ $stage -le 7 ]; then
   dataset=vox1
   for name in dev test; do
