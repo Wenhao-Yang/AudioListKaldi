@@ -86,9 +86,9 @@ fi
 if [ $stage -le 15 ]; then
   local/resample_data_scp.sh 8000 data/vox2/dev_7h data/vox1/dev_8k_7h
   prepare_data/aug2wav.py --dataset-dir /home/storage/yangwenhao/dataset/voxceleb2 \
-                          --outset-dir /home/storage/yangwenhao/dataset/voxceleb2_8k \
+                          --outset-dir /home/storage/yangwenhao/dataset/voxceleb2_%s \
                           --data-dir data/vox2 \
-                          --set-name dev_8k_v4 \
+                          --set-name dev_8k_7h \
                           --suffix 8k \
                           --nj 12
 fi
