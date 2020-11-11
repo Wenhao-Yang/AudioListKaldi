@@ -1,3 +1,5 @@
 __pycache__
 .idea
 *.bundle
+data/vox1/5w_split
+data
