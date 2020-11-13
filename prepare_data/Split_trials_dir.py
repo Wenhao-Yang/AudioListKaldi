@@ -35,6 +35,7 @@ if __name__ == "__main__":
     out_dir = args.out_dir
     assert os.path.exists(data_dir)
     if not os.path.exists(out_dir):
+        print("Create dir for %s.." % out_dir)
         os.makedirs(out_dir)
 
     if args.feat_format == 'kaldi':
@@ -66,10 +67,11 @@ if __name__ == "__main__":
         for line in all_cls:
             utt_path = line.split(' ')
             uid = utt_path[0]
-            tmp_uid2feat[uid] = utt_path[-1]
+            if uid in trials_utts:
+                tmp_uid2feat[uid] = utt_path[-1]
 
-    out_feat_scp = os.path.join(out_dir, 'feats.scp')
-    out_feat_ark = os.path.join(out_dir, 'feat.ark')
+    out_feat_scp = os.path.abspath(os.path.join(out_dir, 'feats.scp'))
+    out_feat_ark = os.path.abspath(os.path.join(out_dir, 'feat.ark'))
     out_trials = os.path.join(out_dir, args.trials)
 
     writer = WriteHelper('ark,scp:%s,%s' % (out_feat_ark, out_feat_scp), compression_method=1)

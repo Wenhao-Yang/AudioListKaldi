@@ -11,6 +11,10 @@
 #echo $loss_ratio
 
 #
-python prepare_data/Split_trials_dir.py --data-dir data/army/spect/dev_8k_v2 \
-  --out-dir data/army/spect/dev_8k_v2/trials_dir \
-  --trials trials
+#python prepare_data/Split_trials_dir.py --data-dir data/army/spect/dev_8k_v2 \
+#  --out-dir data/army/spect/dev_8k_v2/trials_dir \
+#  --trials trials
+
+python prepare_data/Split_trials_dir.py --data-dir data/vox1/spect/dev_log \
+  --out-dir data/vox1/spect/dev_log/trials_dir \
+  --trials trials_2w
