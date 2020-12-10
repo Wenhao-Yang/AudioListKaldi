@@ -81,7 +81,7 @@ if [ $stage -le 1 ]; then
   done
 fi
 
-if [ $stage -le 2 ]; then
+if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank with Pitch features and VAD============================"
   dev_fb24_pitch_dir=data/vox1/pyfb/dev_fb24_pitch
@@ -92,6 +92,26 @@ if [ $stage -le 2 ]; then
   for name in ${dev_fb24_pitch_dir} ${test_fb24_pitch_dir}; do
     steps/make_fbank_pitch.sh --write-utt2num-frames true --fbank_config ${fbank_config} \
     --pitch_postprocess_config ${process_pitch_conf} --nj 12 --cmd "$train_cmd" \
+        ${name}
+    utils/fix_data_dir.sh ${name}
+
+    # Todo: Is there any better VAD solutioin?
+#    sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${name} exp/make_vad $vaddir
+#    utils/fix_data_dir.sh ${name}
+  done
+fi
+
+if [ $stage -le 2 ]; then
+  # Make MFCCs and compute the energy-based VAD for each dataset
+  echo "==========================Making Fbank with Pitch features and VAD============================"
+  dev_fb24_dir=data/vox1/pyfb/dev_fb24_kaldi
+  test_fb24_dir=data/vox1/pyfb/test_fb24_kaldi
+  utils/copy_data_dir.sh ${vox1_train_dir} $dev_fb24_dir
+  utils/copy_data_dir.sh ${vox1_test_dir} $test_fb24_dir
+
+  for name in ${dev_fb24_dir} ${test_fb24_dir}; do
+    steps/make_fbank.sh --write-utt2num-frames true --fbank_config ${fbank_config} \
+        --nj 12 --cmd "$train_cmd" \
         ${name}
     utils/fix_data_dir.sh ${name}
 
