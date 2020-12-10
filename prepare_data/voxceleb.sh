@@ -34,7 +34,7 @@ rirs_root=/home/yangwenhao/local/dataset/rirs/RIRS_NOISES
 vox1_out_dir=data/vox1
 musan_out_dir=data/musan
 
-fbank_config=conf/fbank_64.conf
+fbank_config=conf/fbank_24.conf
 process_pitch_conf=conf/process_pitch.conf
 
 vox1_train_dir=${vox1_out_dir}/dev
