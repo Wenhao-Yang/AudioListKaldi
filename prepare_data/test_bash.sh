@@ -15,6 +15,12 @@
 #  --out-dir data/army/spect/dev_8k_v2/trials_dir \
 #  --trials trials
 
-python prepare_data/Split_trials_dir.py --data-dir data/vox1/pyfb/dev_fb64 \
-  --out-dir data/vox1/pyfb/dev_fb64/trials_dir \
+#python prepare_data/Split_trials_dir.py --data-dir data/vox1/pyfb/dev_fb64 \
+#  --out-dir data/vox1/pyfb/dev_fb64/trials_dir \
+#  --trials trials_2w
+
+for name in kaldi pitch; do
+  python prepare_data/Split_trials_dir.py --data-dir data/vox1/pyfb/dev_fb24_${name} \
+  --out-dir data/vox1/pyfb/dev_fb24_${name}/trials_dir \
   --trials trials_2w
+done
