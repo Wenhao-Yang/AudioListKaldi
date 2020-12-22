@@ -25,6 +25,7 @@
 #  --trials trials_2w
 #done
 
+stage=40
 if [ $stage -le 40 ]; then
   name=fb40
   python local/split_trials_dir.py --data-dir data/vox1/pyfb/dev_${name} \
