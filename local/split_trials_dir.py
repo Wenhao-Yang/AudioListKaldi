@@ -5,7 +5,7 @@
 @Author: yangwenhao
 @Contact: 874681044@qq.com
 @Software: PyCharm
-@File: Split_trials_dir.py
+@File: split_trials_dir.py
 @Time: 2020/11/13 11:07
 @Overview:
 """

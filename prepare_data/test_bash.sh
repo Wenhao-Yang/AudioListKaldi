@@ -11,16 +11,23 @@
 #echo $loss_ratio
 
 #
-#python prepare_data/Split_trials_dir.py --data-dir data/army/spect/dev_8k_v2 \
+#python prepare_data/split_trials_dir.py --data-dir data/army/spect/dev_8k_v2 \
 #  --out-dir data/army/spect/dev_8k_v2/trials_dir \
 #  --trials trials
 
-#python prepare_data/Split_trials_dir.py --data-dir data/vox1/pyfb/dev_fb64 \
+#python prepare_data/split_trials_dir.py --data-dir data/vox1/pyfb/dev_fb64 \
 #  --out-dir data/vox1/pyfb/dev_fb64/trials_dir \
 #  --trials trials_2w
 
-for name in kaldi pitch; do
-  python prepare_data/Split_trials_dir.py --data-dir data/vox1/pyfb/dev_fb24_${name} \
-  --out-dir data/vox1/pyfb/dev_fb24_${name}/trials_dir \
-  --trials trials_2w
-done
+#for name in kaldi pitch; do
+#  python prepare_data/Split_trials_dir.py --data-dir data/vox1/pyfb/dev_fb24_${name} \
+#  --out-dir data/vox1/pyfb/dev_fb24_${name}/trials_dir \
+#  --trials trials_2w
+#done
+
+if [ $stage -le 40 ]; then
+  name=fb40
+  python local/split_trials_dir.py --data-dir data/vox1/pyfb/dev_${name} \
+    --out-dir data/vox1/pyfb/dev_${name}/trials_dir \
+    --trials trials_2w
+fi

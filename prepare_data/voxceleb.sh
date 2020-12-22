@@ -49,7 +49,7 @@ mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=2
+stage=40
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -259,4 +259,11 @@ if [ $stage -le 30 ]; then
 #    data/Vox1_pyfb/test_fb64 data/Vox1_pyfb/test_fb64_cmvn data/Vox1_pyfb/test_fb64_cmvn/feats_no_sil
 #  utils/fix_data_dir.sh data/Vox1_pyfb/test_fb64_cmvn
 
+fi
+
+if [ $stage -le 40 ]; then
+  name=fb40
+  python local/split_trials_dir.py --data-dir data/vox1/pyfb/dev_${name} \
+    --out-dir data/vox1/pyfb/dev_${name}/trials_dir \
+    --trials trials_2w
 fi
