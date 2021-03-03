@@ -91,7 +91,7 @@ if __name__ == '__main__':
         else:
             for wav in all_wavs:
                 uid = os.path.basename(wav)[:-4]
-                spk_id = os.path.basename(os.path.dirname(uid))
+                spk_id = os.path.basename(os.path.dirname(wav))
                 if os.path.exists(wav):
                     # wav_rela_path = str(pathlib.Path(wav).relative_to(args.dataset_dir))
                     wav_scp.append(uid + ' ' + wav + '\n')
