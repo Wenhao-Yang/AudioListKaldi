@@ -34,6 +34,7 @@ args = parser.parse_args()
 if __name__ == '__main__':
 
     data_dir = '/'.join((args.dataset_dir, 'corpus'))
+    print('Data dir is: ' + data_dir)
 
     data_dir = os.path.abspath(data_dir)
     data_dir_path = pathlib.Path(data_dir)
@@ -66,7 +67,7 @@ if __name__ == '__main__':
         wav_scp = []
         utt2spk = []
 
-        subset_lst = subset_dir + '/wav.scp'
+        subset_lst = str(subset_dir) + '/wav.scp'
 
         subset_dir_out = pathlib.Path(args.output_dir + set_name)
         if not subset_dir_out.exists():
