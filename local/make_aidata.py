@@ -99,8 +99,8 @@ if __name__ == '__main__':
 
         wav_scp.sort()
         utt2spk.sort()
-        with open(subset_dir_out.joinpath('wav.scp'), 'w') as f1, \
-                open(subset_dir_out.joinpath('utt2spk'), 'w') as f2:
+        with open(str(subset_dir_out.joinpath('wav.scp')), 'w') as f1, \
+                open(str(subset_dir_out.joinpath('utt2spk')), 'w') as f2:
             f1.writelines(wav_scp)
             f2.writelines(utt2spk)
 
