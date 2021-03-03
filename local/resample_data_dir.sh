@@ -46,9 +46,9 @@ cat $data_dir/wav.scp | \
 #          echo "Proceed $nj wavs!"
           wait
         fi
-#        if [ $(( $nj % 1000 ))} = 0 ]; then
-#          echo "Proceed $nj wavs!"
-#        fi
+        if [ $(( $nj % 1000 ))} = 0 ]; then
+          echo "Proceed $nj wavs!"
+        fi
       fi
 
     fi
