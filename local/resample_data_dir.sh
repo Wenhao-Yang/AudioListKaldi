@@ -38,16 +38,17 @@ cat $data_dir/wav.scp | \
         # echo $orig_path $new_path
 
         [ ! -d ${new_path%/*} ] && mkdir -p ${new_path%/*}
-        sox -V1 ${orig_path} -r $sample_rate ${new_path} &
+        sox  ${orig_path} -r $sample_rate ${new_path} &
         echo -e "${l[-2]} ${new_path}\n" >> $out_dir/wav.scp
 
         nj=`expr $nj + 1`
         if [ $(( $nj % $all_job ))} = 0 ]; then
+          echo "Proceed $nj wavs!"
           wait
         fi
-        if [ $(( $nj % 1000 ))} = 0 ]; then
-          echo "Proceed $nj wavs!"
-        fi
+#        if [ $(( $nj % 1000 ))} = 0 ]; then
+#          echo "Proceed $nj wavs!"
+#        fi
       fi
 
     fi
