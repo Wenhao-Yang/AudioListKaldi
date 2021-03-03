@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
         subset_lst = str(subset_dir) + '/wav.scp'
 
-        subset_dir_out = pathlib.Path(args.output_dir + set_name)
+        subset_dir_out = pathlib.Path(args.output_dir + '/' + set_name)
         if not subset_dir_out.exists():
             os.makedirs(str(subset_dir_out))
 
