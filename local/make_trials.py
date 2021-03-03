@@ -81,10 +81,11 @@ for data_dir in data_roots:
                         if spk_posi>=int(0.7*num_pair/len(spks)):
                             break
                         this_line = ' '.join((spk2utt_dict[spk][i], spk2utt_dict[spk][j], 'target\n'))
+                        this_line_r = ' '.join((spk2utt_dict[spk][j], spk2utt_dict[spk][i], 'target\n'))
                         # f.write(this_line)
-                        # if len(positive_pairs)<0.3*num_pair:
-                        positive_pairs.append(this_line)
-                        spk_posi+=1
+                        if this_line not in positive_pairs and this_line_r not in positive_pairs:
+                            positive_pairs.append(this_line)
+                            spk_posi+=1
 
             for i in range(int(0.75*num_pair/len(spks))):
                 this_uid = np.random.choice(spk2utt_dict[spk])
@@ -92,9 +93,11 @@ for data_dir in data_roots:
                 other_uid = np.random.choice(spk2utt_dict[other_spk])
 
                 this_line = ' '.join((this_uid, other_uid, 'nontarget\n'))
+                this_line_r = ' '.join((other_uid, this_uid, 'nontarget\n'))
                 # f.write(this_line)
                 if len(positive_pairs) < 10 * num_pair:
-                    negative_pairs.append(this_line)
+                    if this_line not in negative_pairs and this_line_r not in negative_pairs:
+                        negative_pairs.append(this_line)
                 else:
                     break
                 # trials.append((this_line, 0))
