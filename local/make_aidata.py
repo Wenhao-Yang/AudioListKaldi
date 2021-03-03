@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser(description='Prepare scp file for cn-celeb')
 # Model options
 
 # options for
-parser.add_argument('--dataset-dir', type=str, default='/home/storage/yangwenhao/dataset/aidatatang_200zh',
+parser.add_argument('--dataset-dir', type=str, default='/home/storage/yangwenhao/dataset/aidatatang_200zh/corpus',
                     help='path to dataset')
 parser.add_argument('--output-dir', type=str, default='data/aidata',
                     help='path to dataset')
@@ -33,7 +33,7 @@ args = parser.parse_args()
 
 if __name__ == '__main__':
 
-    data_dir = '/'.join((args.dataset_dir, 'corpus'))
+    data_dir = args.dataset_dir
     print('Data dir is: ' + data_dir)
 
     data_dir = os.path.abspath(data_dir)
