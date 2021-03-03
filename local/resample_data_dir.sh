@@ -26,33 +26,33 @@ nj=0
 all_job=6
 
 cat $data_dir/wav.scp | \
-    while read line; do
-        l=($line)
-        if [ ${#l[@]} = 2 ]; then
-          # echo ${#l[@]}
-          # /home/storage/yangwenhao/dataset/voxceleb2/dev/aac/id00012/21Uxsk56VDQ/00010.wav
-          orig_path=${l[-1]} #/home/cca01/work2019/yangwenhao/mydataset/wav_test/noise/CHN01/D01-U000000.wav
+  while read line; do
+    l=($line)
+    if [ ${#l[@]} = 2 ]; then
+      # echo ${#l[@]}
+      # /home/storage/yangwenhao/dataset/voxceleb2/dev/aac/id00012/21Uxsk56VDQ/00010.wav
+      orig_path=${l[-1]} #/home/cca01/work2019/yangwenhao/mydataset/wav_test/noise/CHN01/D01-U000000.wav
 
-          if [ -s ${orig_path} ]; then
-            new_path=${orig_path/"$org_data"/"$out_data"}
-            # echo $orig_path $new_path
+      if [ -s ${orig_path} ]; then
+        new_path=${orig_path/"$org_data"/"$out_data"}
+        # echo $orig_path $new_path
 
-            [ ! -d ${new_path%/*} ] && mkdir -p ${new_path%/*}
-            sox -V1 ${orig_path} -r $sample_rate ${new_path} &
-            echo -e "${l[-2]} ${new_path}\n" >> $out_dir/wav.scp
+        [ ! -d ${new_path%/*} ] && mkdir -p ${new_path%/*}
+        sox -V1 ${orig_path} -r $sample_rate ${new_path} &
+        echo -e "${l[-2]} ${new_path}\n" >> $out_dir/wav.scp
 
-            nj=`expr $nj + 1`
-            if [ $(( $nj % $all_job ))} = 0 ]; then
-              wait
-            fi
-            if [ $(( $nj % 1000 ))} = 0 ]; then
-              echo "Proceed $nj wavs!"
-            fi
-          fi
-
+        nj=`expr $nj + 1`
+        if [ $(( $nj % $all_job ))} = 0 ]; then
+          wait
         fi
+        if [ $(( $nj % 1000 ))} = 0 ]; then
+          echo "Proceed $nj wavs!"
+        fi
+      fi
 
-    done
+    fi
+
+  done
 wait
 
 #cat $data_dir/wav.scp | awk '{print $1 " sox " $2 " -r " "'$sample_rate'" " -p |"}' > $out_dir/wav.scp
