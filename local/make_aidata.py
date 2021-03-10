@@ -15,7 +15,7 @@ import pathlib
 import os
 import numpy as np
 
-parser = argparse.ArgumentParser(description='Prepare scp file for cn-celeb')
+parser = argparse.ArgumentParser(description='Prepare scp file for aidatatang')
 # Model options
 
 # options for

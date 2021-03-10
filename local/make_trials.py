@@ -14,7 +14,7 @@ import os
 import pdb
 import random
 import sys
-
+from tqdm import tqdm
 import numpy as np
 
 if sys.argv[1].isdigit():
@@ -24,9 +24,9 @@ else:
     num_pair = -1
     data_roots = sys.argv[1:]
 
-print('Current path is ' + os.getcwd())
+print('Current path: ' + os.getcwd())
 assert len(data_roots)>0
-print("Dirs are: \n" + '; '.join(data_roots))
+print("Dirs are: " + '; '.join(data_roots))
 
 
 for data_dir in data_roots:
@@ -67,8 +67,8 @@ for data_dir in data_roots:
         positive_pairs = []
         negative_pairs = []
         random.shuffle(spks)
-
-        for spk_idx in range(len(spks)):
+        pbar = tqdm(range(len(spks)))
+        for spk_idx in pbar:
             spk = spks[spk_idx]
             other_spks = spks.copy()
             other_spks.pop(spk_idx)
@@ -105,7 +105,6 @@ for data_dir in data_roots:
 
         positive_pairs = np.unique(positive_pairs).tolist()
         negative_pairs = np.unique(negative_pairs).tolist()
-        #     break
         # pdb.set_trace()
 
         random.shuffle(negative_pairs)
