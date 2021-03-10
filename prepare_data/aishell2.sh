@@ -54,9 +54,10 @@ if [ $stage -le 0 ]; then
   # This script creates data/voxceleb1_test and data/voxceleb1_train.
   # Our evaluation set is the test portion of VoxCeleb1.
   python local/make_aishell.py --dataset-dir ${data_dir} --output-dir ${out_dir}
-python local/make_aishell.py --dataset-dir /home/work2020/yangwenhao/dataset/aishell2_8k_radio_wav_v2/iOS --output-dir data/aishell2/8k_radio_v2
 
-python local/make_aishell.py --dataset-dir /home/storage/yangwenhao/dataset/aishell2_8k/iOS --output-dir data/aishell2/8k --suffix 8k
+#python local/make_aishell.py --dataset-dir /home/work2020/yangwenhao/dataset/aishell2_8k_radio_wav_v2/iOS --output-dir data/aishell2/8k_radio_v2
+#python local/make_aishell.py --dataset-dir /home/storage/yangwenhao/dataset/aishell2_8k/iOS --output-dir data/aishell2/8k --suffix 8k
+#python local/make_aishell.py --dataset-dir /home/storage/yangwenhao/dataset/AISHELL-2 --output-dir data/aishell2
 
   for name in all dev test ; do
     utils/fix_data_dir.sh ${out_dir}/${name}
