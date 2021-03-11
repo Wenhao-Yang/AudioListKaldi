@@ -17,6 +17,9 @@ import sys
 from tqdm import tqdm
 import numpy as np
 
+random.seed(123456)
+np.random.seed(123456)
+
 if sys.argv[1].isdigit():
     num_pair = int(sys.argv[1])
     data_roots = sys.argv[2:]
@@ -64,8 +67,9 @@ for data_dir in data_roots:
 
         print('Num of repeats: %d ' % (num_pair/len(spks)))
         pairs = 0
-        positive_pairs = []
-        negative_pairs = []
+        positive_pairs = set()
+        negative_pairs = set()
+
         random.shuffle(spks)
         pbar = tqdm(range(len(spks)))
         for spk_idx in pbar:
@@ -76,16 +80,15 @@ for data_dir in data_roots:
             num_utt= len(spk2utt_dict[spk])
             spk_posi = 0
             for i in range(num_utt):
-                for j in range(num_utt):
-                    if i<j:
-                        if spk_posi>=int(0.7*num_pair/len(spks)):
-                            break
-                        this_line = ' '.join((spk2utt_dict[spk][i], spk2utt_dict[spk][j], 'target\n'))
-                        this_line_r = ' '.join((spk2utt_dict[spk][j], spk2utt_dict[spk][i], 'target\n'))
-                        # f.write(this_line)
-                        if this_line not in positive_pairs and this_line_r not in positive_pairs:
-                            positive_pairs.append(this_line)
-                            spk_posi+=1
+                for j in range(i+1, num_utt):
+                    if spk_posi>=int(0.7*num_pair/len(spks)):
+                        break
+                    this_line = ' '.join((spk2utt_dict[spk][i], spk2utt_dict[spk][j], 'target\n'))
+                    this_line_r = ' '.join((spk2utt_dict[spk][j], spk2utt_dict[spk][i], 'target\n'))
+                    # f.write(this_line)
+                    if this_line_r not in positive_pairs:
+                        positive_pairs.add(this_line)
+                        spk_posi+=1
 
             for i in range(int(0.75*num_pair/len(spks))):
                 this_uid = np.random.choice(spk2utt_dict[spk])
@@ -96,15 +99,15 @@ for data_dir in data_roots:
                 this_line_r = ' '.join((other_uid, this_uid, 'nontarget\n'))
                 # f.write(this_line)
                 if len(positive_pairs) < 10 * num_pair:
-                    if this_line not in negative_pairs and this_line_r not in negative_pairs:
-                        negative_pairs.append(this_line)
+                    if this_line_r not in negative_pairs:
+                        negative_pairs.add(this_line)
                 else:
                     break
                 # trials.append((this_line, 0))
                 # pairs += 1
 
-        positive_pairs = np.unique(positive_pairs).tolist()
-        negative_pairs = np.unique(negative_pairs).tolist()
+        positive_pairs = list(positive_pairs)
+        negative_pairs = list(negative_pairs)
         # pdb.set_trace()
 
         random.shuffle(negative_pairs)
@@ -119,6 +122,7 @@ for data_dir in data_roots:
             if len(positive_pairs)>=num_pair:
                 break
 
+        random.shuffle(positive_pairs)
         for l in positive_pairs:
             f.write(l)
 
