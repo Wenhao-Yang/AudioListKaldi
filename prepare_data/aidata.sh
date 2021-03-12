@@ -17,6 +17,6 @@ fi
 
 
 if [ $stage -le 5 ]; then
-  python local/make_aidata.py --dataset-dir /home/storage/yangwenhao/dataset/aidatatang_200zh/corpus \
+  python local/make_aidata.py --dataset-dir /home/work2020/yangwenhao/dataset/aidatatang_200zh/aidatatang_200zh/corpus \
     --output-dir data/aidata
 fi
