@@ -24,6 +24,9 @@ echo "New wavs will be writen to ${out_data}"
 nj=0
 #[ ! -f $out_dir/wav.scp ] && touch $out_dir/wav.scp
 all_job=8
+all_lines=`wc -l $data_dir/wav.scp | awk '{print $1}'`
+ten_line=$(( $all_lines / 8 ))
+b=''
 
 cat $data_dir/wav.scp | \
   while read line; do
@@ -43,11 +46,12 @@ cat $data_dir/wav.scp | \
 
         nj=`expr $nj + 1`
         if [ $(( $nj % $all_job )) -eq 0 ]; then
-#          echo "Proceed $nj wavs!"
           wait
         fi
-        if [ $(( $nj % 1000 )) -eq 0 ]; then
-          echo "Proceed $nj wavs!"
+        if [ $(( $nj % $ten_line )) -eq 0 ]; then
+          printf "[%-20s]%d%%\r" $b $(( $nj*100/$all_lines ))
+          b=#$b
+#          echo "Proceed $nj wavs!"
         fi
       fi
 
@@ -68,5 +72,8 @@ done
 utils/fix_data_dir.sh $out_dir
 mv $out_dir/wav.scp $out_dir/wav.scp.bcp
 grep -v "^$"  $out_dir/wav.scp.bcp > $out_dir/wav.scp && rm $out_dir/wav.scp.bcp
+
+mv $out_dir ${out_dir}_tmp
+utils/copy_data_dir.sh --utt-suffix  -${suffix} ${out_dir}_tmp $out_dir && rm -r ${out_dir}_tmp
 
 echo "resample_data_dir.sh: files are created in $out_dir"
