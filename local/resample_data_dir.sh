@@ -25,7 +25,7 @@ nj=0
 #[ ! -f $out_dir/wav.scp ] && touch $out_dir/wav.scp
 all_job=12
 all_lines=`wc -l $data_dir/wav.scp | awk '{print $1}'`
-ten_line=$(( $all_lines / 8 ))
+ten_line=$(( $all_lines / 100 ))
 b=''
 
 cat $data_dir/wav.scp | \
