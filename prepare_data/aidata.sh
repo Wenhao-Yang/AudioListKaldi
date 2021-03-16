@@ -21,4 +21,6 @@ if [ $stage -le 5 ]; then
     --output-dir data/aidata
 
   ./local/resample_data_dir.sh /home/work2020/yangwenhao/dataset/aidatatang_200zh/aidatatang_200zh/corpus/train 8000 data/aidata/train data/aidata/train_8k
+
+  ./local/resample_data_dir.sh /home/work2020/yangwenhao/dataset/aidatatang_200zh/aidatatang_200zh/corpus/dev 8000 data/aidata/dev data/aidata/dev_8k
 fi

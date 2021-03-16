@@ -49,17 +49,13 @@ if __name__ == "__main__":
     assert os.path.exists(feat_scp_path)
     assert os.path.exists(trials_scp)
 
-    trials_utts = []
+    trials_utts = set()
     with open(trials_scp, 'r') as u:
         all_cls = u.readlines()
         for line in all_cls:
             utt_a, utt_b, target = line.split(' ')
-
-            if utt_a not in trials_utts:
-                trials_utts.append(utt_a)
-
-            if utt_b not in trials_utts:
-                trials_utts.append(utt_b)
+            trials_utts.add(utt_a)
+            trials_utts.add(utt_b)
 
     tmp_uid2feat = {}
     with open(feat_scp_path, 'r') as u:
