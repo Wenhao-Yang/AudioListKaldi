@@ -23,7 +23,7 @@ echo "New wavs will be writen to ${out_data}"
 
 nj=0
 #[ ! -f $out_dir/wav.scp ] && touch $out_dir/wav.scp
-all_job=8
+all_job=12
 all_lines=`wc -l $data_dir/wav.scp | awk '{print $1}'`
 ten_line=$(( $all_lines / 8 ))
 b=''
