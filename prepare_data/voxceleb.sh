@@ -267,3 +267,16 @@ if [ $stage -le 40 ]; then
     --out-dir data/vox1/pyfb/dev_${name}/trials_dir \
     --trials trials_2w
 fi
+
+
+python local/split_trials_dir.py --data-dir data/vox1/pyfb/dev_mel_fb24_bod \
+    --out-dir data/vox1/pyfb/dev_mel_fb24_bod/trials_dir \
+    --trials trials_2w
+
+sox -V1 /home/storage/yangwenhao/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10059/2iL0P9T7pYY/00010.wav -r 8000 /home/storage/yangwenhao/dataset/voxceleb1_8k/voxceleb1_wav/vox1_dev_wav/wav/id10059/2iL0P9T7pYY/00010.wav
+
+sox -V1 /home/storage/yangwenhao/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10059/Ez0-hbMQs28/00002.wav -r 8000 /home/storage/yangwenhao/dataset/voxceleb1_8k/voxceleb1_wav/vox1_dev_wav/wav/id10059/Ez0-hbMQs28/00002.wav
+
+sox -V1 /home/storage/yangwenhao/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10059/Kg8KZ0OvfBo/00006.wav -r 8000 /home/storage/yangwenhao/dataset/voxceleb1_8k/voxceleb1_wav/vox1_dev_wav/wav/id10059/Kg8KZ0OvfBo/00006.wav
+
+sox -V1 /home/storage/yangwenhao/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10059/Kg8KZ0OvfBo/00002.wav -r 8000 /home/storage/yangwenhao/dataset/voxceleb1_8k/voxceleb1_wav/vox1_dev_wav/wav/id10059/Kg8KZ0OvfBo/00002.wav

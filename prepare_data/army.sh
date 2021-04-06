@@ -33,6 +33,9 @@ if [ $stage -le 10 ]; then
 fi
 
 if [ $stage -le 20 ]; then
+  utils/combine_data.sh data/army/spect/dev_8k_v5_log data/aidata/spect/train_8k_log data/vox1/spect/dev_8k_log data/vox1/spect/dev_8k_radio_v3_log data/aishell2/spect/dev_8k_log data/aishell2/spect/dev_8k_radio_v3_log
+
+
   for s in dev test ; do
     mv data/vox1/spect/${s}_8k_radio_v3_log data/vox1/spect/${s}_8k_radio_v3_log_tmp
     utils/copy_data_dir.sh --utt-suffix  -8k-radio-v3 data/vox1/spect/${s}_8k_radio_v3_log_tmp data/vox1/spect/${s}_8k_radio_v3_log
@@ -51,4 +54,13 @@ utils/combine_data.sh data/army/spect/dev_8k_v5_log data/aidata/spect/train_8k_l
 
 cat data/aidata/spect/train_8k_log/trials data/vox1/spect/dev_8k_log/trials data/vox1/spect/dev_8k_radio_v3_log/trials data/aishell2/spect/dev_8k_log/trials data/aishell2/spect/dev_8k_radio_v3_log/trials | shuf > data/army/spect/dev_8k_v5_log/trials
 
+cat data/aidata/spect/dev_8k_log/trials data/vox1/spect/test_8k_log/trials data/vox1/spect/test_8k_radio_v3_log/trials data/aishell2/spect/test_8k_log/trials data/aishell2/spect/test_8k_radio_v3_log/trials | shuf > data/army/spect/test_8k_v5_log/trials
+
+
 python local/split_trials_dir.py --data-dir data/army/spect/dev_8k_v5_log --out-dir data/army/spect/dev_8k_v5_log/trials_dir --trials trials_4w
+
+utils/combine_data.sh data/vox1/spect/test_8k_v5_log data/vox1/spect/test_8k_log data/vox1/spect/test_8k_radio_v3_log
+python local/make_trials.py 60000 data/vox1/spect/test_8k_v5_log
+
+utils/combine_data.sh data/aishell2/spect/test_8k_v5_log data/aishell2/spect/test_8k_log data/aishell2/spect/test_8k_radio_v3_log
+python local/make_trials.py 60000 data/aishell2/spect/test_8k_v5_log
