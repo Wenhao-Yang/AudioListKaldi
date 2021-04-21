@@ -22,11 +22,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     assert os.path.exists(args.trials)
-    assert os.path.exists(os.path.join((args.enroll_dir, 'spk2utt')))
-    assert os.path.exists(os.path.join((args.enroll_dir, 'wav.scp')))
+    assert os.path.exists(os.path.join(args.enroll_dir, 'spk2utt'))
+    assert os.path.exists(os.path.join(args.enroll_dir, 'wav.scp'))
 
     spk2utt = {}
-    spk2utt_f = open(os.path.join((args.enroll_dir, 'spk2utt')), 'r')
+    spk2utt_f = open(os.path.join(args.enroll_dir, 'spk2utt'), 'r')
     for l in spk2utt_f.readlines():
         spk, uid = l.split()
         spk2utt[spk] = uid
@@ -35,9 +35,9 @@ if __name__ == "__main__":
         os.makedirs(os.path.dirname(args.out_trials))
         print('mkdirs: ', str(os.path.dirname(args.out_trials)))
 
-    trials_f = open(os.path.join((args.trials)), 'r')
+    trials_f = open(args.trials, 'r')
     out_trails_num = 0
-    with open(os.path.join((args.out_trials)), 'w') as out_f:
+    with open(args.out_trials, 'w') as out_f:
         for l in trials_f.readlines():
             try:
                 sid_a, uid_b, tag = l.split()
