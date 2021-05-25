@@ -56,11 +56,15 @@ if __name__ == '__main__':
         cn_lst = np.load(cn_npy)
         if len(cn_lst) != 130108:
             raise ValueError
+        # dom = set()
+        # for utt_dic in cn_lst:
+        #     dom.add(utt_dic['uid'].split('-')[1])
 
         print('Load wav lst from %s' % cn_npy)
 
     except (FileExistsError, ValueError) as e:
         cn_lst = []
+        # dom = set()
         for spk in spks_dir:
             # [.../data/id00000/singing-01-002.wav, ...]
             utts = [x for x in spk.iterdir() if x.is_file() and x.suffix == '.wav']
@@ -68,6 +72,8 @@ if __name__ == '__main__':
                 utt_dic = {}
                 uid = spk.name + '-' + utt.name.rstrip('.wav')
                 utt_dic['uid'] = uid
+
+                # dom.add(uid.split('-')[1])
                 utt_dic['path'] = str(utt)
                 utt_dic['spk'] = spk.name
                 cn_lst.append(utt_dic)
@@ -76,8 +82,9 @@ if __name__ == '__main__':
         np.save(cn_npy, cn_lst)
         print('Saving wav lst to %s' % cn_npy)
 
-    wav_scp = 'wav.scp'
-    utt2spk = 'spk2utt'
+    # wav_scp = 'wav.scp'
+    # utt2spk = 'spk2utt'
+    # utt2dom = 'utt2dom'
     # dev set
 
     dev_lst = args.dataset_dir + '/dev/dev.lst'
@@ -89,22 +96,28 @@ if __name__ == '__main__':
 
     wav_scp = []
     utt2spk = []
+    utt2dom = []
 
     for spk in dev_lst_f.readlines():
         spk_name = spk.rstrip('\n')
         for utt in cn_lst:
             if utt['spk'] == spk_name:
                 wav_scp.append(utt['uid'] + ' ' + utt['path'] + '\n')
+                u_dom = utt['uid'].split('-')[1]
+                utt2dom.append(utt['uid'] + ' ' + u_dom + '\n')
                 # f2.write(' ' + utt['uid'])
                 # spk_name = spk_name + '\n' if idx < (len(enroll) - 1) else spk_id
                 utt2spk.append(utt['uid'] + ' ' + spk_name + '\n')
     wav_scp.sort()
     utt2spk.sort()
+    utt2dom.sort()
 
     with open(args.output_dir + '/dev/wav.scp', 'w') as f1, \
-            open(args.output_dir + '/dev/utt2spk', 'w') as f2:
+            open(args.output_dir + '/dev/utt2spk', 'w') as f2, \
+            open(args.output_dir + '/dev/utt2dom', 'w') as f3:
         f1.writelines(wav_scp)
         f2.writelines(utt2spk)
+        f3.writelines(utt2dom)
 
     print('\nFor dev:\n\twav.scp and utt2spk write to %s/dev .' % args.output_dir)
     print('\tThere are %d in dev' % len(wav_scp))
@@ -118,6 +131,7 @@ if __name__ == '__main__':
 
     wav_scp = []
     utt2spk = []
+
 
     enroll = enroll_lst_f.readlines()
     for idx, utt_pair in enumerate(enroll):
@@ -150,26 +164,31 @@ if __name__ == '__main__':
 
     wav_scp = []
     utt2spk = []
+    utt2dom = []
 
     test = test_lst_f.readlines()
     for idx, utt_path in enumerate(test):
         path = utt_path.rstrip('.wav').split('/')  # test/id00999-singing-02-006.wav
         uid = '-'.join(path).rstrip('.wav\n')  # test-id00999-singing-02-006.wav
 
+        dom = uid.split('-')[2]
         spk_id = uid.split('-')[1]
         path = args.dataset_dir + '/eval/' + utt_path
         wav_scp.append(uid + ' ' + path)
+        utt2dom.append(uid + ' ' + dom + '\n')
         # f2.write(spk_id + ' ' + uid + '\n')
-        spk_id = spk_id + '\n'
-        utt2spk.append(uid + ' ' + spk_id)
+        utt2spk.append(uid + ' ' + spk_id + '\n')
 
     wav_scp.sort()
     utt2spk.sort()
+    utt2dom.sort()
 
     with open(args.output_dir + '/eval/wav.scp', 'w') as f1, \
-            open(args.output_dir + '/eval/utt2spk', 'w') as f2:
+            open(args.output_dir + '/eval/utt2spk', 'w') as f2, \
+            open(args.output_dir + '/eval/utt2dom', 'w') as f3:
         f1.writelines(wav_scp)
         f2.writelines(utt2spk)
+        f3.writelines(utt2dom)
 
     print('\nFor eval:\n\twav.scp and utt2spk write to %s/test .' % args.output_dir)
     print('\tThere are %d in test' % len(wav_scp))
