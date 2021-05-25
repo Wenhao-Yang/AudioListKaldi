@@ -50,6 +50,23 @@ if __name__ == "__main__":
 
     print('Write %d trails pairs to %s' %(out_trails_num, args.out_trials))
 
+# this_wav=data/sitw/eval/wav.scp
+# mv ${this_wav} ${this_wav}.bcp
+# cat ${this_wav}.bcp | \
+#   while read line; do
+#     l=($line)
+#     if [ ${#l[@]} = 2 ]; then
+#       orig_path=${l[-1]}
+#       new_path=${orig_path/"flac"/"wav"}
+#
+#       if [ -s ${new_path} ]; then
+#         echo -e "${l[-2]} ${new_path}" >> ${this_wav}
+#       fi
+#     fi
+#
+#   done
+
+
 
 
 
