@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser(description='Prepare scp file for sitw')
 # options for vox1
 parser.add_argument('--dataset-dir', type=str, default='/home/yangwenhao/storage/dataset/sitw_wav',
                     help='path to dataset')
-parser.add_argument('--output-dir', type=str, default='data/sitw_wav',
+parser.add_argument('--output-dir', type=str, default='data/sitw',
                     help='path to dataset')
 args = parser.parse_args()
 

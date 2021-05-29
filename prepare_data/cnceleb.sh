@@ -98,3 +98,11 @@ if [ $stage -le 4 ]; then
   utils/fix_data_dir.sh ${cnceleb_out_dir}/test_cmvn
 #  local/make_trials.py ${cnceleb_out_dir}/test_cmvn
 fi
+
+if [ $stage -le 5 ]; then
+  echo "===============================Split trials feat in train set========================================"
+  python local/split_trials_dir.py \
+    --data-dir data/cnceleb/pyfb/dev_fb40_ws25 \
+    --out-dir data/cnceleb/pyfb/dev_fb40_ws25/trials_dir \
+    --trials trials_2w
+fi
