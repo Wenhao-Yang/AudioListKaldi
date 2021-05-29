@@ -33,12 +33,13 @@ def main():
     assert os.path.exists(data_root), print(data_root, " not exist!")
 
     for s in 'dev', 'eval':
-        print("Processing %s set ...")
+        print("Processing %s set ..." % s)
         set_dir = os.path.join(data_root, s)
         # set_audio_dir = os.path.join(set_dir, 'audio')
         set_lst_dir = os.path.join(set_dir, 'lists')
 
         spk2uid = {}
+        uid2spk = {}
         # uid2spk = {}
         wav2scp = {}
         print("  Processing enroll-core.lst ...")
@@ -56,8 +57,8 @@ def main():
                     pdb.set_trace()
 
                 spk2uid[spk_id] = uid
+                uid2spk[uid] = spk_id
                 # uid2spk[uid] = spk_id
-
 
                 full_flac_path = os.path.join(set_dir, flac_path)
                 wav_path = full_flac_path.replace('flac', 'wav')
@@ -75,8 +76,7 @@ def main():
             for l in pbar:
                 # 45205 audio/ggjnl.flac 88.000 97.990
                 spk_id, flac_path, start, end = l.split()
-                audio_format='flac'
-
+                audio_format = 'flac'
 
                 flac_rela = pathlib.Path(flac_path)
                 if spk_id in spk2uid:
@@ -90,6 +90,8 @@ def main():
                                )
 
                 spk2uid[spk_id] = uid
+                uid2spk[uid] = spk_id
+
                 full_flac_path = os.path.join(set_dir, flac_path)
                 wav_path = full_flac_path.replace('flac', 'wav')
                 if os.path.exists(wav_path):
@@ -108,8 +110,8 @@ def main():
 
         set_keys_dir = os.path.join(set_dir, 'keys')
         trials = os.path.join(set_output, 'trials')
-        all_test_wav = []
-        all_test_spk = []
+        all_test_wav = set()
+        all_test_spk = set()
 
         print("  Processing core-core.lst ...")
         with open(os.path.join(set_keys_dir, 'core-core.lst'), 'r') as cc, \
@@ -120,26 +122,29 @@ def main():
                 # 12013 audio/mihtz.flac imp
                 ppp = p.split()
                 pair_a_spk = ppp[0]
-                all_test_spk.append(pair_a_spk)
+                all_test_spk.add(pair_a_spk)
+
                 pair_a = spk2uid[pair_a_spk]
                 flac_rela = pathlib.Path(ppp[1])
 
                 pair_b = '-'.join((s, os.path.splitext(flac_rela.name)[0]))
+                all_test_spk.add(uid2spk[pair_b])
+
                 if ppp[2]=='tgt':
                     trials_f.write(pair_a + ' ' + pair_b + ' ' + 'target\n')
                 else:
                     trials_f.write(pair_a + ' ' + pair_b + ' ' + 'nontarget\n')
-                all_test_wav.append(pair_a)
-                all_test_wav.append(pair_b)
+                all_test_wav.add(pair_a)
+                all_test_wav.add(pair_b)
 
-        uids = np.unique(all_test_wav)
+        uids = list(all_test_wav)
         uids.sort()
         wav_scp = os.path.join(set_output, 'wav.scp')
         with open(wav_scp, 'w') as f:
             for u in uids:
                 f.write(u + ' ' + wav2scp[u] + '\n')
 
-        spks = np.unique(all_test_spk)
+        spks = list(all_test_spk)
         spks.sort()
         spk2utt = os.path.join(set_output, 'spk2utt')
         with open(spk2utt, 'w') as f:
