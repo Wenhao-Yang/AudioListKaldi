@@ -33,7 +33,7 @@ def main():
     assert os.path.exists(data_root), print(data_root, " not exist!")
 
     for s in 'dev', 'eval':
-
+        print("Processing %s set ...")
         set_dir = os.path.join(data_root, s)
         # set_audio_dir = os.path.join(set_dir, 'audio')
         set_lst_dir = os.path.join(set_dir, 'lists')
@@ -41,7 +41,7 @@ def main():
         spk2uid = {}
         # uid2spk = {}
         wav2scp = {}
-        print("Processing enroll-core.lst ...")
+        print("  Processing enroll-core.lst ...")
         with open(os.path.join(str(set_lst_dir), 'enroll-core.lst'), 'r') as ec:
             enroll_core = ec.readlines()
             pbar = tqdm(enroll_core)
@@ -64,7 +64,7 @@ def main():
                 assert os.path.exists(flac_path), print("%s does not exists!"%flac_path)
                 wav2scp[uid] = os.path.join(set_dir, flac_path)
 
-        print("Processing enroll-assist.lst ...")
+        print("  Processing enroll-assist.lst ...")
         with open(os.path.join(str(set_lst_dir), 'enroll-assist.lst'), 'r') as ea:
             enroll_assi = ea.readlines()
             pbar = tqdm(enroll_assi)
@@ -105,10 +105,12 @@ def main():
         all_test_wav = []
         all_test_spk = []
 
+        print("  Processing core-core.lst ...")
         with open(os.path.join(set_keys_dir, 'core-core.lst'), 'r') as cc, \
             open(trials, 'w') as trials_f:
             pairs = cc.readlines()
-            for p in pairs:
+            pbar = tqdm(pairs)
+            for p in pbar:
                 # 12013 audio/mihtz.flac imp
                 ppp = p.split()
                 pair_a_spk = ppp[0]
