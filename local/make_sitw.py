@@ -14,6 +14,7 @@ import pathlib
 import os
 import pdb
 import numpy as np
+from tqdm import tqdm
 
 parser = argparse.ArgumentParser(description='Prepare scp file for sitw')
 # Model options
@@ -29,6 +30,8 @@ def main():
     data_root = args.dataset_dir
     output_dir = args.output_dir
 
+    assert os.path.exists(data_root), print(data_root, " not exist!")
+
     for s in 'dev', 'eval':
 
         set_dir = os.path.join(data_root, s)
@@ -38,30 +41,45 @@ def main():
         spk2uid = {}
         # uid2spk = {}
         wav2scp = {}
+        print("Processing enroll-core.lst ...")
         with open(os.path.join(str(set_lst_dir), 'enroll-core.lst'), 'r') as ec:
             enroll_core = ec.readlines()
-            for l in enroll_core:
+            pbar = tqdm(enroll_core)
+            for l in pbar:
                 # 12013 audio/unotx.flac
                 spk_id, flac_path = l.split()
+
                 flac_rela = pathlib.Path(flac_path)
 
-                uid = '-'.join((s, os.path.splitext(flac_rela.name)[0]))
-                if spk_id in spk2uid.keys():
+                uid = '-'.join((s, spk_id, os.path.splitext(flac_rela.name)[0]))
+                if spk_id in spk2uid:
                     pdb.set_trace()
 
                 spk2uid[spk_id] = uid
                 # uid2spk[uid] = spk_id
+                wav_path = flac_path.replace('flac', 'wav')
+                if os.path.exists(wav_path):
+                    flac_path = wav_path
+
+                assert os.path.exists(flac_path), print("%s does not exists!"%flac_path)
                 wav2scp[uid] = os.path.join(set_dir, flac_path)
 
+        print("Processing enroll-assist.lst ...")
         with open(os.path.join(str(set_lst_dir), 'enroll-assist.lst'), 'r') as ea:
             enroll_assi = ea.readlines()
-            for l in enroll_assi:
+            pbar = tqdm(enroll_assi)
+            for l in pbar:
                 # 45205 audio/ggjnl.flac 88.000 97.990
                 spk_id, flac_path, start, end = l.split()
+                audio_format='flac'
+                wav_path = flac_path.replace('flac', 'wav')
+
                 flac_rela = pathlib.Path(flac_path)
-                if spk_id in spk2uid.keys():
+                if spk_id in spk2uid:
                     pdb.set_trace()
+
                 uid = '-'.join(('dev',
+                                spk_id,
                                 os.path.splitext(flac_rela.name)[0],
                                 '%04d' % int(float(start)),
                                 '%04d' % int(float(end))
@@ -69,9 +87,13 @@ def main():
                                )
 
                 spk2uid[spk_id] = uid
+
+                if os.path.exists(wav_path):
+                    flac_path = wav_path
+                    audio_format = 'wav'
                 full_flac_path = os.path.join(set_dir, flac_path)
                 duration = float(end) - float(start)
-                soxed_path = 'sox %s -t flac - trim %s %.3f |' % (full_flac_path, start, duration)
+                soxed_path = 'sox %s -t %s - trim %s %.3f |' % (full_flac_path, audio_format, start, duration)
                 wav2scp[uid] = soxed_path
 
         set_output = os.path.join(output_dir, s)
