@@ -61,8 +61,9 @@ def main():
                 if os.path.exists(wav_path):
                     flac_path = wav_path
 
-                assert os.path.exists(flac_path), print("%s does not exists!"%flac_path)
-                wav2scp[uid] = os.path.join(set_dir, flac_path)
+                full_flac_path = os.path.join(set_dir, flac_path)
+                assert os.path.exists(full_flac_path), print("%s does not exists!"%full_flac_path)
+                wav2scp[uid] = full_flac_path
 
         print("  Processing enroll-assist.lst ...")
         with open(os.path.join(str(set_lst_dir), 'enroll-assist.lst'), 'r') as ea:
@@ -92,6 +93,8 @@ def main():
                     flac_path = wav_path
                     audio_format = 'wav'
                 full_flac_path = os.path.join(set_dir, flac_path)
+                assert os.path.exists(full_flac_path)
+
                 duration = float(end) - float(start)
                 soxed_path = 'sox %s -t %s - trim %s %.3f |' % (full_flac_path, audio_format, start, duration)
                 wav2scp[uid] = soxed_path
