@@ -57,12 +57,15 @@ def main():
 
                 spk2uid[spk_id] = uid
                 # uid2spk[uid] = spk_id
-                wav_path = flac_path.replace('flac', 'wav')
-                if os.path.exists(wav_path):
-                    flac_path = wav_path
+
 
                 full_flac_path = os.path.join(set_dir, flac_path)
-                assert os.path.exists(full_flac_path), print("%s does not exists!"%full_flac_path)
+                wav_path = full_flac_path.replace('flac', 'wav')
+
+                if os.path.exists(wav_path):
+                    full_flac_path = wav_path
+                else:
+                    assert os.path.exists(full_flac_path), print("%s does not exists!"%full_flac_path)
                 wav2scp[uid] = full_flac_path
 
         print("  Processing enroll-assist.lst ...")
@@ -73,7 +76,7 @@ def main():
                 # 45205 audio/ggjnl.flac 88.000 97.990
                 spk_id, flac_path, start, end = l.split()
                 audio_format='flac'
-                wav_path = flac_path.replace('flac', 'wav')
+
 
                 flac_rela = pathlib.Path(flac_path)
                 if spk_id in spk2uid:
@@ -88,12 +91,13 @@ def main():
                                )
 
                 spk2uid[spk_id] = uid
-
-                if os.path.exists(wav_path):
-                    flac_path = wav_path
-                    audio_format = 'wav'
                 full_flac_path = os.path.join(set_dir, flac_path)
-                assert os.path.exists(full_flac_path)
+                wav_path = full_flac_path.replace('flac', 'wav')
+                if os.path.exists(wav_path):
+                    full_flac_path = wav_path
+                    audio_format = 'wav'
+                else:
+                    assert os.path.exists(full_flac_path)
 
                 duration = float(end) - float(start)
                 soxed_path = 'sox %s -t %s - trim %s %.3f |' % (full_flac_path, audio_format, start, duration)
