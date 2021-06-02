@@ -17,6 +17,19 @@ import numpy as np
 from kaldi_io import read_mat
 from tqdm import tqdm
 from kaldiio import WriteHelper
+import soundfile as sf
+
+def read_Waveform(filename):
+    """
+    read features from npy files
+    :param filename: the path of wav files.
+    :return:
+    """
+    # audio, sr = librosa.load(filename, sr=sample_rate, mono=True)
+    # audio = audio.flatten()
+    audio, sample_rate = sf.read(filename, dtype='int16')
+
+    return audio.astype(np.float32).reshape(1, -1)
 
 if __name__ == "__main__":
 
@@ -38,12 +51,16 @@ if __name__ == "__main__":
         print("Create dir for %s.." % out_dir)
         os.makedirs(out_dir)
 
+    feats_scp_name = 'feats.scp'
     if args.feat_format == 'kaldi':
         file_loader = read_mat
     elif args.feat_format == 'npy':
         file_loader = np.load
+    elif args.feat_format == 'wav':
+        file_loader = read_Waveform
+        feats_scp_name = 'wav.scp'
 
-    feat_scp_path = os.path.join(data_dir, 'feats.scp')
+    feat_scp_path = os.path.join(data_dir, feats_scp_name)
     trials_scp = os.path.join(data_dir, args.trials)
 
     assert os.path.exists(feat_scp_path)
