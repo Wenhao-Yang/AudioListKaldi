@@ -41,7 +41,7 @@ mfccdir=${vox2_out_dir}/mfcc
 fbankdir=${vox2_out_dir}/fbank
 vaddir=${vox2_out_dir}/vad
 
-stage=0
+stage=3
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -84,5 +84,20 @@ if [ $stage -le 2 ]; then
 
   local/nnet3/xvector/prepare_feats_for_egs.sh --nj 5 --cmd "$train_cmd" ${vox1_test_dir} ${vox1_vad_test_dir} ${vox1_test_dir}/feats_no_sil
   utils/fix_data_dir.sh ${vox1_vad_test_dir}
+
+fi
+
+if [ $stage -le 3 ]; then
+  echo "=====================================make fanks========================================"
+  # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
+  # wasteful, as it roughly doubles the amount of training data on disk.  After
+  # creating training examples, this can be removed.
+  for data_dir in data/vox1/klfb/dev_fb40 data/vox1/klfb/dev_aug_118k_fb40 ; do
+    steps/make_fbank.sh --nj 12 --cmd "$train_cmd" \
+     --fbank-config conf/fbank_40.conf \
+     --write-utt2num-frames true \
+     --write-utt2dur true \
+     $data_dir
+  done
 
 fi
