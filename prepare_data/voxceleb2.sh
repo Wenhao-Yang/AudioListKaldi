@@ -9,8 +9,6 @@
 # @Overview:
 # """
 
-export train_cmd="run.pl --mem 16G"
-
 ./path.sh
 ./cmd.sh
 set -e
@@ -54,7 +52,7 @@ if [ $stage -le 0 ]; then
 
 fi
 
-stage=4
+#stage=4
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
