@@ -9,8 +9,8 @@
 # @Overview:
 # """
 
-./path.sh
-./cmd.sh
+. ./cmd.sh
+. ./path.sh
 set -e
 
 # The trials file is downloaded by local/make_voxceleb1.pl.
