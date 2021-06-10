@@ -86,7 +86,7 @@ if [ $stage -le 3 ]; then
   # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
-  for data_dir in data/vox1/klfb/dev_fb40 data/vox1/klfb/dev_aug_118k_fb40 ; do
+  for data_dir in  data/vox1/klfb/dev_aug_148k_fb40 ; do
     steps/make_fbank.sh --nj 12 --cmd "$train_cmd" \
      --fbank-config conf/fbank_40.conf \
      --write-utt2num-frames true \
