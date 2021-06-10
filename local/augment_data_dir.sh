@@ -14,7 +14,7 @@ sample_rate=16000
 data_dir=$1
 
 subet_utt=`wc -l ${data_dir}/wav.scp | awk '{print $1}'`
-subet_utt=`expr ${subet_utt} \* 4 / 5`
+subet_utt=`expr ${subet_utt} \* 2`
 suffix=`expr ${subet_utt} / 1000`k
 
 if [ $# -ne 1 ]; then
