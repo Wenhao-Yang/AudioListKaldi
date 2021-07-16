@@ -13,6 +13,7 @@ spect_config=conf/spect.conf
 compress=true
 write_utt2num_frames=true  # If true writes utt2num_frames.
 write_utt2dur=true
+round_power_two=true
 # End configuration section.
 
 echo "$0 $@"  # Print the command line for logging.
@@ -117,7 +118,7 @@ if [ -f $data/segments ]; then
 
   $cmd JOB=1:$nj $logdir/make_fbank_${name}.JOB.log \
     extract-segments scp,p:$scp $logdir/segments.JOB ark:- \| \
-    compute-spectrogram-feats-my $vtln_opts $write_utt2dur_opt --verbose=2 \
+    compute-spectrogram-feats-my --round-to-power-of-two=$round_power_two $vtln_opts $write_utt2dur_opt --verbose=2 \
       --config=$fbank_config ark:- ark:- \| \
     copy-feats --compress=$compress $write_num_frames_opt ark:- \
      ark,scp:$fbankdir/raw_fbank_$name.JOB.ark,$fbankdir/raw_fbank_$name.JOB.scp \
@@ -132,7 +133,7 @@ else
   utils/split_scp.pl $scp $split_scps || exit 1;
 
   $cmd JOB=1:$nj $logdir/make_fbank_${name}.JOB.log \
-    compute-spectrogram-feats-my $vtln_opts $write_utt2dur_opt --verbose=2 \
+    compute-spectrogram-feats-my --round-to-power-of-two=$round_power_two $vtln_opts $write_utt2dur_opt --verbose=2 \
      --config=$fbank_config scp,p:$logdir/wav.JOB.scp ark:- \| \
     copy-feats --compress=$compress $write_num_frames_opt ark:- \
      ark,scp:$fbankdir/raw_fbank_$name.JOB.ark,$fbankdir/raw_fbank_$name.JOB.scp \
