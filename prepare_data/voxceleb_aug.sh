@@ -134,7 +134,7 @@ if [ $stage -le 6 ]; then
   for name in dev_aug test; do
     steps/make_spect.sh --write-utt2num-frames true --spect_config conf/spect_161.conf \
       --nj 12 --cmd "$train_cmd" \
-      --round-power-two=false \
+      --round-power-two false \
       data/vox1/klsp/${name} data/vox1/klsp/${name}/log data/vox1/klsp/spect/${name}
     utils/fix_data_dir.sh data/vox1/klsp/${name}
   done
