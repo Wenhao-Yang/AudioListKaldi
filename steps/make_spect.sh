@@ -9,7 +9,7 @@
 # Begin configuration section.
 nj=4
 cmd=run.pl
-fbank_config=conf/fbank.conf
+spect_config=conf/spect.conf
 compress=true
 write_utt2num_frames=true  # If true writes utt2num_frames.
 write_utt2dur=true
@@ -22,12 +22,12 @@ if [ -f path.sh ]; then . ./path.sh; fi
 
 if [ $# -lt 1 ] || [ $# -gt 3 ]; then
   cat >&2 <<EOF
-Usage: $0 [options] <data-dir> [<log-dir> [<fbank-dir>] ]
+Usage: $0 [options] <data-dir> [<log-dir> [<spect-dir>] ]
  e.g.: $0 data/train
 Note: <log-dir> defaults to <data-dir>/log, and
-      <fbank-dir> defaults to <data-dir>/data
+      <spect-dir> defaults to <data-dir>/data
 Options:
-  --fbank-config <config-file>         # config passed to compute-fbank-feats.
+  --spect-config <config-file>         # config similar to config file that passed to compute-fbank-feats.
   --nj <nj>                            # number of parallel jobs.
   --cmd <run.pl|queue.pl <queue opts>> # how to run jobs.
   --write-utt2num-frames <true|false>  # If true, write utt2num_frames file.
@@ -35,6 +35,8 @@ Options:
 EOF
    exit 1;
 fi
+
+fbank_config=$spect_config
 
 data=$1
 if [ $# -ge 2 ]; then
@@ -115,7 +117,7 @@ if [ -f $data/segments ]; then
 
   $cmd JOB=1:$nj $logdir/make_fbank_${name}.JOB.log \
     extract-segments scp,p:$scp $logdir/segments.JOB ark:- \| \
-    compute-spectrogram-feats $vtln_opts $write_utt2dur_opt --verbose=2 \
+    compute-spectrogram-feats-my $vtln_opts $write_utt2dur_opt --verbose=2 \
       --config=$fbank_config ark:- ark:- \| \
     copy-feats --compress=$compress $write_num_frames_opt ark:- \
      ark,scp:$fbankdir/raw_fbank_$name.JOB.ark,$fbankdir/raw_fbank_$name.JOB.scp \
@@ -130,7 +132,7 @@ else
   utils/split_scp.pl $scp $split_scps || exit 1;
 
   $cmd JOB=1:$nj $logdir/make_fbank_${name}.JOB.log \
-    compute-spectrogram-feats $vtln_opts $write_utt2dur_opt --verbose=2 \
+    compute-spectrogram-feats-my $vtln_opts $write_utt2dur_opt --verbose=2 \
      --config=$fbank_config scp,p:$logdir/wav.JOB.scp ark:- \| \
     copy-feats --compress=$compress $write_num_frames_opt ark:- \
      ark,scp:$fbankdir/raw_fbank_$name.JOB.ark,$fbankdir/raw_fbank_$name.JOB.scp \
@@ -165,7 +167,7 @@ fi
 frame_shift=$(perl -ne 'if (/^--frame-shift=(\d+)/) {
                           printf "%.3f", 0.001 * $1; exit; }' $fbank_config)
 echo ${frame_shift:-'0.01'} > $data/frame_shift
-mkdir -p $data/conf && cp $fbank_config $data/conf/fbank.conf || exit 1
+mkdir -p $data/conf && cp $fbank_config $data/conf/spect.conf || exit 1
 
 rm $logdir/wav_${name}.*.scp  $logdir/segments.* \
    $logdir/utt2num_frames.* $logdir/utt2dur.* 2>/dev/null

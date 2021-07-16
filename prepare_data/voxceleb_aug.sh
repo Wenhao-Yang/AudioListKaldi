@@ -49,7 +49,7 @@ fbank_config=conf/fbank_64.conf
 #fbankdir=${vox1_out_dir}/fbank
 #vaddir=${vox1_out_dir}/vad
 
-stage=4
+stage=6
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -129,4 +129,19 @@ if [ $stage -le 5 ]; then
   utils/fix_data_dir.sh data/Vox1_aug_fb64/dev_no_sil
 
 fi
+
+if [ $stage -le 6 ]; then
+  # Make Spectrogram for aug set
+  echo "===================              Spectrogram               ========================"
+  for name in dev_aug test; do
+    steps/make_spect.sh --write-utt2num-frames true --spect_config conf/spect_161.conf --nj 12 --cmd "$train_cmd" \
+          data/vox1/klsp/${name} data/vox1/klsp/${name}/log data/vox1/klsp/spect/${name}
+    utils/fix_data_dir.sh data/vox1/klsp/${name}
+  done
+    # Todo: Is there any better VAD solutioin?
+#  sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${vox1_org_dir}/test exp/make_vad ${vox1_org_dir}/vad
+#  utils/fix_data_dir.sh ${vox1_org_dir}/test
+
+fi
+
 exit 0;
