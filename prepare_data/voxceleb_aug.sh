@@ -131,7 +131,7 @@ fi
 if [ $stage -le 6 ]; then
   # Make Spectrogram for aug set
   echo "===================              Spectrogram               ========================"
-  for name in dev_aug test; do
+  for name in dev ; do
     steps/make_spect.sh --write-utt2num-frames true --spect-config conf/spect_161.conf \
       --nj 12 --cmd "$train_cmd" \
       data/vox1/klsp/${name} data/vox1/klsp/${name}/log data/vox1/klsp/spect/${name}
