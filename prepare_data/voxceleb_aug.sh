@@ -32,9 +32,7 @@ vox1_bab_dir=data/Vox1_babble_fb64
 vox1_noi_dir=data/Vox1_noise_fb64
 vox1_mus_dir=data/Vox1_music_fb64
 vox1_rev_dir=data/Vox1_reverb_fb64
-
 vox1_aug_dir=data/Vox1_aug_fb64
-
 fbank_config=conf/fbank_64.conf
 
 #vox1_test_dir=${vox1_out_dir}/test
