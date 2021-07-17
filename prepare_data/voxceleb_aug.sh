@@ -47,7 +47,7 @@ fbank_config=conf/fbank_64.conf
 #fbankdir=${vox1_out_dir}/fbank
 #vaddir=${vox1_out_dir}/vad
 
-stage=6
+stage=7
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -141,6 +141,13 @@ if [ $stage -le 6 ]; then
 #  sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${vox1_org_dir}/test exp/make_vad ${vox1_org_dir}/vad
 #  utils/fix_data_dir.sh ${vox1_org_dir}/test
 
+fi
+
+if [ $stage -le 7 ]; then
+  name=dev
+  python local/split_trials_dir.py --data-dir data/vox1/klsp/${name} \
+    --out-dir data/vox1/klsp/${name}/trials_dir \
+    --trials trials_2w
 fi
 
 exit 0;
