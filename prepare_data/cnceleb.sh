@@ -42,6 +42,8 @@ if [ $stage -le 0 ]; then
   # This script creates data/voxceleb1_test and data/voxceleb1_train.
   # Our evaluation set is the test portion of VoxCeleb1.
   local/make_cnceleb.py --dataset-dir ${cnceleb_root} --output-dir ${out_dir}
+  cat ${out_dir}/dev/utt2dom | awk '{print $2}' | sort | uniq >${out_dir}/dev/domain
+  
   utils/combine_data.sh ${test_dir} ${out_dir}/enroll ${out_dir}/eval
 
   for name in dev test ; do
