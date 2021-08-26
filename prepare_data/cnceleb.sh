@@ -35,7 +35,7 @@ mfccdir=${out_dir}/mfcc
 fbankdir=${out_dir}/fbank
 vaddir=${out_dir}/vad
 
-stage=0
+stage=6
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -50,7 +50,7 @@ if [ $stage -le 0 ]; then
   done
 fi
 
-stage=100
+#stage=100
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
@@ -105,4 +105,26 @@ if [ $stage -le 5 ]; then
     --data-dir data/cnceleb/pyfb/dev_fb40_ws25 \
     --out-dir data/cnceleb/pyfb/dev_fb40_ws25/trials_dir \
     --trials trials_2w
+fi
+
+if [ $stage -le 6 ]; then
+  data_dir=data/cnceleb/dev
+  org_data=moives
+  out_data=movie
+  cat $data_dir/wav.scp | grep moives | \
+    while read line; do
+      l=($line)
+      if [ ${#l[@]} = 2 ]; then
+        # echo ${#l[@]}
+        # /home/storage/yangwenhao/dataset/voxceleb2/dev/aac/id00012/21Uxsk56VDQ/00010.wav
+        orig_path=${l[-1]} #/home/cca01/work2019/yangwenhao/mydataset/wav_test/noise/CHN01/D01-U000000.wav
+
+        if [ -s ${orig_path} ]; then
+          new_path=${orig_path/"$org_data"/"$out_data"}
+          [ ! -d ${new_path%/*} ] && mkdir -p ${new_path%/*}
+          mv ${orig_path} ${new_path}
+        fi
+      fi
+
+    done
 fi
