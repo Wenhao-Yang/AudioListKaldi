@@ -119,7 +119,7 @@ fi
 if [ -f $srcdir/cmvn.scp ]; then
   utils/apply_map.pl -f 1 $destdir/spk_map <$srcdir/cmvn.scp >$destdir/cmvn.scp
 fi
-for f in frame_shift stm glm ctm; do
+for f in frame_shift stm glm ctm trials trials_2w ; do
   if [ -f $srcdir/$f ]; then
     cp $srcdir/$f $destdir
   fi

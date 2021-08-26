@@ -43,7 +43,7 @@ if [ $stage -le 0 ]; then
   # Our evaluation set is the test portion of VoxCeleb1.
   local/make_cnceleb.py --dataset-dir ${cnceleb_root} --output-dir ${out_dir}
   cat ${out_dir}/dev/utt2dom | awk '{print $2}' | sort | uniq >${out_dir}/dev/domain
-  
+
   utils/combine_data.sh ${test_dir} ${out_dir}/enroll ${out_dir}/eval
 
   for name in dev test ; do
@@ -131,4 +131,25 @@ if [ $stage -le 6 ]; then
       fi
 
     done
+fi
+if [ $stage -le 7 ]; then
+  # Make Spectrogram for aug set
+  dataset=cnceleb
+  echo "===================              Spectrogram               ========================"
+  for name in dev ; do
+    steps/make_spect.sh --write-utt2num-frames true --spect-config conf/spect_161.conf \
+      --nj 14 --cmd "$train_cmd" \
+      data/${dataset}/klsp/${name} data/${dataset}/klsp/${name}/log data/${dataset}/klsp/spect/${name}
+    utils/fix_data_dir.sh data/${dataset}/klsp/${name}
+  done
+
+  echo "===============================Split trials feat in train set========================================"
+  python local/split_trials_dir.py \
+    --data-dir data/${dataset}/klsp/dev \
+    --out-dir data/${dataset}/klsp/dev/trials_dir \
+    --trials trials_2w
+    # Todo: Is there any better VAD solutioin?
+#  sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${vox1_org_dir}/test exp/make_vad ${vox1_org_dir}/vad
+#  utils/fix_data_dir.sh ${vox1_org_dir}/test
+
 fi
