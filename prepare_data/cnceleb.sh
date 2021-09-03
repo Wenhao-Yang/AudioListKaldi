@@ -153,3 +153,12 @@ if [ $stage -le 7 ]; then
 #  utils/fix_data_dir.sh ${vox1_org_dir}/test
 
 fi
+
+if [ $stage -le 9 ]; then
+
+for s in advertisement drama entertainment interview live_broadcast movie play recitation singing speech vlog;do
+  cat data/cnceleb/test/trials | grep ${s} > data/cnceleb/test/trials_${s}
+done
+
+fi
+
