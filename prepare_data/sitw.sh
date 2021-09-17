@@ -37,8 +37,8 @@ fbank_config=conf/fbank_64.conf
 mfccdir=${sitw_out_dir}/mfcc
 fbankdir=${sitw_out_dir}/fbank
 vaddir=${sitw_out_dir}/vad
-
-stage=3
+dataset=sitw
+stage=4
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -89,4 +89,20 @@ fi
 
 if [ $stage -le 3 ]; then
   utils/combine_data.sh ${sitw_out_dir}/${name} ${vox1_train_dir}_reverb ${vox1_train_dir}_noise ${vox1_train_dir}_music ${vox1_train_dir}_babble
+fi
+
+
+if [ $stage -le 4 ]; then
+  # Make Spectrogram for aug set
+  echo "===================              Spectrogram               ========================"
+  for name in dev test ; do
+    steps/make_spect.sh --write-utt2num-frames true --spect-config conf/spect_161.conf \
+      --nj 14 --cmd "$train_cmd" \
+      data/${dataset}/klsp/${name} data/${dataset}/klsp/${name}/log data/${dataset}/klsp/spect/${name}
+    utils/fix_data_dir.sh data/${dataset}/klsp/${name}
+  done
+    # Todo: Is there any better VAD solutioin?
+#  sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${vox1_org_dir}/test exp/make_vad ${vox1_org_dir}/vad
+#  utils/fix_data_dir.sh ${vox1_org_dir}/test
+
 fi
