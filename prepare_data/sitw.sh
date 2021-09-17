@@ -101,8 +101,5 @@ if [ $stage -le 4 ]; then
       data/${dataset}/klsp/${name} data/${dataset}/klsp/${name}/log data/${dataset}/klsp/spect/${name}
     utils/fix_data_dir.sh data/${dataset}/klsp/${name}
   done
-    # Todo: Is there any better VAD solutioin?
-#  sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${vox1_org_dir}/test exp/make_vad ${vox1_org_dir}/vad
-#  utils/fix_data_dir.sh ${vox1_org_dir}/test
 
 fi
