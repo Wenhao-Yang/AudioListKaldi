@@ -35,7 +35,7 @@ mfccdir=${vox2_out_dir}/mfcc
 fbankdir=${vox2_out_dir}/fbank
 vaddir=${vox2_out_dir}/vad
 
-stage=4
+stage=3
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -93,7 +93,7 @@ if [ $stage -le 3 ]; then
      --write-utt2dur true \
      $data_dir
   done
-
+  exit
 fi
 
 if [ $stage -le 4 ]; then
