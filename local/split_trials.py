@@ -21,7 +21,7 @@ if __name__ == "__main__":
     parser.add_argument('--nj', type=int, default=16, metavar='E',
                         help='number of jobs to make feats (default: 10)')
     parser.add_argument('--out-dir', default='data/cnceleb/dev/subtrials', type=str)
-    parser.add_argument('--trials', default='data/cnceleb/dev/trials_30w', type=str)
+    parser.add_argument('--trials', default='data/cnceleb/dev/trials_60w', type=str)
     # parser.add_argument('--domains', type=str)
 
     args = parser.parse_args()
