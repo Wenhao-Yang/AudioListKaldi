@@ -49,7 +49,7 @@ mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=40
+stage=60
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -79,6 +79,8 @@ if [ $stage -le 1 ]; then
     sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${name} exp/make_vad $vaddir
     utils/fix_data_dir.sh ${name}
   done
+
+
 fi
 
 if [ $stage -le 1 ]; then
@@ -268,19 +270,30 @@ if [ $stage -le 40 ]; then
     --trials trials_2w
 fi
 
+if [ $stage -le 50 ]; then
+  python local/split_trials_dir.py --data-dir data/vox1/pyfb/dev_mel_fb24_bod \
+      --out-dir data/vox1/pyfb/dev_mel_fb24_bod/trials_dir \
+      --trials trials_2w
 
-python local/split_trials_dir.py --data-dir data/vox1/pyfb/dev_mel_fb24_bod \
-    --out-dir data/vox1/pyfb/dev_mel_fb24_bod/trials_dir \
-    --trials trials_2w
-
-python local/split_trials_dir.py --data-dir data/vox1/pyfb/dev_fb24 --out-dir data/vox1/pyfb/dev_fb24/trials_dir --trials trials_2w
-python local/split_trials_dir.py --data-dir data/vox1/spect/dev_log --out-dir data/vox1/spect/dev_log/trials_dir --trials trials_2w
+  python local/split_trials_dir.py --data-dir data/vox1/pyfb/dev_fb24 --out-dir data/vox1/pyfb/dev_fb24/trials_dir --trials trials_2w
+  python local/split_trials_dir.py --data-dir data/vox1/spect/dev_log --out-dir data/vox1/spect/dev_log/trials_dir --trials trials_2w
 
 
-sox -V1 /home/storage/yangwenhao/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10059/2iL0P9T7pYY/00010.wav -r 8000 /home/storage/yangwenhao/dataset/voxceleb1_8k/voxceleb1_wav/vox1_dev_wav/wav/id10059/2iL0P9T7pYY/00010.wav
+  sox -V1 /home/storage/yangwenhao/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10059/2iL0P9T7pYY/00010.wav -r 8000 /home/storage/yangwenhao/dataset/voxceleb1_8k/voxceleb1_wav/vox1_dev_wav/wav/id10059/2iL0P9T7pYY/00010.wav
 
-sox -V1 /home/storage/yangwenhao/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10059/Ez0-hbMQs28/00002.wav -r 8000 /home/storage/yangwenhao/dataset/voxceleb1_8k/voxceleb1_wav/vox1_dev_wav/wav/id10059/Ez0-hbMQs28/00002.wav
+  sox -V1 /home/storage/yangwenhao/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10059/Ez0-hbMQs28/00002.wav -r 8000 /home/storage/yangwenhao/dataset/voxceleb1_8k/voxceleb1_wav/vox1_dev_wav/wav/id10059/Ez0-hbMQs28/00002.wav
 
-sox -V1 /home/storage/yangwenhao/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10059/Kg8KZ0OvfBo/00006.wav -r 8000 /home/storage/yangwenhao/dataset/voxceleb1_8k/voxceleb1_wav/vox1_dev_wav/wav/id10059/Kg8KZ0OvfBo/00006.wav
+  sox -V1 /home/storage/yangwenhao/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10059/Kg8KZ0OvfBo/00006.wav -r 8000 /home/storage/yangwenhao/dataset/voxceleb1_8k/voxceleb1_wav/vox1_dev_wav/wav/id10059/Kg8KZ0OvfBo/00006.wav
 
-sox -V1 /home/storage/yangwenhao/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10059/Kg8KZ0OvfBo/00002.wav -r 8000 /home/storage/yangwenhao/dataset/voxceleb1_8k/voxceleb1_wav/vox1_dev_wav/wav/id10059/Kg8KZ0OvfBo/00002.wav
+  sox -V1 /home/storage/yangwenhao/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10059/Kg8KZ0OvfBo/00002.wav -r 8000 /home/storage/yangwenhao/dataset/voxceleb1_8k/voxceleb1_wav/vox1_dev_wav/wav/id10059/Kg8KZ0OvfBo/00002.wav
+fi
+
+if [ $stage -le 60 ]; then
+
+  for name in dev_aug_fb40 ; do
+    steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
+      --nj 14 --cmd "$train_cmd" \
+      data/vox1/klfb/${name} data/vox1/klfb/${name}/log data/vox1/klfb/fbank/${name}
+    utils/fix_data_dir.sh data/vox1/klfb/${name}
+  done
+fi
