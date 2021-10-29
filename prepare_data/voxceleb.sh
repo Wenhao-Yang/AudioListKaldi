@@ -290,7 +290,7 @@ fi
 
 if [ $stage -le 60 ]; then
 
-  for name in dev_fb40 ; do # dev_aug_fb40
+  for name in dev_vol_fb40 ; do # dev_aug_fb40
     steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
       --nj 14 --cmd "$train_cmd" \
       data/vox1/klfb/${name} data/vox1/klfb/${name}/log data/vox1/klfb/fbank/${name}
