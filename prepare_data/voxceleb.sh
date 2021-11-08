@@ -276,6 +276,9 @@ if [ $stage -le 50 ]; then
       --trials trials_2w
 
   python local/split_trials_dir.py --data-dir data/vox1/pyfb/dev_fb24 --out-dir data/vox1/pyfb/dev_fb24/trials_dir --trials trials_2w
+
+  python local/split_trials_dir.py --data-dir data/vox1/klfb/dev_fb40 --out-dir data/vox1/klfb/dev_fb40/trials_dir --trials trials_2w
+
   python local/split_trials_dir.py --data-dir data/vox1/spect/dev_log --out-dir data/vox1/spect/dev_log/trials_dir --trials trials_2w
 
 
@@ -296,4 +299,24 @@ if [ $stage -le 60 ]; then
       data/vox1/klfb/${name} data/vox1/klfb/${name}/log data/vox1/klfb/fbank/${name}
     utils/fix_data_dir.sh data/vox1/klfb/${name}
   done
+#  wav-reverberate --shift-output=true --additive-signals='wav-reverberate --duration=5.59 "/home/storage/yangwenhao/dataset/musan/music/jamendo/music-jamendo-0098.wav" - |' --start-times='0' --snrs='8' /home/yangwenhao/storage/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10001/1zcIwhmdeo4/00003.wav - |
+#
+#  wav-reverberate --shift-output=true --additive-signals='wav-reverberate --duration=5.59 "/home/yangwenhao/storage/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10002/0_laIeN-Q44/00001.wav" - |' --start-times='0' --snrs='0' /home/yangwenhao/storage/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10001/1zcIwhmdeo4/00003.wav /home/work2020/yangwenhao/project/lstm_speaker_verification/data/vox1/dev_aug_spk/wavs/id10001-1zcIwhmdeo4-00003-id10002-0_laIeN-Q44-00001.wav
+#
+#  wav-reverberate --shift-output=true --additive-signals='wav-reverberate --duration=5.59 "/home/yangwenhao/storage/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10003/5ablueV_1tw/00001.wav" - |' --start-times='0' --snrs='0' /home/yangwenhao/storage/dataset/voxceleb1/voxceleb1_wav/vox1_dev_wav/wav/id10001/1zcIwhmdeo4/00003.wav /home/work2020/yangwenhao/project/lstm_speaker_verification/data/vox1/dev_aug_spk/wavs/id10001-1zcIwhmdeo4-00003-id10003-5ablueV_1tw-00001.wav
+#
+#  id10001-id10002-001 /home/work2020/yangwenhao/project/lstm_speaker_verification/data/vox1/dev_aug_spk/wavs/id10001-1zcIwhmdeo4-00003-id10002-0_laIeN-Q44-00001.wav
+#  id10001-id10003-001 /home/work2020/yangwenhao/project/lstm_speaker_verification/data/vox1/dev_aug_spk/wavs/id10001-1zcIwhmdeo4-00003-id10003-5ablueV_1tw-00001.wav
+#
+#  id10001-id10002-001 id10001-id10002
+#  id10001-id10003-001 id10001-id10003
+#
+#  steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
+#      --nj 1 data/vox1/dev_aug_spk data/vox1/dev_aug_spk/log data/vox1/dev_aug_spk/fbank
+
+steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
+      --nj 12 data/vox1/klfb/test_fb40 data/vox1/klfb/test_fb40/log data/vox1/klfb/fbank/test_fb40
+
+
+
 fi

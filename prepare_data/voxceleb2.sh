@@ -35,7 +35,7 @@ mfccdir=${vox2_out_dir}/mfcc
 fbankdir=${vox2_out_dir}/fbank
 vaddir=${vox2_out_dir}/vad
 
-stage=3
+stage=5
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -108,5 +108,23 @@ if [ $stage -le 4 ]; then
     # Todo: Is there any better VAD solutioin?
 #  sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${vox1_org_dir}/test exp/make_vad ${vox1_org_dir}/vad
 #  utils/fix_data_dir.sh ${vox1_org_dir}/test
+  steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
+      --nj 12 data/vox1/klfb/test_fb40 data/vox1/klfb/test_fb40/log data/vox1/klfb/fbank/test_fb40
 
 fi
+
+if [ $stage -le 5 ]; then
+  # Make Spectrogram for aug set
+  dataset=vox2
+  echo "===================              Fbank               ========================"
+  for name in dev ; do
+    steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
+      --nj 12 data/${dataset}/klfb/${name}_fb40 data/${dataset}/klfb/${name}_fb40/log data/${dataset}/klfb/fbank/${name}_fb40
+  done
+    # Todo: Is there any better VAD solutioin?
+#  sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${vox1_org_dir}/test exp/make_vad ${vox1_org_dir}/vad
+#  utils/fix_data_dir.sh ${vox1_org_dir}/test
+
+
+fi
+
