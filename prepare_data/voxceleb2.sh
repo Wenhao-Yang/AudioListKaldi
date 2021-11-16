@@ -125,6 +125,10 @@ if [ $stage -le 5 ]; then
 #  sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${vox1_org_dir}/test exp/make_vad ${vox1_org_dir}/vad
 #  utils/fix_data_dir.sh ${vox1_org_dir}/test
 
+#  name=dev_fb40
+#  python local/split_trials_dir.py --data-dir data/vox2/klfb/${name} \
+#    --out-dir data/vox2/klfb/${name}/trials_dir \
+#    --trials trials_2w
 
 fi
 
