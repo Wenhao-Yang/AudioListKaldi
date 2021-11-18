@@ -25,6 +25,8 @@ parser = argparse.ArgumentParser(description='Prepare scp file for cn-celeb')
 # options for vox1
 parser.add_argument('--dataset-dir', type=str, default='/home/yangwenhao/storage/dataset/CN-Celeb',
                     help='path to dataset')
+parser.add_argument('--dataset-dir-2', type=str, default='/home/work2020/yangwenhao/dataset/CNCELEB2',
+                    help='path to dataset')
 parser.add_argument('--output-dir', type=str, default='data/cnceleb',
                     help='path to dataset')
 
@@ -49,7 +51,6 @@ if __name__ == '__main__':
     cn_npy = str(out_dir_path) + '/cn.npy'
 
     try:
-
         if not os.path.exists(cn_npy):
             raise FileExistsError
 
@@ -169,7 +170,8 @@ if __name__ == '__main__':
     test = test_lst_f.readlines()
     for idx, utt_path in enumerate(test):
         path = utt_path.rstrip('.wav').split('/')  # test/id00999-singing-02-006.wav
-        uid = '-'.join(path).rstrip('.wav\n')  # test-id00999-singing-02-006.wav
+        # uid = '-'.join(path).rstrip('.wav\n')  # test-id00999-singing-02-006.wav
+        uid = path[-1].rstrip('.wav\n')  # id00999-singing-02-006.wav
 
         dom = uid.split('-')[2]
         spk_id = uid.split('-')[1]
@@ -208,6 +210,55 @@ if __name__ == '__main__':
 
     with open(args.output_dir + '/eval/trials', 'w') as f:
         f.writelines(trials_uid)
+
+    data_dirs = ['/'.join((args.dataset_dir_2, 'data1')),
+                 '/'.join((args.dataset_dir_2, 'data2'))]
+
+    cn_lst = []
+    for data_dir in data_dirs:
+        data_dir_path = pathlib.Path(data_dir)
+        if data_dir_path.exists():
+            spks_dir = [x for x in data_dir_path.iterdir() if x.is_dir()]
+            for spk in spks_dir:
+                utts = [x for x in spk.iterdir() if x.is_file() and x.suffix == '.wav']
+                for utt in utts:
+                    utt_dic = {}
+                    uid = spk.name + '-' + utt.name.rstrip('.wav')
+                    utt_dic['uid'] = uid
+
+                    # dom.add(uid.split('-')[1])
+                    utt_dic['path'] = str(utt)
+                    utt_dic['spk'] = spk.name
+
+                    cn_lst.append(utt_dic)
+
+    if len(cn_lst) > 0:
+        dev_dir_path = pathlib.Path(args.output_dir + '/dev2')
+        if not dev_dir_path.exists():
+            os.makedirs(str(dev_dir_path))
+
+        wav_scp = []
+        utt2spk = []
+        utt2dom = []
+
+        for utt in cn_lst:
+            wav_scp.append(utt['uid'] + ' ' + utt['path'] + '\n')
+            u_dom = utt['uid'].split('-')[1]
+            utt2dom.append(utt['uid'] + ' ' + u_dom + '\n')
+            utt2spk.append(utt['uid'] + ' ' + utt['spk'] + '\n')
+
+        wav_scp.sort()
+        utt2spk.sort()
+        utt2dom.sort()
+
+        dev2_dir = args.output_dir + '/dev2'
+        with open(dev2_dir + '/wav.scp', 'w') as f1, \
+                open(dev2_dir + '/utt2spk', 'w') as f2, \
+                open(dev2_dir + '/utt2dom', 'w') as f3:
+
+            f1.writelines(wav_scp)
+            f2.writelines(utt2spk)
+            f3.writelines(utt2dom)
 
     print('Saving trials in %s' % (args.output_dir + '/eval/trials'))
     print('Preparing Completed!')

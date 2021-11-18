@@ -35,7 +35,7 @@ mfccdir=${out_dir}/mfcc
 fbankdir=${out_dir}/fbank
 vaddir=${out_dir}/vad
 
-stage=10
+stage=0
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
