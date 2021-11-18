@@ -164,7 +164,7 @@ fi
 
 if [ $stage -le 10 ]; then
   dataset=cnceleb
-  for name in test_fb40 ; do # dev_aug_fb40
+  for name in dev2_fb40 ; do # dev_aug_fb40 test_fb40
     steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
       --nj 12 --cmd "$train_cmd" \
       data/${dataset}/klfb/${name} data/${dataset}/klfb/${name}/log data/${dataset}/klfb/fbank/${name}
