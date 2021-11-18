@@ -85,7 +85,7 @@ if __name__ == "__main__":
                         pairs.add(pair_str)
                         if len(pairs) > args.max_pairs and positive > args.max_pairs * 0.2:
                             break
-            positive_percent += ' {:>5.2f}'.format(positive / len(pairs))
+            positive_percent += ' {:>5.2f}'.format(100 * positive / len(pairs))
             with open(os.path.join(args.out_dir, "trials_" + subset), 'w') as f:
                 for l in pairs:
                     f.write(l)
