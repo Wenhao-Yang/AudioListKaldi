@@ -61,7 +61,7 @@ if __name__ == "__main__":
     for dom_enroll in dom2utt:
         positive_percent = '{:<20s}'.format(dom_enroll + ':')
         for dom_eval in dom2utt:
-            subset = dom_enroll + '_' + dom_eval
+            subset = dom_enroll[:4] + '_' + dom_eval[:4]
             pairs = set()
             enroll_utts = dom2utt[dom_enroll].copy()
             eval_utts = dom2utt[dom_eval].copy()
