@@ -37,9 +37,9 @@ if __name__ == "__main__":
             utt2dom[uid] = udom
 
             if udom in dom2utt:
-                dom2utt.append(uid)
+                dom2utt[udom].append(uid)
             else:
-                dom2utt = [uid]
+                dom2utt[udom] = [uid]
 
     utt2spk = {}
     spk2utt = {}
@@ -49,9 +49,9 @@ if __name__ == "__main__":
             utt2spk[uid] = sid
 
             if sid in spk2utt:
-                spk2utt.append(uid)
+                spk2utt[sid].append(uid)
             else:
-                spk2utt = [uid]
+                spk2utt[sid] = [uid]
 
     if not os.path.exists(args.out_dir):
         os.makedirs(args.out_dir)
