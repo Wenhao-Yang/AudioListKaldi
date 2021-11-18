@@ -59,7 +59,7 @@ if __name__ == "__main__":
     num_trials = 0
     print('')
     for dom_enroll in dom2utt:
-        positive_percent = dom_enroll + ':'
+        positive_percent = '{:<20s}'.format(dom_enroll + ':')
         for dom_eval in dom2utt:
             subset = dom_enroll + '_' + dom_eval
             pairs = set()
@@ -85,7 +85,7 @@ if __name__ == "__main__":
                         pairs.add(pair_str)
                         if len(pairs) > args.max_pairs and positive > args.max_pairs * 0.2:
                             break
-            positive_percent += '{:>5.2f}'.format(positive / len(pairs))
+            positive_percent += ' {:>5.2f}'.format(positive / len(pairs))
             with open(os.path.join(args.out_dir, "trials_" + subset), 'w') as f:
                 for l in pairs:
                     f.write(l)
