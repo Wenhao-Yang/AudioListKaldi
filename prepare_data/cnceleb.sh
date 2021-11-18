@@ -35,7 +35,7 @@ mfccdir=${out_dir}/mfcc
 fbankdir=${out_dir}/fbank
 vaddir=${out_dir}/vad
 
-stage=0
+stage=10
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -46,7 +46,7 @@ if [ $stage -le 0 ]; then
 
   utils/combine_data.sh ${test_dir} ${out_dir}/enroll ${out_dir}/eval
 
-  for name in dev test ; do
+  for name in dev test dev2 ; do
     utils/fix_data_dir.sh ${out_dir}/${name}
     utils/validate_data_dir.sh --no-text --no-feats ${out_dir}/${name}
   done

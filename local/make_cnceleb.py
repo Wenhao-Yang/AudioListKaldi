@@ -260,5 +260,8 @@ if __name__ == '__main__':
             f2.writelines(utt2spk)
             f3.writelines(utt2dom)
 
+        print('\nFor dev2:\n\twav.scp and utt2spk write to %s/dev2 .' % args.output_dir)
+        print('\tThere are %d in dev' % len(wav_scp))
+
     print('Saving trials in %s' % (args.output_dir + '/eval/trials'))
     print('Preparing Completed!')
