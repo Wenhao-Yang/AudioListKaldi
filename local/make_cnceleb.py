@@ -174,7 +174,7 @@ if __name__ == '__main__':
         uid = path[-1].rstrip('.wav\n')  # id00999-singing-02-006.wav
 
         dom = uid.split('-')[2]
-        spk_id = uid.split('-')[1]
+        spk_id = uid.split('-')[0]
         path = args.dataset_dir + '/eval/' + utt_path
         wav_scp.append(uid + ' ' + path)
         utt2dom.append(uid + ' ' + dom + '\n')
