@@ -204,7 +204,7 @@ if __name__ == '__main__':
         enroll_uid, test_path, target = utt_pair.split(' ')  # id00800-enroll test/id00800-singing-01-005.wav 1
 
         path = test_path.rstrip('.wav').split('/')  # test/id00999-singing-02-006.wav
-        test_uid = '-'.join(path)  # test-id00999-singing-02-006.wav
+        test_uid = path[1]  # test-id00999-singing-02-006.wav
 
         trials_uid.append(enroll_uid + ' ' + test_uid + ' ' + target)
 
