@@ -13,8 +13,10 @@ import os
 import argparse
 import random
 from itertools import combinations, permutations
-
 import numpy as np
+
+random.seed(123456)
+np.random.seed(123456)
 
 if __name__ == "__main__":
 
