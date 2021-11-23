@@ -40,7 +40,7 @@ mfccdir=${out_dir}/mfcc
 fbankdir=${out_dir}/fbank
 vaddir=${out_dir}/vad
 
-stage=0
+stage=10
 
 waited=0
 while [ `ps 113458 | wc -l` -eq 2 ]; do
@@ -65,7 +65,7 @@ if [ $stage -le 0 ]; then
   done
 fi
 
-stage=100
+#stage=100
 if [ $stage -le 5 ]; then
   echo "=====================================Copy Compress========================================"
   # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
@@ -114,8 +114,28 @@ if [ $stage -le 3 ]; then
   done
 fi
 
-if [ $stage -le 3 ]; then
+if [ $stage -le 4 ]; then
   utils/combine_data.sh ${sitw_out_dir}/${name} ${vox1_train_dir}_reverb ${vox1_train_dir}_noise ${vox1_train_dir}_music ${vox1_train_dir}_babble
+fi
+
+if [ $stage -le 10 ]; then
+  dataset=aishell2
+  for name in dev_fb40 test_fb40 ; do # dev_aug_fb40 test_fb40
+    steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
+      --nj 12 --cmd "$train_cmd" \
+      data/${dataset}/klfb/${name} data/${dataset}/klfb/${name}/log data/${dataset}/klfb/fbank/${name}
+    utils/fix_data_dir.sh data/${dataset}/klfb/${name}
+  done
+
+fi
+
+if [ $stage -le 11 ]; then
+  name=fb40
+  dataset=aishell2
+  feat=klfb
+  python local/split_trials_dir.py --data-dir data/${dataset}/${feat}/dev_${name} \
+    --out-dir data/${dataset}/${feat}/dev_${name}/trials_dir \
+    --trials trials_2w
 fi
 
 #
