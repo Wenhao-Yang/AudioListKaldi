@@ -66,7 +66,7 @@ if __name__ == "__main__":
     for i in range(len(domains)):
         dom_enroll = domains[i]
         positive_percent = '{:<20s}'.format(dom_enroll + ':')
-        positive_percent += i *  "     "
+        positive_percent += i *  "      "
 
         for j in range(i, len(domains)):
             dom_eval = domains[j]
