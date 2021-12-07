@@ -81,6 +81,8 @@ if __name__ == "__main__":
                             pair_str += 'target\n'
                             positive += 1
                         else:
+                            if negative > (args.max_pairs*2):
+                                continue
                             pair_str += 'nontarget\n'
                             negative += 1
 
