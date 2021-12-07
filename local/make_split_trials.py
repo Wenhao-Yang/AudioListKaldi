@@ -71,7 +71,7 @@ if __name__ == "__main__":
         for j in range(i, len(domains)):
             dom_eval = domains[j]
             # subset = dom_enroll[:4] + '_' + dom_eval[:4]
-            subset = dom_enroll[:3] + dom_eval[:3]
+            subset = dom_enroll[:2] + dom_eval[:2]
             pairs = set()
             enroll_utts = dom2utt[dom_enroll].copy()
             eval_utts = dom2utt[dom_eval].copy()
