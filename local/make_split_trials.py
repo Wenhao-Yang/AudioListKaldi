@@ -60,9 +60,16 @@ if __name__ == "__main__":
 
     num_trials = 0
     print('')
-    for dom_enroll in dom2utt:
+    domains = list(dom2utt.keys())
+    domains.sort()
+
+    for i in range(len(domains)):
+        dom_enroll = domains[i]
         positive_percent = '{:<20s}'.format(dom_enroll + ':')
-        for dom_eval in dom2utt:
+        positive_percent += i *  "     "
+
+        for j in range(i, len(domains)):
+            dom_eval = domains[j]
             subset = dom_enroll[:4] + '_' + dom_eval[:4]
             pairs = set()
             enroll_utts = dom2utt[dom_enroll].copy()
