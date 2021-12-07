@@ -81,7 +81,7 @@ if __name__ == "__main__":
             positive = 0
             negative = 0
             for enroll_utt in enroll_utts:
-                for eval_utt in enroll_utts:
+                for eval_utt in eval_utts:
                     if enroll_utt != eval_utt:
                         pair_str = enroll_utt + ' ' + eval_utt + ' '
 
@@ -89,14 +89,17 @@ if __name__ == "__main__":
                             pair_str += 'target\n'
                             positive += 1
                         else:
-                            if negative > (args.max_pairs*2):
+                            if negative > (args.max_pairs*0.8):
                                 continue
+
                             pair_str += 'nontarget\n'
                             negative += 1
 
                         pairs.add(pair_str)
-                        if len(pairs) > args.max_pairs and positive > args.max_pairs * 0.2:
+
+                        if positive > args.max_pairs * 0.2 and len(pairs) > args.max_pairs:
                             break
+
             positive_percent += ' {:>5.2f}'.format(100 * positive / len(pairs))
             with open(os.path.join(args.out_dir, "trials_" + subset), 'w') as f:
                 for l in pairs:
