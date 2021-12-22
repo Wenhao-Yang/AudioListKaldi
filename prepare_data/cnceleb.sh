@@ -35,7 +35,7 @@ mfccdir=${out_dir}/mfcc
 fbankdir=${out_dir}/fbank
 vaddir=${out_dir}/vad
 
-stage=0
+stage=12
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -181,4 +181,29 @@ if [ $stage -le 11 ]; then
   python local/split_trials_dir.py --data-dir data/${dataset}/${feat}/dev_${name} \
     --out-dir data/${dataset}/${feat}/dev_${name}/trials_dir \
     --trials trials_2w
+fi
+
+if [ $stage -le 12 ]; then
+  # Make Spectrogram for aug set
+  name=fb40
+  dataset=cnceleb
+  feat=klsp
+  echo "===================              Spectrogram               ========================"
+  for name in dev dev2 test; do
+    steps/make_spect.sh --write-utt2num-frames true --spect-config conf/spect_161.conf \
+      --nj 14 --cmd "$train_cmd" \
+      data/${dataset}/klsp/${name} data/${dataset}/klsp/${name}/log data/${dataset}/klsp/klsp/${name}
+    utils/fix_data_dir.sh data/${dataset}/klsp/${name}
+  done
+
+  python local/split_trials_dir.py --data-dir data/${dataset}/${feat}/dev \
+    --out-dir data/${dataset}/${feat}/dev/trials_dir \
+    --trials trials_2w
+
+    # Todo: Is there any better VAD solutioin?
+#  sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${vox1_org_dir}/test exp/make_vad ${vox1_org_dir}/vad
+#  utils/fix_data_dir.sh ${vox1_org_dir}/test
+  # steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
+  #     --nj 12 data/vox1/klfb/test_fb40 data/vox1/klfb/test_fb40/log data/vox1/klfb/fbank/test_fb40
+
 fi
