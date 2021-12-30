@@ -49,7 +49,7 @@ mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=60
+stage=61
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -316,6 +316,30 @@ if [ $stage -le 60 ]; then
 
 steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
       --nj 12 data/vox1/klfb/test_fb40 data/vox1/klfb/test_fb40/log data/vox1/klfb/fbank/test_fb40
+
+
+
+fi
+if [ $stage -le 61 ]; then
+
+  for dim in 24 64; do # dev_aug_fb40
+    name=dev_fb${dim}
+    steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_${dim}.conf \
+      --nj 14 --cmd "$train_cmd" \
+      data/vox1/klfb/${name} data/vox1/klfb/${name}/log data/vox1/klfb/fbank/${name}
+    utils/fix_data_dir.sh data/vox1/klfb/${name}
+  done
+
+  for dim in 24 64; do # dev_aug_fb40
+    name=test_fb${dim}
+    steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_${dim}.conf \
+      --nj 14 --cmd "$train_cmd" \
+      data/vox1/klfb/${name} data/vox1/klfb/${name}/log data/vox1/klfb/fbank/${name}
+    utils/fix_data_dir.sh data/vox1/klfb/${name}
+  done
+
+# steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
+#       --nj 12 data/vox1/klfb/test_fb40 data/vox1/klfb/test_fb40/log data/vox1/klfb/fbank/test_fb40
 
 
 
