@@ -49,7 +49,7 @@ mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=61
+stage=62
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -338,9 +338,19 @@ if [ $stage -le 61 ]; then
     utils/fix_data_dir.sh data/vox1/klfb/${name}
   done
 
+
+
 # steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
 #       --nj 12 data/vox1/klfb/test_fb40 data/vox1/klfb/test_fb40/log data/vox1/klfb/fbank/test_fb40
+fi
 
-
-
+if [ $stage -le 62 ]; then
+  for dim in 24 64 80; do # dev_aug_fb40
+    name=fb${dim}
+    feat=klfb
+    dataset=vox1
+    python local/split_trials_dir.py --data-dir data/${dataset}/${feat}/dev_${name} \
+      --out-dir data/${dataset}/${feat}/dev_${name}/trials_dir \
+      --trials trials_2w
+  done
 fi
