@@ -35,7 +35,7 @@ mfccdir=${out_dir}/mfcc
 fbankdir=${out_dir}/fbank
 vaddir=${out_dir}/vad
 
-stage=10
+stage=11
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -176,12 +176,13 @@ if [ $stage -le 10 ]; then
 fi
 
 if [ $stage -le 11 ]; then
-  name=fb40
+  name=fb24_cut
   dataset=cnceleb
   feat=klfb
   python local/split_trials_dir.py --data-dir data/${dataset}/${feat}/dev_${name} \
     --out-dir data/${dataset}/${feat}/dev_${name}/trials_dir \
     --trials trials_2w
+  exit
 fi
 
 if [ $stage -le 12 ]; then
