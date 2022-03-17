@@ -49,7 +49,7 @@ mfccdir=${vox1_out_dir}/mfcc
 fbankdir=${vox1_out_dir}/fbank
 vaddir=${vox1_out_dir}/vad
 
-stage=62
+stage=1
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -70,15 +70,17 @@ fi
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
-  for name in ${vox1_train_dir} ${vox1_test_dir}; do
-    steps/make_fbank.sh --write-utt2num-frames true --fbank_config ${fbank_config} --nj 12 --cmd "$train_cmd" \
-        ${name} exp/make_fbank $fbankdir
-    utils/fix_data_dir.sh ${name}
+#  for name in ${vox1_train_dir} ${vox1_test_dir}; do
+  for name in dev_fb40  test_fb40; do
+#    steps/make_fbank.sh --write-utt2num-frames true --fbank_config ${fbank_config} --nj 12 --cmd "$train_cmd" \
+#        ${name} exp/make_fbank $fbankdir
+#    utils/fix_data_dir.sh ${name}
 
     # Todo: Is there any better VAD solutioin?
-    sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${name} exp/make_vad $vaddir
-    utils/fix_data_dir.sh ${name}
+    sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" data/vox1/klfb/${name} exp/make_vad data/vox1/klfb/${name}/vad
+#    utils/fix_data_dir.sh ${name}
   done
+  exit
 
 
 fi
