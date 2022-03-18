@@ -35,7 +35,7 @@ mfccdir=${out_dir}/mfcc
 fbankdir=${out_dir}/fbank
 vaddir=${out_dir}/vad
 
-stage=11
+stage=10
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -165,7 +165,7 @@ fi
 
 if [ $stage -le 10 ]; then
   dataset=cnceleb
-  for name in dev_fb24_cut test_fb40_cut; do # dev_aug_fb40 test_fb40
+  for name in test_fb20_cut; do # dev_aug_fb40 test_fb40
      steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_24_cnc.conf \
        --nj 12 --cmd "$train_cmd" \
        data/${dataset}/klfb/${name} data/${dataset}/klfb/${name}/log data/${dataset}/klfb/fbank/${name}
