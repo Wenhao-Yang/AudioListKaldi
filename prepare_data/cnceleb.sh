@@ -35,7 +35,7 @@ mfccdir=${out_dir}/mfcc
 fbankdir=${out_dir}/fbank
 vaddir=${out_dir}/vad
 
-stage=10
+stage=1
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -59,14 +59,17 @@ fi
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
-  for name in dev enroll test ; do
+  cnceleb_out_dir=data/cnceleb/subtools
+
+  for name in eval_enroll eval_test ; do
     steps/make_fbank.sh --write-utt2num-frames true --fbank_config ${fbank_config} --nj 12 --cmd "$train_cmd" \
-        ${cnceleb_out_dir}/${name} exp/make_fbank $fbankdir
+        ${cnceleb_out_dir}/${name} exp/make_fbank ${cnceleb_out_dir}/${name}/fbank
     utils/fix_data_dir.sh ${cnceleb_out_dir}/${name}
 
-    sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${cnceleb_out_dir}/${name} exp/make_vad $vaddir
+    sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${cnceleb_out_dir}/${name} exp/make_vad ${cnceleb_out_dir}/${name}/vad
     utils/fix_data_dir.sh ${cnceleb_out_dir}/${name}
   done
+  exit
 fi
 
 #if [ $stage -le 2 ]; then
