@@ -35,7 +35,7 @@ mfccdir=${out_dir}/mfcc
 fbankdir=${out_dir}/fbank
 vaddir=${out_dir}/vad
 
-stage=1
+stage=3
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -89,11 +89,16 @@ if [ $stage -le 3 ]; then
   # This script applies CMVN and removes nonspeech frames.  Note that this is somewhat
   # wasteful, as it roughly doubles the amount of training data on disk.  After
   # creating training examples, this can be removed.
-  for name in dev enroll test ; do
-    local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns true --nj 12 --cmd "$train_cmd" ${cnceleb_out_dir}/${name} ${cnceleb_out_dir}/${name}_cmvn ${cnceleb_out_dir}/${name}/feats_cmvn
+  cnceleb_out_dir=data/cnceleb/subtools
+
+#  for name in dev enroll test ; do
+  for name in dev_fb40 eval_enroll eval_test ; do
+
+    local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns true --nj 12 --cmd "$train_cmd" ${cnceleb_out_dir}/${name} ${cnceleb_out_dir}/${name}/cmvn_dir ${cnceleb_out_dir}/${name}/feats_cmvn
 
     utils/fix_data_dir.sh ${cnceleb_out_dir}/${name}_cmvn
   done
+  exit
 fi
 
 if [ $stage -le 4 ]; then
