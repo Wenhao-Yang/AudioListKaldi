@@ -96,7 +96,7 @@ if [ $stage -le 3 ]; then
 
     local/nnet3/xvector/prepare_feats_for_cmvn.sh --cmvns true --nj 12 --cmd "$train_cmd" ${cnceleb_out_dir}/${name} ${cnceleb_out_dir}/${name}/cmvn_dir ${cnceleb_out_dir}/${name}/feats_cmvn
 
-    utils/fix_data_dir.sh ${cnceleb_out_dir}/${name}_cmvn
+    utils/fix_data_dir.sh ${cnceleb_out_dir}/${name}
   done
   exit
 fi
