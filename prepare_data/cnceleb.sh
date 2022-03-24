@@ -59,6 +59,7 @@ fi
 if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
+  fbank_config=conf/fbank_40.conf
   cnceleb_out_dir=data/cnceleb/subtools
 
   for name in eval_enroll eval_test ; do
