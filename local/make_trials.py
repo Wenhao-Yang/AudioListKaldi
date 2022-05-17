@@ -44,7 +44,7 @@ for data_dir in data_roots:
     assert os.path.exists(utt2spk)
 
     utt2num_frames = data_dir + '/utt2num_frames'
-    valid_utts = []
+    valid_utts = set([])
     ignore_utts = 0
     if not os.path.exists(utt2num_frames):
         print('utt2num_frames select is skipped.')
@@ -53,7 +53,7 @@ for data_dir in data_roots:
             for l in f.readlines():
                 uid, num_frames = l.split()
                 if int(num_frames) > MIN_FRAMES:
-                    valid_utts.append(uid)
+                    valid_utts.add(uid)
                 else:
                     ignore_utts += 1
         print('%d of utterances are ignored, and % d of utterances are valid.' % (ignore_utts, len(valid_utts)))
