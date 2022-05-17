@@ -8,6 +8,10 @@
 @File: make_trials.py
 @Time: 2020/3/29 4:14 PM
 @Overview:
+
+make trials from data dir
+
+# remove too short utterances
 """
 
 import os
@@ -31,12 +35,28 @@ print('Current path: ' + os.getcwd())
 assert len(data_roots)>0
 print("Dirs are: " + '; '.join(data_roots))
 
+MIN_FRAMES = 200
 
 for data_dir in data_roots:
-    spk2utt = data_dir+'/spk2utt'
+    spk2utt = data_dir + '/spk2utt'
     assert os.path.exists(spk2utt)
     utt2spk = data_dir + '/utt2spk'
     assert os.path.exists(utt2spk)
+
+    utt2num_frames = data_dir + '/utt2num_frames'
+    valid_utts = []
+    ignore_utts = 0
+    if not os.path.exists(utt2num_frames):
+        print('utt2num_frames select is skipped.')
+    else:
+        with open(utt2num_frames, 'r') as f:
+            for l in f.readlines():
+                uid, num_frames = l.split()
+                if int(num_frames) > MIN_FRAMES:
+                    valid_utts.append(uid)
+                else:
+                    ignore_utts += 1
+        print('%d of utterances are ignored, and % d of utterances are valid.' % (ignore_utts, len(valid_utts)))
 
     spk2utt_dict = {}
     with open(spk2utt, 'r') as f:
@@ -44,7 +64,7 @@ for data_dir in data_roots:
         for l in lines:
             lst = l.split()
             spkid = lst[0]
-            spk2utt_dict[spkid]=lst[1:]
+            spk2utt_dict[spkid] = lst[1:]
 
     utt2spk_dict = {}
     with open(utt2spk, 'r') as f:
@@ -81,28 +101,33 @@ for data_dir in data_roots:
             spk_posi = 0
             for i in range(num_utt):
                 for j in range(i+1, num_utt):
-                    if spk_posi>=int(0.7*num_pair/len(spks)):
+                    if spk_posi >= int(0.7 * num_pair / len(spks)):
                         break
-                    this_line = ' '.join((spk2utt_dict[spk][i], spk2utt_dict[spk][j], 'target\n'))
-                    this_line_r = ' '.join((spk2utt_dict[spk][j], spk2utt_dict[spk][i], 'target\n'))
-                    # f.write(this_line)
-                    if this_line_r not in positive_pairs:
-                        positive_pairs.add(this_line)
-                        spk_posi+=1
+
+                    if spk2utt_dict[spk][i] in valid_utts and spk2utt_dict[spk][j] in valid_utts:
+
+                        this_line = ' '.join((spk2utt_dict[spk][i], spk2utt_dict[spk][j], 'target\n'))
+                        this_line_r = ' '.join((spk2utt_dict[spk][j], spk2utt_dict[spk][i], 'target\n'))
+                        # f.write(this_line)
+                        if this_line_r not in positive_pairs:
+                            positive_pairs.add(this_line)
+                            spk_posi += 1
 
             for i in range(int(0.75*num_pair/len(spks))):
                 this_uid = np.random.choice(spk2utt_dict[spk])
                 other_spk = np.random.choice(other_spks)
                 other_uid = np.random.choice(spk2utt_dict[other_spk])
 
-                this_line = ' '.join((this_uid, other_uid, 'nontarget\n'))
-                this_line_r = ' '.join((other_uid, this_uid, 'nontarget\n'))
-                # f.write(this_line)
-                if len(positive_pairs) < 10 * num_pair:
-                    if this_line_r not in negative_pairs:
-                        negative_pairs.add(this_line)
-                else:
-                    break
+                if this_uid in valid_utts and other_uid in valid_utts:
+
+                    this_line = ' '.join((this_uid, other_uid, 'nontarget\n'))
+                    this_line_r = ' '.join((other_uid, this_uid, 'nontarget\n'))
+                    # f.write(this_line)
+                    if len(positive_pairs) < 10 * num_pair:
+                        if this_line_r not in negative_pairs:
+                            negative_pairs.add(this_line)
+                    else:
+                        break
                 # trials.append((this_line, 0))
                 # pairs += 1
 
@@ -127,4 +152,4 @@ for data_dir in data_roots:
             f.write(l)
 
         print('Generate %d pairs for set: %s, in which %d of them are positive pairs.' % (
-            num_pair, data_dir, num_positive))
+            len(positive_pairs), data_dir, num_positive))
