@@ -113,7 +113,7 @@ for data_dir in data_roots:
                             positive_pairs.add(this_line)
                             spk_posi += 1
 
-            for i in range(int(0.75*num_pair/len(spks))):
+            for i in range(int(num_pair / len(spks))):
                 this_uid = np.random.choice(spk2utt_dict[spk])
                 other_spk = np.random.choice(other_spks)
                 other_uid = np.random.choice(spk2utt_dict[other_spk])
@@ -123,7 +123,7 @@ for data_dir in data_roots:
                     this_line = ' '.join((this_uid, other_uid, 'nontarget\n'))
                     this_line_r = ' '.join((other_uid, this_uid, 'nontarget\n'))
                     # f.write(this_line)
-                    if len(positive_pairs) < 10 * num_pair:
+                    if len(negative_pairs) < 10 * num_pair:
                         if this_line_r not in negative_pairs:
                             negative_pairs.add(this_line)
                     else:
