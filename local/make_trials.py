@@ -123,9 +123,8 @@ for data_dir in data_roots:
                     this_line = ' '.join((this_uid, other_uid, 'nontarget\n'))
                     this_line_r = ' '.join((other_uid, this_uid, 'nontarget\n'))
                     # f.write(this_line)
-                    if len(negative_pairs) < 10 * num_pair:
-                        if this_line_r not in negative_pairs:
-                            negative_pairs.add(this_line)
+                    if len(negative_pairs) < 10 * num_pair and this_line_r not in negative_pairs:
+                        negative_pairs.add(this_line)
                     else:
                         break
                 # trials.append((this_line, 0))
