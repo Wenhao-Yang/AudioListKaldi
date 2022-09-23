@@ -10,7 +10,7 @@
 # """
 
 
-stage=0
+stage=10
 if [ $stage -le 0 ]; then
   ls *.tar.gz | xargs -n1 tar xzvf
 fi
