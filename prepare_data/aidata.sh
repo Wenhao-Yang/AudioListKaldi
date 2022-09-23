@@ -24,3 +24,13 @@ if [ $stage -le 5 ]; then
 
   ./local/resample_data_dir.sh /home/work2020/yangwenhao/dataset/aidatatang_200zh/aidatatang_200zh/corpus/dev 8000 data/aidata/dev data/aidata/dev_8k
 fi
+
+if [ $stage -le 10 ]; then
+
+  for dim in 40; do # dev_aug_fb40
+    name=dev_fb${dim}
+    steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_${dim}.conf \
+      --nj 14 --cmd "$train_cmd" \
+      data/aidata/klfb/${name} data/aidata/klfb/${name}/log data/aidata/klfb/fbank/${name}
+    utils/fix_data_dir.sh data/aidata/klfb/${name}
+  done
