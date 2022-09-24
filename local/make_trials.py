@@ -113,7 +113,7 @@ for data_dir in data_roots:
                             positive_pairs.add(this_line)
                             spk_posi += 1
 
-            for i in range(int(num_pair / len(spks))):
+            for i in range(int(2 * num_pair / len(spks))):
                 this_uid = np.random.choice(spk2utt_dict[spk])
                 other_spk = np.random.choice(other_spks)
                 other_uid = np.random.choice(spk2utt_dict[other_spk])
