@@ -120,13 +120,21 @@ fi
 
 if [ $stage -le 10 ]; then
   dataset=aishell2
-  for name in dev_fb40 test_fb40 ; do # dev_aug_fb40 test_fb40
-    steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
-      --nj 12 --cmd "$train_cmd" \
-      data/${dataset}/klfb/${name} data/${dataset}/klfb/${name}/log data/${dataset}/klfb/fbank/${name}
-    utils/fix_data_dir.sh data/${dataset}/klfb/${name}
-  done
+#  for name in dev_fb40 test_fb40 ; do # dev_aug_fb40 test_fb40
+  for dim in 40 ; do # dev_aug_fb40
+    for sets in test ; do # dev_aug_fb40 test_fb40
+      name=${sets}_fb${dim}
+      if [ ! -d data/aidata/klfb/${name} ]; then
+          utils/copy_data_dir.sh data/${dataset}/${sets} data/${dataset}/klfb/${name}
+        fi
 
+      steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_${dim}.conf \
+        --nj 12 --cmd "$train_cmd" \
+        data/${dataset}/klfb/${name} data/${dataset}/klfb/${name}/log data/${dataset}/klfb/fbank/${name}
+      utils/fix_data_dir.sh data/${dataset}/klfb/${name}
+    done
+  done
+  exit
 fi
 
 if [ $stage -le 11 ]; then

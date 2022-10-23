@@ -318,9 +318,6 @@ if [ $stage -le 60 ]; then
 
 steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
       --nj 12 data/vox1/klfb/test_fb40 data/vox1/klfb/test_fb40/log data/vox1/klfb/fbank/test_fb40
-
-
-
 fi
 if [ $stage -le 61 ]; then
 
