@@ -10,6 +10,7 @@
 # """
 
 dataset=magic
+stage=0
 
 if [ $stage -le 0 ]; then
   # Make Spectrogram for aug set
