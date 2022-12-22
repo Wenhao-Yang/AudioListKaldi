@@ -40,7 +40,7 @@ mfccdir=${out_dir}/mfcc
 fbankdir=${out_dir}/fbank
 vaddir=${out_dir}/vad
 
-stage=10
+stage=20
 
 waited=0
 while [ `ps 113458 | wc -l` -eq 2 ]; do
@@ -156,3 +156,21 @@ fi
 #cp feats.scp feats.scp.bcp && cat feats.scp.bcp | awk '{print $1 "-8k-radio-v3 " $2}' > feats.scp
 #
 #cp trials trials.bcp && cat trials.bcp | awk '{print $1 "-8k-radio-v3 " $2 "-8k-radio-v3 " $3}' > trials
+
+if [ $stage -le 20 ]; then
+  # Make Spectrogram for aug set
+  echo "===================              Spectrogram               ========================"
+  dataset=aishell2
+  for name in test ; do
+    steps/make_spect.sh --write-utt2num-frames true --spect-config conf/spect_161.conf \
+      --nj 14 --cmd "$train_cmd" \
+      data/${dataset}/klsp/${name} data/${dataset}/klsp/${name}/log data/${dataset}/klsp/spect/${name}
+    utils/fix_data_dir.sh data/${dataset}/klsp/${name}
+  done
+    # Todo: Is there any better VAD solutioin?
+#  sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${vox1_org_dir}/test exp/make_vad ${vox1_org_dir}/vad
+#  utils/fix_data_dir.sh ${vox1_org_dir}/test
+#   steps/make_fbank.sh --write-utt2num-frames true --fbank-config conf/fbank_40.conf \
+#       --nj 12 data/vox1/klfb/test_fb40 data/vox1/klfb/test_fb40/log data/vox1/klfb/fbank/test_fb40
+
+fi
