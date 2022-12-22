@@ -9,6 +9,10 @@
 # @Overview:
 # """
 
+. ./cmd.sh
+. ./path.sh
+set -e
+
 dataset=magic
 stage=0
 
