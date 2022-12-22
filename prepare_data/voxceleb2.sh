@@ -36,6 +36,8 @@ fbankdir=${vox2_out_dir}/fbank
 vaddir=${vox2_out_dir}/vad
 
 stage=5
+# numofframse = 847503681
+
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
