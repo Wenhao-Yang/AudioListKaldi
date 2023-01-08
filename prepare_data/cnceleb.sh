@@ -20,8 +20,10 @@ export LC_ALL=C
 set -e
 
 # The trials file is downloaded by local/make_voxceleb1.pl.
-cnceleb_root=/home/storage/yangwenhao/dataset/CN-Celeb
-out_dir=data/cnceleb
+# cnceleb_root=/home/storage/yangwenhao/dataset/CN-Celebs
+cnceleb_root=/media/yangwenhao/0D190FEF0D190FEF/dataset/CN-Celeb_flac
+
+out_dir=data/cnceleb_v2
 
 dev_dir=${out_dir}/dev
 test_dir=${out_dir}/test
@@ -35,7 +37,7 @@ mfccdir=${out_dir}/mfcc
 fbankdir=${out_dir}/fbank
 vaddir=${out_dir}/vad
 
-stage=3
+stage=0
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="
@@ -47,7 +49,7 @@ if [ $stage -le 0 ]; then
   utils/combine_data.sh ${test_dir} ${out_dir}/enroll ${out_dir}/eval
   cp ${out_dir}/eval ${test_dir}
 
-  for name in dev test dev2 ; do
+  for name in dev test ; do
     utils/fix_data_dir.sh ${out_dir}/${name}
     utils/validate_data_dir.sh --no-text --no-feats ${out_dir}/${name}
   done
@@ -60,14 +62,15 @@ if [ $stage -le 1 ]; then
   # Make MFCCs and compute the energy-based VAD for each dataset
   echo "==========================Making Fbank features and VAD============================"
   fbank_config=conf/fbank_40.conf
-  cnceleb_out_dir=data/cnceleb/subtools
+  # cnceleb_out_dir=data/cnceleb/subtools
+  cnceleb_out_dir=data/cnceleb_v2/klfb
 
-  for name in eval_enroll eval_test ; do
+  for name in dev_fb40 test_fb40 ; do
     steps/make_fbank.sh --write-utt2num-frames true --fbank_config ${fbank_config} --nj 12 --cmd "$train_cmd" \
         ${cnceleb_out_dir}/${name} exp/make_fbank ${cnceleb_out_dir}/${name}/fbank
     utils/fix_data_dir.sh ${cnceleb_out_dir}/${name}
 
-    sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${cnceleb_out_dir}/${name} exp/make_vad ${cnceleb_out_dir}/${name}/vad
+    # sid/compute_vad_decision.sh --nj 12 --cmd "$train_cmd" ${cnceleb_out_dir}/${name} exp/make_vad ${cnceleb_out_dir}/${name}/vad
     utils/fix_data_dir.sh ${cnceleb_out_dir}/${name}
   done
   exit
@@ -197,7 +200,7 @@ fi
 if [ $stage -le 12 ]; then
   # Make Spectrogram for aug set
   name=fb40
-  dataset=cnceleb
+  dataset=cnceleb_v2
   feat=klsp
   echo "===================              Spectrogram               ========================"
   for name in dev dev2 test; do
