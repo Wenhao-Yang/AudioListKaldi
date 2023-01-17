@@ -37,7 +37,7 @@ vaddir=${vox2_out_dir}/vad
 
 stage=5
 # numofframse = 847503681
-
+# awk '{sum += $2};END {print sum}'
 
 if [ $stage -le 0 ]; then
   echo "===================================Data preparing=================================="

@@ -65,8 +65,8 @@ if [ $stage -le 1 ]; then
   # cnceleb_out_dir=data/cnceleb/subtools
   cnceleb_out_dir=data/cnceleb_v2/klfb
 
-  for name in dev_fb40 test_fb40 ; do
-    steps/make_fbank.sh --write-utt2num-frames true --fbank_config ${fbank_config} --nj 12 --cmd "$train_cmd" \
+  for name in test_fb40 ; do
+    steps/make_fbank.sh --write-utt2num-frames true --fbank_config ${fbank_config} --nj 4 --cmd "$train_cmd" \
         ${cnceleb_out_dir}/${name} exp/make_fbank ${cnceleb_out_dir}/${name}/fbank
     utils/fix_data_dir.sh ${cnceleb_out_dir}/${name}
 
