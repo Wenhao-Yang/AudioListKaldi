@@ -40,7 +40,7 @@ if [ $stage -le 10 ]; then
   for dim in 40 ; do # dev_aug_fb40
     for sets in train test; do
       name=${sets}_fb${dim}
-      if [ ! -d data/aidata/klfb/${name} ]; then
+      if [ ! -d data/aidata/klfb/${name}_ncm ]; then
         utils/copy_data_dir.sh data/aidata/${sets} data/aidata/klfb/${name}_ncm
       fi
       steps/make_fbank.sh --compress false --write-utt2num-frames true --fbank-config conf/fbank_${dim}.conf \
