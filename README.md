@@ -1,14 +1,20 @@
-# lstm_speaker_verification
-1. this project is an implement of a methode proposed by Google in ICASSP 2018
+# Speaker Verification Data Processing
 
-"ATTENTION-BASED MODELS FOR TEXT-DEPENDENT SPEAKER VERIFICATION"
+## Using Kaldi and Python
 
-pdf of the paper:https://arxiv.org/pdf/1710.10470.pdf
+### 1. Overview
 
-2. execute this progrmme by using the command as follow:
+Preparing lst for speaker verificaton in Pytorch using kaldi and python scripts.
 
-python train.py
+### 2. Directorys
 
-3. the file input_data.py is used for exitracting mfcc features and prepare the input data of training LSTM
+```shell
+├── root
+│   ├── conf            # Config files for features, etc.
+│   ├── local           # Preparing wav.scp, utt2spk, etc.
+│   ├── prepare_data    # Making features in dataset dirs.
+│   ├── sid             # copied from kaldi
+│   ├── steps           #  ...
+│   ├── utils           #  ...
+```
 
-the file model.py is used for construction of neural network
